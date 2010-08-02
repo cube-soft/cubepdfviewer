@@ -241,7 +241,7 @@
             this.MenuCurrentPage.Font = new System.Drawing.Font("メイリオ", 10F);
             this.MenuCurrentPage.Name = "MenuCurrentPage";
             this.MenuCurrentPage.Padding = new System.Windows.Forms.Padding(2);
-            this.MenuCurrentPage.Size = new System.Drawing.Size(50, 27);
+            this.MenuCurrentPage.Size = new System.Drawing.Size(46, 27);
             this.MenuCurrentPage.Text = "0";
             this.MenuCurrentPage.TextBoxTextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.MenuCurrentPage.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MenuCurrentPage_KeyDown);
@@ -333,16 +333,14 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(784, 762);
             this.Controls.Add(this.StatausBar);
             this.Controls.Add(this.MenuTool);
             this.Controls.Add(this.MainViewer);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MaximizeBox = false;
             this.Name = "MainForm";
             this.Text = "CubePDF Viewer";
+            this.SizeChanged += new System.EventHandler(this.MainForm_SizeChanged);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MainForm_KeyDown);
             this.MenuTool.ResumeLayout(false);
             this.MenuTool.PerformLayout();

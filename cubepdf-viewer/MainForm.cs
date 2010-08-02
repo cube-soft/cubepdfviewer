@@ -59,17 +59,18 @@ namespace Cube {
         /// 
         /* ----------------------------------------------------------------- */
         private void ReDraw(string status = "Ready") {
-            doc_.RenderPage(MainViewer.Handle);
-            MainViewer.PageSize = new Size(doc_.PageWidth, doc_.PageHeight);
+            if (doc_ != null) {
+                doc_.RenderPage(MainViewer.Handle);
+                MainViewer.PageSize = new Size(doc_.PageWidth, doc_.PageHeight);
 
-            // メニューバーの各種情報の更新．
-            MenuCurrentPage.Text = doc_.CurrentPage.ToString();
-            MenuTotalPage.Text = "/ " + doc_.PageCount.ToString();
-            MenuZoomText.Text = ((int)(doc_.Zoom)).ToString() + "%";
+                // メニューバーの各種情報の更新．
+                MenuCurrentPage.Text = doc_.CurrentPage.ToString();
+                MenuTotalPage.Text = "/ " + doc_.PageCount.ToString();
+                MenuZoomText.Text = ((int)(doc_.Zoom)).ToString() + "%";
 
-            // ステータスバーの各種情報の更新
-            StatusText.Text = status;
-
+                // ステータスバーの各種情報の更新
+                StatusText.Text = status;
+            }
             this.Refresh();
         }
 
@@ -232,6 +233,25 @@ namespace Cube {
             else {
                 if (e.KeyCode == Keys.F3 && MenuSearchText.Text != "") this.Search(sender, true);
             }
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// MainForm_SizeChanged
+        /// 
+        /// <summary>
+        /// ウィンドウサイズを変更する．
+        /// TODO: スクロールバーがおかしい．
+        /// </summary>
+        /// 
+        /* ----------------------------------------------------------------- */
+        private void MainForm_SizeChanged(object sender, EventArgs e) {
+            // Note: width, height は，現在のウィンドウ幅と PageViewr の関係より．
+            // デザイナで何らかの修正を加えた場合，この値 (40, 115) が変わる場合がある．
+            int width = this.Size.Width - 40;
+            int height = this.Size.Height - 115;
+            this.MainViewer.Size = new Size(width, height);
+            this.ReDraw();
         }
         
         /* ----------------------------------------------------------------- */
