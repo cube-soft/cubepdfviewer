@@ -199,6 +199,7 @@ namespace Cube {
             }
             */
 
+            // TODO: サイズの設定がおかしい．
             int width = this.MainViewer.Width - this.MainViewer.Margin.Left - this.MainViewer.Margin.Left;
             this.MainViewer.PageSize = new Size(width, (int)(width * 11 / 8.5));
             this.MainViewer.Visible = true;

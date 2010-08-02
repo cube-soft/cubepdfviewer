@@ -13,8 +13,6 @@ namespace PDFViewer
     {
         public delegate void PaintControlHandler(object sender,Rectangle view, Point location, Graphics g);
         public delegate bool MovePageHandler(object sender);
-        //public event MovePageHandler NextPage;
-        //public event MovePageHandler PreviousPage;
 
         bool _drawShadow;
         bool _drawRect;
@@ -797,73 +795,6 @@ namespace PDFViewer
             }
             //ReleaseRubberFrame();
         }
-
-        //private int _deltasCount = 0;
-        //private bool bHasMorePagesT=true;
-        //private bool bHasMorePagesD=true;
-        /*
-        protected override void OnMouseWheel(MouseEventArgs e)
-        {
-            Point pos = e.Location; // pnlPageContanier.PointToClient(e.Location);
-            if (MouseInPage(pos))
-            {
-                int pointY = ScrollPosition.Y;
-                if (e.Delta < 0)
-                    pointY = ScrollPosition.Y + 120 * PageBounds.Height / ViewBounds.Height / 6;
-                else if (e.Delta > 0)
-                    pointY = ScrollPosition.Y - 120 * PageBounds.Height / ViewBounds.Height / 6;
-                ScrollPosition = new Point(ScrollPosition.X, pointY);
-                if (vsb.Maximum == 0)
-                {
-                    if (e.Delta < 0)
-                    {
-                        if (NextPage != null)
-                           NextPage.Invoke(this);
-                    }
-                    else
-                    {
-                        if (PreviousPage != null)
-                            PreviousPage.Invoke(this);
-                    }
-
-                }
-                else
-                {
-                    if (vsb.Value == vsb.Maximum)
-                    {
-                        //GoNext
-                        _deltasCount++;
-                        if (_deltasCount > 1)
-                        {
-                            _deltasCount = 0;
-                            if (NextPage != null)
-                                bHasMorePagesD = NextPage.Invoke(this);
-                            bHasMorePagesT = true;
-                            if (bHasMorePagesD)
-                                ScrollPosition = new Point(hsb.Value, 0);
-                        }
-                    }
-                    if (vsb.Value == 0)
-                    {
-                        //GoNext
-                        _deltasCount++;
-                        if (_deltasCount > 1)
-                        {
-                            _deltasCount = 0;
-                            //GoBack
-                            if (PreviousPage != null)
-                                bHasMorePagesT = PreviousPage.Invoke(this);
-                            bHasMorePagesD = true;
-                            if (bHasMorePagesT)
-                                ScrollPosition = new Point(hsb.Value, vsb.Maximum);
-                        }
-                    }
-                }
-                
-            }
-            base.OnMouseWheel(e);
-        }
-        */
     }
 
     #region Shadow Drawing

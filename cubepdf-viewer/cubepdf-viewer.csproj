@@ -166,13 +166,15 @@
     <None Include="Resources\arrow_right.png" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="cube-soft.ico" />
     <None Include="Resources\fit2height.png" />
     <None Include="Resources\fit2width.png" />
     <None Include="Resources\cube-soft.ico" />
     <None Include="Resources\search.png" />
     <None Include="Resources\zoomout.png" />
     <None Include="Resources\zoomin.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="cube-soft.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

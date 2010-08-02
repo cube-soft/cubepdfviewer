@@ -241,7 +241,7 @@
             this.MenuCurrentPage.Font = new System.Drawing.Font("メイリオ", 10F);
             this.MenuCurrentPage.Name = "MenuCurrentPage";
             this.MenuCurrentPage.Padding = new System.Windows.Forms.Padding(2);
-            this.MenuCurrentPage.Size = new System.Drawing.Size(30, 27);
+            this.MenuCurrentPage.Size = new System.Drawing.Size(50, 27);
             this.MenuCurrentPage.Text = "0";
             this.MenuCurrentPage.TextBoxTextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.MenuCurrentPage.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MenuCurrentPage_KeyDown);
@@ -315,17 +315,18 @@
             // 
             this.MainViewer.AutoSize = true;
             this.MainViewer.BackColor = System.Drawing.SystemColors.AppWorkspace;
-            this.MainViewer.BorderColor = System.Drawing.Color.Black;
+            this.MainViewer.BorderColor = System.Drawing.Color.DimGray;
+            this.MainViewer.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.MainViewer.DrawBorder = false;
             this.MainViewer.DrawShadow = false;
-            this.MainViewer.Location = new System.Drawing.Point(11, 49);
-            this.MainViewer.Margin = new System.Windows.Forms.Padding(5);
+            this.MainViewer.Location = new System.Drawing.Point(11, 50);
+            this.MainViewer.Margin = new System.Windows.Forms.Padding(0);
             this.MainViewer.Name = "MainViewer";
             this.MainViewer.PageColor = System.Drawing.SystemColors.AppWorkspace;
             this.MainViewer.PageSize = new System.Drawing.Size(0, 0);
             this.MainViewer.PaintMethod = PDFViewer.PageViewer.DoubleBufferMethod.BuiltInOptimizedDoubleBuffer;
-            this.MainViewer.ScrollPosition = new System.Drawing.Point(-5, -5);
-            this.MainViewer.Size = new System.Drawing.Size(760, 686);
+            this.MainViewer.ScrollPosition = new System.Drawing.Point(0, 0);
+            this.MainViewer.Size = new System.Drawing.Size(760, 685);
             this.MainViewer.TabIndex = 0;
             // 
             // MainForm
