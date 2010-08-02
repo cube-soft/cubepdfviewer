@@ -195,8 +195,12 @@ namespace Cube {
             }
             */
 
+            int x = System.Math.Min(Screen.PrimaryScreen.Bounds.Height, Screen.PrimaryScreen.Bounds.Width) - 100;
+            this.Size = new Size(x, x);
+            this.MainViewer.Size = new Size(x - DELTA_WIDTH, x - DELTA_HEIGHT);
+
             // TODO: サイズの設定がおかしい．
-            int width = this.MainViewer.Width - this.MainViewer.Margin.Left - this.MainViewer.Margin.Left;
+            int width = this.MainViewer.Width;
             this.MainViewer.PageSize = new Size(width, (int)(width * 11 / 8.5));
             this.MainViewer.Visible = true;
         }
@@ -243,8 +247,8 @@ namespace Cube {
         private void MainForm_SizeChanged(object sender, EventArgs e) {
             // Note: width, height は，現在のウィンドウ幅と PageViewr の関係より．
             // デザイナで何らかの修正を加えた場合，この値 (40, 115) が変わる場合がある．
-            int width = this.Size.Width - 40;
-            int height = this.Size.Height - 115;
+            int width = this.Size.Width - DELTA_WIDTH;
+            int height = this.Size.Height - DELTA_HEIGHT;
             this.MainViewer.Size = new Size(width, height);
             this.ReDraw();
         }
@@ -468,6 +472,11 @@ namespace Cube {
             g.ReleaseHdc();
         }
 
+#endregion
+
+#region Constant variables
+        private const int DELTA_WIDTH = 40;
+        private const int DELTA_HEIGHT = 115;
 #endregion
 
         /* ----------------------------------------------------------------- */
