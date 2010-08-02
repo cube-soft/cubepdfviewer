@@ -1,0 +1,15 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Cube.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="TITLE" Type="System.String" Scope="User">
+      <Value Profile="(Default)">CubePDF Viewer</Value>
+    </Setting>
+    <Setting Name="STATUS_EOS" Type="System.String" Scope="User">
+      <Value Profile="(Default)">文書の検索が終了しました。</Value>
+    </Setting>
+    <Setting Name="FILTER_PDF" Type="System.String" Scope="User">
+      <Value Profile="(Default)">PDF ファイル(*.pdf)|*.pdf|すべてのファイル(*.*)|*.*</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
