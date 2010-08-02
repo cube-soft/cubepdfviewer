@@ -60,6 +60,20 @@ namespace Cube.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap arrow_first {
+            get {
+                object obj = ResourceManager.GetObject("arrow_first", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap arrow_last {
+            get {
+                object obj = ResourceManager.GetObject("arrow_last", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap arrow_left {
             get {
                 object obj = ResourceManager.GetObject("arrow_left", resourceCulture);

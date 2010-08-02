@@ -309,6 +309,16 @@ namespace Cube {
         }
 
         /* ----------------------------------------------------------------- */
+        /// MenuFirstPage_Click
+        /* ----------------------------------------------------------------- */
+        private void MenuFirstPage_Click(object sender, EventArgs e) {
+            if (doc_ == null) return;
+
+            doc_.CurrentPage = 1;
+            this.ReDraw();
+        }
+
+        /* ----------------------------------------------------------------- */
         /// MenuPrevious_Click
         /* ----------------------------------------------------------------- */
         private void MenuPrevious_Click(object sender, EventArgs e) {
@@ -320,6 +330,16 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         private void MenuNext_Click(object sender, EventArgs e) {
             NextPage(sender, e);
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// MenuLastPage_Click
+        /* ----------------------------------------------------------------- */
+        private void MenuLastPage_Click(object sender, EventArgs e) {
+            if (doc_ == null) return;
+
+            doc_.CurrentPage = doc_.PageCount;
+            this.ReDraw();
         }
 
         /* ----------------------------------------------------------------- */

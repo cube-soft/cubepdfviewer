@@ -177,6 +177,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="cube-soft.ico" />
+    <None Include="Resources\arrow_last.png" />
+    <None Include="Resources\arrow_first.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
