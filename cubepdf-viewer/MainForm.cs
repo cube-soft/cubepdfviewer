@@ -413,7 +413,8 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         private void MenuFirstPage_Click(object sender, EventArgs e) {
             if (doc_ == null) return;
-
+            if (doc_.CurrentPage <= 1) return;
+            
             doc_.CurrentPage = 1;
             this.AsyncReDraw();
         }
@@ -437,6 +438,7 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         private void MenuLastPage_Click(object sender, EventArgs e) {
             if (doc_ == null) return;
+            if (doc_.CurrentPage >= doc_.PageCount) return;
 
             doc_.CurrentPage = doc_.PageCount;
             this.AsyncReDraw();
