@@ -352,7 +352,7 @@ namespace Cube {
                 doc_ = new PDFLibNet.PDFWrapper();
                 doc_.PDFLoadCompeted += new PDFLibNet.PDFLoadCompletedHandler(PDFLoadCompleted);
                 doc_.PDFLoadBegin += new PDFLibNet.PDFLoadBeginHandler(PDFLoadBegin);
-                doc_.UseMuPDF = false;
+                doc_.UseMuPDF = USE_MUPDF;
 
                 if (doc_.LoadPDF(dialog.FileName)) {
                     doc_.CurrentPage = 1;
@@ -601,6 +601,7 @@ namespace Cube {
 #region Constant variables
         private const int DELTA_WIDTH = 40;
         private const int DELTA_HEIGHT = 115;
+        private const bool USE_MUPDF = true;
 #endregion
 
         /* ----------------------------------------------------------------- */
