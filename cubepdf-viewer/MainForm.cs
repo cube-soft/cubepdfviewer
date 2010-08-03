@@ -339,6 +339,8 @@ namespace Cube {
         /// 
         /// <summary>
         /// ToolStrip->MenuOpen の Click イベントハンドラ
+        /// NOTE: PDFLoadBegin(), PDFLoadCompleted はそれぞれ
+        /// doc_.LoadPDF() の実行開始直後，終了直前に呼ばれる．
         /// </summary>
         /// 
         /* ----------------------------------------------------------------- */
