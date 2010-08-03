@@ -347,15 +347,34 @@ namespace Cube {
                 if (doc_ != null) doc_.Dispose();
 
                 doc_ = new PDFLibNet.PDFWrapper();
+                doc_.PDFLoadCompeted += new PDFLibNet.PDFLoadCompletedHandler(PDFLoadCompleted);
+                doc_.PDFLoadBegin += new PDFLibNet.PDFLoadBeginHandler(PDFLoadBegin);
                 doc_.UseMuPDF = false;
-                this.Cursor = Cursors.WaitCursor;
+
                 if (doc_.LoadPDF(dialog.FileName)) {
                     doc_.CurrentPage = 1;
                     doc_.FitToWidth(MainViewer.Handle);
                     this.Text = System.IO.Path.GetFileName(dialog.FileName) + " - " + Properties.Settings.Default.TITLE;
-                    this.ReDraw();
+                    this.Cursor = Cursors.WaitCursor;
+                    this.ReDraw(); // ここは AsyncReDraw() だとうまくいかない．
                 }
             }
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// PDFLoadBegin
+        /* ----------------------------------------------------------------- */
+        private void PDFLoadBegin() {
+            this.Cursor = Cursors.WaitCursor;
+            this.Refresh();
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// PDFLoadCompleted
+        /* ----------------------------------------------------------------- */
+        private void PDFLoadCompleted() {
+            this.Cursor = Cursors.Default;
+            this.PostReDraw();
         }
 
         /* ----------------------------------------------------------------- */
