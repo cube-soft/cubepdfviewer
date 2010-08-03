@@ -30,10 +30,18 @@ namespace Cube {
     /// MainForm
     /// 
     /// <summary>
-    /// Memo: PDFViewer ではファイルをロードしている間，「リサイズ」，
+    /// NOTE: PDFViewer ではファイルをロードしている間，「リサイズ」，
     /// 「フォームを閉じる」，「各種マウスイベント」を無効化している．
     /// ただ，PDFViewer はこの処理が原因で異常終了するケースが散見される
     /// ため，CubePDF Viewer ではこの処理は保留する．
+    /// 
+    /// また，現在は使用していないが，PDFLoadBegin, PDFLoadCompeted
+    /// イベントが用意されてある（後者は，PDFLoadCompleted の typo か？）
+    /// ファイルのロード時間がやや長いので，この辺りのイベントに適切な
+    /// ハンドラを指定する必要があるか．
+    /// 
+    /// RenderFinished の他に RenderNotifyFinished と言うイベントも存在
+    /// する．現状では，どのような条件でこのイベントが発生するのかは不明．
     /// </summary>
     /// 
     /* --------------------------------------------------------------------- */
@@ -47,7 +55,7 @@ namespace Cube {
             InitializeComponent();
             InitializeMainViewer();
             InitializeLibrary();
-
+            
             this.MouseEnter += new System.EventHandler(this.MainForm_MouseEnter);
             this.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.MainForm_MouseWheel);
             this.KeyPreview = true;
@@ -400,6 +408,7 @@ namespace Cube {
         /// ユーザがページ数を直接指定してエンターキーを押した場合の
         /// イベントハンドラ．最終ページ以降の値が指定された場合には，
         /// 最終ページを表示させる．
+        /// TODO: 数字以外が入力された場合にどうなるか．
         /// </summary>
         /// 
         /* ----------------------------------------------------------------- */
