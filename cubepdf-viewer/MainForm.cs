@@ -82,6 +82,7 @@ namespace Cube {
 
                 // まだ描画されていない部分を白色で表示させておく．
                 MainViewer.PageColor = System.Drawing.Color.White;
+                this.Cursor = Cursors.WaitCursor;
                 this.Refresh();
             }
             else this.Refresh();
@@ -100,6 +101,7 @@ namespace Cube {
             if (doc_ != null) {
                 MainViewer.PageSize = new Size(doc_.PageWidth, doc_.PageHeight);
                 MainViewer.PageColor = System.Drawing.Color.Transparent;
+                this.Cursor = Cursors.Default;
 
                 // メニューバーの各種情報の更新．
                 MenuCurrentPage.Text = doc_.CurrentPage.ToString();
@@ -116,7 +118,7 @@ namespace Cube {
             if (doc_ == null) return false;
             if (doc_.CurrentPage < doc_.PageCount) {
                 doc_.NextPage();
-                this.AsyncReDraw();
+                this.ReDraw();
                 return true;
             }
             return false;
@@ -129,7 +131,7 @@ namespace Cube {
             if (doc_ == null) return false;
             if (doc_.CurrentPage > 1) {
                 doc_.PreviousPage();
-                this.AsyncReDraw();
+                this.ReDraw();
                 return true;
             }
             return false;
@@ -285,8 +287,6 @@ namespace Cube {
         /// 
         /* ----------------------------------------------------------------- */
         private void MainForm_SizeChanged(object sender, EventArgs e) {
-            // Note: width, height は，現在のウィンドウ幅と PageViewr の関係より．
-            // デザイナで何らかの修正を加えた場合，この値 (40, 115) が変わる場合がある．
             int width = this.Size.Width - DELTA_WIDTH;
             int height = this.Size.Height - DELTA_HEIGHT;
             this.MainViewer.Size = new Size(width, height);
@@ -311,6 +311,7 @@ namespace Cube {
 
                 doc_ = new PDFLibNet.PDFWrapper();
                 doc_.UseMuPDF = false;
+                this.Cursor = Cursors.WaitCursor;
                 if (doc_.LoadPDF(dialog.FileName)) {
                     doc_.CurrentPage = 1;
                     doc_.FitToWidth(MainViewer.Handle);
@@ -355,7 +356,7 @@ namespace Cube {
             if (doc_ == null) return;
 
             doc_.CurrentPage = 1;
-            this.ReDraw();
+            this.AsyncReDraw();
         }
 
         /* ----------------------------------------------------------------- */
@@ -379,7 +380,7 @@ namespace Cube {
             if (doc_ == null) return;
 
             doc_.CurrentPage = doc_.PageCount;
-            this.ReDraw();
+            this.AsyncReDraw();
         }
 
         /* ----------------------------------------------------------------- */
@@ -534,6 +535,9 @@ namespace Cube {
 
 #endregion
 
+        /* ----------------------------------------------------------------- */
+        //  定数の定義
+        /* ----------------------------------------------------------------- */
 #region Constant variables
         private const int DELTA_WIDTH = 40;
         private const int DELTA_HEIGHT = 115;

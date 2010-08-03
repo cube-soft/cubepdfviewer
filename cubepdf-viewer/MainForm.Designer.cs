@@ -262,7 +262,7 @@
             this.MenuCurrentPage.Margin = new System.Windows.Forms.Padding(2);
             this.MenuCurrentPage.Name = "MenuCurrentPage";
             this.MenuCurrentPage.Padding = new System.Windows.Forms.Padding(2);
-            this.MenuCurrentPage.Size = new System.Drawing.Size(42, 27);
+            this.MenuCurrentPage.Size = new System.Drawing.Size(50, 27);
             this.MenuCurrentPage.Text = "0";
             this.MenuCurrentPage.TextBoxTextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.MenuCurrentPage.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MenuCurrentPage_KeyDown);
