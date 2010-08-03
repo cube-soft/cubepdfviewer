@@ -156,6 +156,14 @@ namespace Cube {
 
         /* ----------------------------------------------------------------- */
         /// Search
+        /// 
+        /// <summary>
+        /// 検索結果を描画する．
+        /// TODO: あるページ内の検索結果に対するスクロールバーの調整を
+        /// 行っていない (FocusSearchResult) 為，その部分の実装．
+        /// 処理部分の記述にバグがある気がする．
+        /// </summary>
+        /// 
         /* ----------------------------------------------------------------- */
         private void Search(object sender, SearchArgs e) {
             if (doc_ == null) return;
@@ -189,7 +197,7 @@ namespace Cube {
 
             if (result > 0) {
                 doc_.CurrentPage = doc_.SearchResults[0].Page;
-                // FocusSearchResult(_pdfDoc.SearchResults[0]);
+                // FocusSearchResult(doc_.SearchResults[0]);
                 this.AsyncReDraw();
             }
             else {
@@ -201,7 +209,19 @@ namespace Cube {
         }
 
         /* ----------------------------------------------------------------- */
+        ///
         /// Search
+        ///
+        /// <summary>
+        /// 検索方向を指定して検索する．
+        /// </summary>
+        /// 
+        /// <param name="vector"">
+        /// 検索方向
+        ///   true:  現在の位置よりも後方向．
+        ///   false: 現在の位置よりも前方向．
+        /// </param>
+        /// 
         /* ----------------------------------------------------------------- */
         private void Search(object sender, bool vector) {
             try {
