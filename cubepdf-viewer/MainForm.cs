@@ -55,20 +55,60 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         private void ReDraw(string status = "Ready") {
             if (doc_ != null) {
+                StatusText.Text = status;
                 doc_.RenderPage(MainViewer.Handle);
+                this.PostReDraw();
+            }
+            else this.Refresh();
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// AsyncReDraw
+        /// 
+        /// <summary>
+        /// 再描画処理．時間のかかるような再描画処理をスレッドを利用して
+        /// 非同期で行う．
+        /// </summary>
+        /// 
+        /* ----------------------------------------------------------------- */
+        private void AsyncReDraw(string status = "Ready") {
+            if (doc_ != null) {
+                StatusText.Text = status;
+                doc_.RenderFinished -= new PDFLibNet.RenderFinishedHandler(PostReDraw);
+                doc_.RenderFinished += new PDFLibNet.RenderFinishedHandler(PostReDraw);
+                doc_.RenderPageThread(MainViewer.Handle, false);
+                this.PostReDraw();
+
+                // まだ描画されていない部分を白色で表示させておく．
+                MainViewer.PageColor = System.Drawing.Color.White;
+                this.Refresh();
+            }
+            else this.Refresh();
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// PostReDraw
+        /// 
+        /// <summary>
+        /// 再描画の最後に行う処理．
+        /// </summary>
+        /// 
+        /* ----------------------------------------------------------------- */
+        void PostReDraw() {
+            if (doc_ != null) {
                 MainViewer.PageSize = new Size(doc_.PageWidth, doc_.PageHeight);
+                MainViewer.PageColor = System.Drawing.Color.Transparent;
 
                 // メニューバーの各種情報の更新．
                 MenuCurrentPage.Text = doc_.CurrentPage.ToString();
                 MenuTotalPage.Text = "/ " + doc_.PageCount.ToString();
                 MenuZoomText.Text = ((int)(doc_.Zoom)).ToString() + "%";
-
-                // ステータスバーの各種情報の更新
-                StatusText.Text = status;
             }
             this.Refresh();
         }
-
+        
         /* ----------------------------------------------------------------- */
         /// NextPage
         /* ----------------------------------------------------------------- */
@@ -76,7 +116,7 @@ namespace Cube {
             if (doc_ == null) return false;
             if (doc_.CurrentPage < doc_.PageCount) {
                 doc_.NextPage();
-                this.ReDraw();
+                this.AsyncReDraw();
                 return true;
             }
             return false;
@@ -89,7 +129,7 @@ namespace Cube {
             if (doc_ == null) return false;
             if (doc_.CurrentPage > 1) {
                 doc_.PreviousPage();
-                this.ReDraw();
+                this.AsyncReDraw();
                 return true;
             }
             return false;
@@ -131,7 +171,7 @@ namespace Cube {
             if (result > 0) {
                 doc_.CurrentPage = doc_.SearchResults[0].Page;
                 // FocusSearchResult(_pdfDoc.SearchResults[0]);
-                this.ReDraw();
+                this.AsyncReDraw();
             }
             else {
                 Console.Beep();
@@ -378,7 +418,7 @@ namespace Cube {
             }
             catch (Exception /* err */) { }
             finally {
-                this.ReDraw();
+                this.AsyncReDraw();
             }
         }
 
@@ -393,7 +433,7 @@ namespace Cube {
             }
             catch (Exception /* err */) { }
             finally {
-                this.ReDraw();
+                this.AsyncReDraw();
             }
         }
 
