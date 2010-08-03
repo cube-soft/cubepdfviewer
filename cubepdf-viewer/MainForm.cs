@@ -31,7 +31,7 @@ namespace Cube {
     /// 
     /// <summary>
     /// Memo: PDFViewer ではファイルをロードしている間，「リサイズ」，
-    /// 「フォームを閉じる」，「マウスイベント」を無効化している．
+    /// 「フォームを閉じる」，「各種マウスイベント」を無効化している．
     /// ただ，PDFViewer はこの処理が原因で異常終了するケースが散見される
     /// ため，CubePDF Viewer ではこの処理は保留する．
     /// </summary>
@@ -89,7 +89,7 @@ namespace Cube {
                 doc_.RenderPageThread(MainViewer.Handle, false);
                 this.PostReDraw();
 
-                // まだ描画されていない部分を白色で表示させておく．
+                // まだ描画されていない領域を白色で表示しておく．
                 MainViewer.PageColor = System.Drawing.Color.White;
                 this.Cursor = Cursors.WaitCursor;
                 this.Refresh();
