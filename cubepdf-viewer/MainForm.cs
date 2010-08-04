@@ -102,7 +102,7 @@ namespace Cube {
 
                 // まだ描画されていない領域を白色で表示しておく．
                 MainViewer.PageColor = System.Drawing.Color.White;
-                this.Cursor = Cursors.WaitCursor;
+                // this.Cursor = Cursors.WaitCursor;
                 this.Refresh();
             }
             else this.Refresh();
@@ -158,6 +158,7 @@ namespace Cube {
         }
 
         /* ----------------------------------------------------------------- */
+        ///
         /// Search
         /// 
         /// <summary>
@@ -201,7 +202,7 @@ namespace Cube {
             if (result > 0) {
                 doc_.CurrentPage = doc_.SearchResults[0].Page;
                 // FocusSearchResult(doc_.SearchResults[0]);
-                this.AsyncReDraw();
+                this.ReDraw();
             }
             else {
                 Console.Beep();
@@ -277,9 +278,9 @@ namespace Cube {
             }
             */
 
-            int x = System.Math.Min(Screen.PrimaryScreen.Bounds.Height, Screen.PrimaryScreen.Bounds.Width) - 100;
-            this.Size = new Size(x, x);
-            this.MainViewer.Size = new Size(x - DELTA_WIDTH, x - DELTA_HEIGHT);
+            int x = Screen.PrimaryScreen.Bounds.Height - 100;
+            this.Size = new Size(System.Math.Max(x, 800), x);
+            this.MainViewer.Size = new Size(System.Math.Max(x, 800) - DELTA_WIDTH, x - DELTA_HEIGHT);
 
             // TODO: サイズの設定がおかしい．
             int width = this.MainViewer.Width;
@@ -514,7 +515,7 @@ namespace Cube {
             }
             catch (Exception /* err */) { }
             finally {
-                this.ReDraw();
+                this.AsyncReDraw();
             }
         }
         
