@@ -35,8 +35,8 @@ namespace Cube {
     /// ただ，PDFViewer はこの処理が原因で異常終了するケースが散見される
     /// ため，CubePDF Viewer ではこの処理は保留する．
     /// 
-    /// また，現在は使用していないが，PDFLoadBegin, PDFLoadCompeted
-    /// イベントが用意されてある（後者は，PDFLoadCompleted の typo か？）
+    /// また，現在は使用していないが，PDFLoadBegin, PDFLoadCompleted
+    /// イベントが用意されてある．
     /// ファイルのロード時間がやや長いので，この辺りのイベントに適切な
     /// ハンドラを指定する必要があるか．
     /// 追記: PDFLoad() よりは，その後の RenderPage() メソッドの方に
@@ -62,6 +62,17 @@ namespace Cube {
             this.MouseEnter += new System.EventHandler(this.MainForm_MouseEnter);
             this.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.MainForm_MouseWheel);
             this.KeyPreview = true;
+            this.MenuZoomText.Enabled = false;
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// UpdateFitCondtion
+        /* ----------------------------------------------------------------- */
+        private void UpdateFitCondition(int which) {
+            fit_ = which;
+            MenuFitToWidth.Checked = ((fit_ & FIT_WIDTH) != 0);
+            MenuFitToHeight.Checked = ((fit_ & FIT_HEIGHT) != 0);
+            this.Refresh();
         }
 
         /* ----------------------------------------------------------------- */
@@ -252,8 +263,9 @@ namespace Cube {
         /// InitializeLibrary
         /* ----------------------------------------------------------------- */
         private void InitializeLibrary() {
-            PDFLibNet.xPDFParams.Antialias = true;
-            PDFLibNet.xPDFParams.VectorAntialias = true;
+            // MuPDF の場合は不要．
+            // PDFLibNet.xPDFParams.Antialias = true;
+            // PDFLibNet.xPDFParams.VectorAntialias = true;
         }
 
         /* ----------------------------------------------------------------- */
@@ -267,16 +279,6 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         private void InitializeMainViewer() {
             this.MainViewer.PaintControl += new PDFViewer.PageViewer.PaintControlHandler(this.DoubleBuffer_PaintControl);
-
-            // 使用する描画ライブラリが xPDFlib の場合の初期設定
-            /*
-            if (ConfigurationManager.AppSettings.Get("xpdfrc") == "xpdfrc") {
-                var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-                config.AppSettings.Settings.Remove("xpdfrc");
-                config.AppSettings.Settings.Add("xpdfrc", AppDomain.CurrentDomain.BaseDirectory + "xpdfrc");
-                ConfigurationManager.RefreshSection("appSettings");
-            }
-            */
 
             int x = Screen.PrimaryScreen.Bounds.Height - 100;
             this.Size = new Size(System.Math.Max(x, 800), x);
@@ -331,7 +333,9 @@ namespace Cube {
             int width = this.Size.Width - DELTA_WIDTH;
             int height = this.Size.Height - DELTA_HEIGHT;
             this.MainViewer.Size = new Size(width, height);
-            this.ReDraw();
+            if (MenuFitToWidth.Checked) this.MenuFitToWidth_Click(sender, e);
+            else if (MenuFitToHeight.Checked) this.MenuFitToHeight_Click(sender, e);
+            else this.ReDraw();
         }
         
         /* ----------------------------------------------------------------- */
@@ -353,15 +357,17 @@ namespace Cube {
                 if (doc_ != null) doc_.Dispose();
 
                 doc_ = new PDFLibNet.PDFWrapper();
-                doc_.PDFLoadCompeted += new PDFLibNet.PDFLoadCompletedHandler(PDFLoadCompleted);
+                doc_.PDFLoadCompleted += new PDFLibNet.PDFLoadCompletedHandler(PDFLoadCompleted);
                 doc_.PDFLoadBegin += new PDFLibNet.PDFLoadBeginHandler(PDFLoadBegin);
                 doc_.UseMuPDF = USE_MUPDF;
 
                 if (doc_.LoadPDF(dialog.FileName)) {
                     doc_.CurrentPage = 1;
-                    doc_.FitToWidth(MainViewer.Handle);
+                    if (MenuFitToHeight.Checked) doc_.FitToHeight(MainViewer.Handle);
+                    else doc_.FitToWidth(MainViewer.Handle);
                     this.Text = System.IO.Path.GetFileName(dialog.FileName) + " - " + Properties.Settings.Default.TITLE;
                     this.Cursor = Cursors.WaitCursor;
+                    this.MenuZoomText.Enabled = true;
                     this.ReDraw(); // ここは AsyncReDraw() だとうまくいかない．
                 }
             }
@@ -419,7 +425,7 @@ namespace Cube {
             if (doc_.CurrentPage <= 1) return;
             
             doc_.CurrentPage = 1;
-            this.AsyncReDraw();
+            this.ReDraw();
         }
 
         /* ----------------------------------------------------------------- */
@@ -444,7 +450,7 @@ namespace Cube {
             if (doc_.CurrentPage >= doc_.PageCount) return;
 
             doc_.CurrentPage = doc_.PageCount;
-            this.AsyncReDraw();
+            this.ReDraw();
         }
 
         /* ----------------------------------------------------------------- */
@@ -472,11 +478,12 @@ namespace Cube {
                 }
             }
         }
-        
+
         /* ----------------------------------------------------------------- */
         /// MenuZoomIn_Click
         /* ----------------------------------------------------------------- */
         private void MenuZoomIn_Click(object sender, EventArgs e) {
+            UpdateFitCondition(FIT_NONE);
             if (doc_ == null) return;
 
             try {
@@ -492,6 +499,7 @@ namespace Cube {
         /// MenuZoomOut_Click
         /* ----------------------------------------------------------------- */
         private void MenuZoomOut_Click(object sender, EventArgs e) {
+            UpdateFitCondition(FIT_NONE);
             if (doc_ == null) return;
 
             try {
@@ -507,6 +515,7 @@ namespace Cube {
         /// MenuZoomText_DropDownItemClicked
         /* ----------------------------------------------------------------- */
         private void MenuZoomText_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e) {
+            UpdateFitCondition(FIT_NONE);
             if (doc_ == null) return;
 
             try {
@@ -523,10 +532,13 @@ namespace Cube {
         /// MenuFitToWidth_Click
         /* ----------------------------------------------------------------- */
         private void MenuFitToWidth_Click(object sender, EventArgs e) {
+            UpdateFitCondition(MenuFitToWidth.Checked ? FIT_WIDTH : FIT_NONE);
             if (doc_ == null) return;
 
             try {
-                doc_.FitToWidth(MainViewer.Handle);
+                if (MenuFitToWidth.Checked) {
+                    doc_.FitToWidth(MainViewer.Handle);
+                }
             }
             catch (Exception /* err */) { }
             finally {
@@ -538,10 +550,13 @@ namespace Cube {
         /// MenuFitToHeight_Click
         /* ----------------------------------------------------------------- */
         private void MenuFitToHeight_Click(object sender, EventArgs e) {
+            UpdateFitCondition(MenuFitToHeight.Checked ? FIT_HEIGHT : FIT_NONE);
             if (doc_ == null) return;
 
             try {
-                doc_.FitToHeight(MainViewer.Handle);
+                if (MenuFitToHeight.Checked) {
+                    doc_.FitToHeight(MainViewer.Handle);
+                }
             }
             catch (Exception /* err */) { }
             finally {
@@ -607,6 +622,9 @@ namespace Cube {
         private const int DELTA_WIDTH = 40;
         private const int DELTA_HEIGHT = 115;
         private const bool USE_MUPDF = true;
+        private const int FIT_NONE = 0;
+        private const int FIT_WIDTH = 0x01;
+        private const int FIT_HEIGHT = 0x02;
 #endregion
 
         /* ----------------------------------------------------------------- */
@@ -615,6 +633,7 @@ namespace Cube {
 #region Member variables
         private PDFLibNet.PDFWrapper doc_ = null;
         private bool from_begin_ = true;
+        private int fit_ = 0;
 #endregion
     }
 }

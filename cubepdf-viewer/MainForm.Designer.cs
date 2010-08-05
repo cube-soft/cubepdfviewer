@@ -206,6 +206,8 @@
             // 
             // MenuFitToWidth
             // 
+            this.MenuFitToWidth.BackColor = System.Drawing.SystemColors.Control;
+            this.MenuFitToWidth.CheckOnClick = true;
             this.MenuFitToWidth.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.MenuFitToWidth.Image = global::Cube.Properties.Resources.fit2width;
             this.MenuFitToWidth.ImageTransparentColor = System.Drawing.Color.Magenta;
@@ -217,6 +219,7 @@
             // 
             // MenuFitToHeight
             // 
+            this.MenuFitToHeight.CheckOnClick = true;
             this.MenuFitToHeight.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.MenuFitToHeight.Image = global::Cube.Properties.Resources.fit2height;
             this.MenuFitToHeight.ImageTransparentColor = System.Drawing.Color.Magenta;
@@ -262,7 +265,7 @@
             this.MenuCurrentPage.Margin = new System.Windows.Forms.Padding(2);
             this.MenuCurrentPage.Name = "MenuCurrentPage";
             this.MenuCurrentPage.Padding = new System.Windows.Forms.Padding(2);
-            this.MenuCurrentPage.Size = new System.Drawing.Size(50, 27);
+            this.MenuCurrentPage.Size = new System.Drawing.Size(46, 27);
             this.MenuCurrentPage.Text = "0";
             this.MenuCurrentPage.TextBoxTextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.MenuCurrentPage.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MenuCurrentPage_KeyDown);
@@ -311,7 +314,7 @@
             this.MenuSearchText.Margin = new System.Windows.Forms.Padding(2);
             this.MenuSearchText.Name = "MenuSearchText";
             this.MenuSearchText.Padding = new System.Windows.Forms.Padding(2);
-            this.MenuSearchText.Size = new System.Drawing.Size(122, 27);
+            this.MenuSearchText.Size = new System.Drawing.Size(116, 27);
             this.MenuSearchText.ToolTipText = "検索ワード";
             this.MenuSearchText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MenuSearchText_KeyDown);
             this.MenuSearchText.TextChanged += new System.EventHandler(this.MenuSearchText_TextChanged);
@@ -335,7 +338,7 @@
             this.StatausBar.Name = "StatausBar";
             this.StatausBar.Size = new System.Drawing.Size(784, 23);
             this.StatausBar.TabIndex = 2;
-            this.StatausBar.Text = "statusStrip1";
+            this.StatausBar.Text = "Ready";
             // 
             // StatusText
             // 

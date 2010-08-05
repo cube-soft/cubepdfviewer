@@ -71,6 +71,10 @@
   <PropertyGroup>
     <ApplicationIcon>cube-soft.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>
+    </StartupObject>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="PDFLibNet">
       <HintPath>.\PDFLibNet.dll</HintPath>

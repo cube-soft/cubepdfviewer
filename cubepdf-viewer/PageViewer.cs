@@ -38,7 +38,7 @@ namespace PDFViewer
         int _pointX = 0;
         int _pointY = 0;
         #endregion
-
+        
         #region Bounds
         private bool InvalidateScrollBarChanged = true;
         private Size _viewSize;
@@ -60,7 +60,7 @@ namespace PDFViewer
         public PageViewer()
         {
             InitializeComponent();
-
+            
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint, true);
             Application.ApplicationExit += new EventHandler(MemoryCleanup);
 
@@ -565,7 +565,7 @@ namespace PDFViewer
                 hsb.Value = Math.Min(pos.X, hsb.Maximum);
                 vsb.Value = Math.Min(pos.Y, vsb.Maximum);
                 
-                Resized();
+                //Resized();
                 Invalidate();
             }
         }
@@ -606,9 +606,13 @@ namespace PDFViewer
             
             
             InvalidateScrollBarChanged = false;
+            //vsb.Minimum = 0;
+            //vsb.Maximum = 100;
             if ((PageSize.Height - ClientSize.Height) > 0)
             {
-                vsb.Maximum = (PageSize.Height - ClientSize.Height )/2 + Margin.Size.Height;
+                vsb.Maximum = (int)(PageSize.Height - ClientSize.Height) / 2 + Margin.Size.Height;
+                //double ratio = (double)PageSize.Height / (double)ClientSize.Height;
+                //vsb.LargeChange = (int)((vsb.Maximum - vsb.Minimum) / ratio);
                 vsb.Visible = true;
                 if (bvtoMax) vsb.Value = vsb.Maximum;
             }
