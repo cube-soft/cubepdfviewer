@@ -285,8 +285,9 @@ namespace Cube {
             this.MainViewer.Size = new Size(System.Math.Max(x, 800) - DELTA_WIDTH, x - DELTA_HEIGHT);
 
             // TODO: サイズの設定がおかしい．
-            int width = this.MainViewer.Width;
-            this.MainViewer.PageSize = new Size(width, (int)(width * 11 / 8.5));
+            //int width = this.MainViewer.Width;
+            //this.MainViewer.PageSize = new Size(width, (int)(width * 11 / 8.5));
+            this.MainViewer.PageSize = this.MainViewer.Size;
             this.MainViewer.Visible = true;
         }
 #endregion

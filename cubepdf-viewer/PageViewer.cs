@@ -9,6 +9,10 @@ using System.Windows.Forms;
 
 namespace PDFViewer
 {
+    /// TODO: ScrollbarはMaximum Minimumを100,0で固定する
+    /// <summary>
+    /// 
+    /// </summary>
     public class PageViewer : UserControl
     {
         public delegate void PaintControlHandler(object sender,Rectangle view, Point location, Graphics g);
@@ -38,7 +42,7 @@ namespace PDFViewer
         int _pointX = 0;
         int _pointY = 0;
         #endregion
-        
+
         #region Bounds
         private bool InvalidateScrollBarChanged = true;
         private Size _viewSize;
@@ -60,7 +64,7 @@ namespace PDFViewer
         public PageViewer()
         {
             InitializeComponent();
-            
+
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint, true);
             Application.ApplicationExit += new EventHandler(MemoryCleanup);
 
@@ -79,32 +83,12 @@ namespace PDFViewer
         
         public Point PointUserToPage(Point p)
         {
-            /*
-            int offsetX=0;
-            int offsetY=0;
-
-            if(PageBounds.Y>=0)
-                offsetY = -(2*Margin.Top-PageBounds.Y);
-            else 
-                offsetY = 0;
-            if (PageBounds.X >= 0)
-                offsetX = -(2 * Margin.Left - PageBounds.X);
-            else
-                offsetX = 0;
-
-            if (PageBounds.Height <= ViewSize.Height)
-                offsetY = PageBounds.Y-Margin.Top;
-            if (PageBounds.Width <= ViewSize.Width)
-                offsetX = PageBounds.X-Margin.Left;
-            */
+            
             Point copy = p;
             
             copy.Offset(-PageBounds.X, -PageBounds.Y);
             copy.Offset(CurrentView.X, CurrentView.Y);
-            /*if(PageBounds.Left>Margin.Left)
-                copy.Offset(-Margin.Left,0);
-            if (PageBounds.Top > Margin.Top)
-                copy.Offset(0, -Margin.Top);*/
+           
             return copy;
         }
 
@@ -189,6 +173,8 @@ namespace PDFViewer
             this.hsb.TabIndex = 0;
             this.hsb.Scroll += new System.Windows.Forms.ScrollEventHandler(this.hsb_Scroll);
             this.hsb.Resize += new System.EventHandler(this.vsb_Resize);
+            this.hsb.Maximum = 100;
+            this.hsb.Minimum = 0;
             // 
             // vsb
             // 
@@ -199,14 +185,16 @@ namespace PDFViewer
             this.vsb.TabIndex = 1;
             this.vsb.Scroll += new System.Windows.Forms.ScrollEventHandler(this.vScrollBar1_Scroll);
             this.vsb.Resize += new System.EventHandler(this.vsb_Resize);
+            this.vsb.Maximum = 100;
+            this.vsb.Minimum = 0;
             // 
-            // DoubleBufferControl
+            // PageViewer
             // 
             this.BackColor = System.Drawing.SystemColors.AppWorkspace;
             this.Controls.Add(this.vsb);
             this.Controls.Add(this.hsb);
             this.Margin = new System.Windows.Forms.Padding(10);
-            this.Name = "DoubleBufferControl";
+            this.Name = "PageViewer";
             this.Size = new System.Drawing.Size(361, 419);
             this.MarginChanged += new System.EventHandler(this.DoubleBufferControl_MarginChanged);
             this.Resize += new System.EventHandler(this.DoubleBufferControl_Resize);
@@ -394,13 +382,14 @@ namespace PDFViewer
         /// <summary>
         /// Returns the bounds of the current view
         /// </summary>
+        // TODO convert ScrollbarValue
         public virtual Rectangle CurrentView
         {
             get
             {
                 
-                int x = hsb.Value;
-                int y = vsb.Value;
+                int x = HScrollbarValue;
+                int y = VScrollbarValue;
                 int w = ClientSize.Width;
                 int h = ClientSize.Height;
                //Begin Coord after margin
@@ -543,12 +532,13 @@ namespace PDFViewer
                 return _scrollbarSize;
             }
         }
-
+        // TODO convert ScrollbarValue
         public virtual Point ScrollPosition
         {
             get
             {
-                Point pos = new Point(hsb.Value, vsb.Value);
+                //Point pos = new Point(hsb.Value, vsb.Value);
+                var pos = new Point(HScrollbarValue, VScrollbarValue);
                 pos.Offset(-Margin.Left, -Margin.Top);
                 return pos;
             }
@@ -565,7 +555,7 @@ namespace PDFViewer
                 hsb.Value = Math.Min(pos.X, hsb.Maximum);
                 vsb.Value = Math.Min(pos.Y, vsb.Maximum);
                 
-                //Resized();
+                Resized();
                 Invalidate();
             }
         }
@@ -579,12 +569,15 @@ namespace PDFViewer
             Invalidate();   //Redraw
         }
 
+        // TODO convert ScrollbarValue?
         private void Resized()
         {
             //----Window resized----
             //Save status
-            bool bvtoMax = vsb.Value == vsb.Maximum && vsb.Value>0;
-            bool bhtoMax = hsb.Value == hsb.Maximum  && hsb.Value>0;
+            //bool bvtoMax = vsb.Value == vsb.Maximum && vsb.Value>0;
+            //bool bhtoMax = hsb.Value == hsb.Maximum  && hsb.Value>0;
+            bool bvtoMax = vsb.Value >= (1 + vsb.Maximum - vsb.LargeChange) && vsb.Value > 0;
+            bool bhtoMax = hsb.Value >= (1 + hsb.Maximum - hsb.LargeChange)  && hsb.Value>0;
 
             //Recalc View
             int viewWidth = Width;
@@ -606,32 +599,31 @@ namespace PDFViewer
             
             
             InvalidateScrollBarChanged = false;
-            //vsb.Minimum = 0;
-            //vsb.Maximum = 100;
             if ((PageSize.Height - ClientSize.Height) > 0)
             {
-                vsb.Maximum = (int)(PageSize.Height - ClientSize.Height) / 2 + Margin.Size.Height;
-                //double ratio = (double)PageSize.Height / (double)ClientSize.Height;
-                //vsb.LargeChange = (int)((vsb.Maximum - vsb.Minimum) / ratio);
+                vsb.Maximum = (PageSize.Height - ClientSize.Height) / 2 + Margin.Size.Height;
+                var ratio = Math.Max(((double)ClientSize.Height / PageSize.Height), 0);
+                vsb.LargeChange = (int)((vsb.Maximum - vsb.Minimum) * ratio);
+                vsb.SmallChange = 1;
                 vsb.Visible = true;
-                if (bvtoMax) vsb.Value = vsb.Maximum;
+                if (bvtoMax) vsb.Value = TrueVScrollMaximum;
             }
             else
             {
-                vsb.Maximum = 0;
                 vsb.Value = 0;
                 vsb.Visible = false;
             }
             if ((int)(PageSize.Width - ClientSize.Width) > 0)
             {
-                
-                hsb.Maximum = (int)(PageSize.Width - ClientSize.Width )/2 + Margin.Size.Width;
+                hsb.Maximum = (PageSize.Width - ClientSize.Width) / 2 + Margin.Size.Width;
+                var ratio = Math.Max(((double)ClientSize.Width / PageSize.Width), 0);
+                hsb.LargeChange = (int)((hsb.Maximum - hsb.Minimum) * ratio);
+                hsb.SmallChange = 1;
                 hsb.Visible = true;
-                if (bhtoMax) hsb.Value = hsb.Maximum;
+                if (bhtoMax) hsb.Value = TrueHScrollMaximum;
             }
             else
             {
-                hsb.Maximum = 0;
                 hsb.Value = 0;
                 hsb.Visible = false;
             }
@@ -642,19 +634,58 @@ namespace PDFViewer
 
         }
 
+        # region convert scrollbar value
+        // HScrollbar, VScrollbarのValueをLargeChangeの変更にあわせ、変換するプロパティを用意
+        // 現在のScrollbar.Valueの値が、Scrollbar.Valueが取りうる値の何％かを算出
+        // 元々のMaximumの値とかけ合わせて最大値とする
+        // なお、Valueが取りうる値の範囲を算出するTrueScrollvarValueプロパティも併せて用意
+        private int HScrollbarValue
+        {
+            get
+            {
+                var hsb_max = (PageSize.Width - ClientSize.Width) / 2 + Margin.Size.Width;
+                var ratio = (double)hsb.Value / TrueHScrollMaximum;
+                return (int)(hsb_max * ratio);
+            }
+        }
+        // とりあえず垂直バーから
+        private int VScrollbarValue
+        {
+            get
+            {
+                var vsb_max = (PageSize.Height - ClientSize.Height) / 2 + Margin.Size.Height;
+                var ratio = (double)vsb.Value / TrueVScrollMaximum;
+                return (int)(vsb_max * ratio);
+            }
+        }
+        private int TrueHScrollMaximum
+        {
+            get
+            {
+                return 1 + hsb.Maximum - hsb.LargeChange;
+            }
+        }
+        private int TrueVScrollMaximum
+        {
+            get 
+            {
+                return 1 + vsb.Maximum - vsb.LargeChange;
+            }
+        }
+        #endregion
         private void RecalcPageLocation()
         {
             if (PageSize.Width < ClientBounds.Width && PageSize.Height > ClientBounds.Height)
                 //Center vertically
-                _pageLocation = new Point((ClientBounds.Width - PageSize.Width) / 2 + Margin.Left, Margin.Top - vsb.Value);
+                _pageLocation = new Point((ClientBounds.Width - PageSize.Width) / 2 + Margin.Left, Margin.Top - VScrollbarValue); 
             else if (PageSize.Width > ClientBounds.Width && PageSize.Height < ClientBounds.Height)
                 //Center horizontally
-                _pageLocation = new Point(Margin.Left - hsb.Value, (ClientBounds.Height - PageSize.Height) / 2 + Margin.Top);
+                _pageLocation = new Point(Margin.Left - HScrollbarValue, (ClientBounds.Height - PageSize.Height) / 2 + Margin.Top); 
             else if (PageSize.Width < ClientBounds.Width && PageSize.Height < ClientBounds.Height)
                 //center both
                 _pageLocation = new Point((ClientBounds.Width - PageSize.Width) / 2 + Margin.Left, (ClientBounds.Height - PageSize.Height) / 2 + Margin.Top);
             else
-                _pageLocation = new Point(Margin.Left - hsb.Value, Margin.Top - vsb.Value);
+                _pageLocation = new Point(Margin.Left - HScrollbarValue, Margin.Top - VScrollbarValue);
             _pageBounds = new Rectangle(_pageLocation, PageSize);
 
         }
@@ -742,12 +773,12 @@ namespace PDFViewer
                         offsetY = e.Y - _pointCurrent.Y;
                         if (PageBounds.Width > ViewBounds.Width)
                         {
-                            _pointX = (hsb.Value);
+                            _pointX = hsb.Value;
                             _pointX -= offsetX;
                         }
                         if (PageBounds.Height > ViewBounds.Height)
                         {
-                            _pointY = (vsb.Value);
+                            _pointY = vsb.Value;
                             _pointY -= offsetY;
                         }
                         ScrollPosition = new Point(_pointX, _pointY);
