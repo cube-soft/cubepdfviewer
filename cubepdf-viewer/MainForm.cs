@@ -141,7 +141,38 @@ namespace Cube {
             }
             this.Refresh();
         }
-        
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// LoadFile
+        /// 
+        /// <summary>
+        /// ユーザから指定されたファイルを開く．
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private bool LoadFile(string filename) {
+            if (doc_ == null) return false;
+
+            try {
+                return doc_.LoadPDF(filename);
+            }
+            catch (System.Security.SecurityException) {
+                PasswordDialog frm = new PasswordDialog();
+                if (frm.ShowDialog() == DialogResult.OK) {
+                    if (!frm.Password.Equals(String.Empty)) doc_.UserPassword = frm.Password;
+                    return LoadFile(filename);
+                }
+                else {
+                    MessageBox.Show(Properties.Settings.Default.ERROR_PASSWORD,
+                        Properties.Settings.Default.ERROR_TITLE,
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
+                    return false;
+                }
+            }
+        }
+
         /* ----------------------------------------------------------------- */
         /// NextPage
         /* ----------------------------------------------------------------- */
@@ -257,7 +288,7 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         //  各種初期化処理
         /* ----------------------------------------------------------------- */
-#region Initialize methods
+        #region Initialize methods
 
         /* ----------------------------------------------------------------- */
         /// InitializeLibrary
@@ -290,12 +321,12 @@ namespace Cube {
             this.MainViewer.PageSize = this.MainViewer.Size;
             this.MainViewer.Visible = true;
         }
-#endregion
+        #endregion
         
         /* ----------------------------------------------------------------- */
         //  各種イベント・ハンドラ
         /* ----------------------------------------------------------------- */
-#region Event handlers
+        #region Event handlers
 
         /* ----------------------------------------------------------------- */
         ///
@@ -308,15 +339,27 @@ namespace Cube {
         /// 
         /* ----------------------------------------------------------------- */
         private void MainForm_KeyDown(object sender, KeyEventArgs e) {
-            if (e.Control) {
-                if (e.KeyCode == Keys.O) this.MenuOpen_Click(sender, (EventArgs)e);
-                else if (e.KeyCode == Keys.F) MenuSearchText.Focus();
-            }
-            else if (e.Shift) {
-                //if (e.KeyCode == Keys.F3 && MenuSearchText.Text != "") this.Search(sender, false);
-            }
-            else {
-                if (e.KeyCode == Keys.F3 && MenuSearchText.Text != "") this.Search(sender, true);
+            switch (e.KeyCode) {
+            case Keys.Escape: // 検索の解除
+                // SearchResultを空にするため空文字で検索
+                if (doc_ != null) {
+                    doc_.FindText("", doc_.CurrentPage, PDFLibNet.PDFSearchOrder.PDFSearchFromCurrent,
+                        false, false, true, false);
+                }
+                this.ReDraw(Properties.Settings.Default.STATUS_EOS);
+                break;
+            case Keys.F3: // 次の検索
+                //if (MenuSearchText.Text != "") this.Search(sender, !e.Shift);
+                if (MenuSearchText.Text != "") this.Search(sender, true);
+                break;
+            case Keys.F: // 検索
+                if (e.Control) this.MenuSearchText.Focus();
+                break;
+            case Keys.O: // ファイルを開く
+                if (e.Control) this.MenuOpen_Click(sender, (EventArgs)e);
+                break;
+            default:
+                break;
             }
         }
 
@@ -362,7 +405,7 @@ namespace Cube {
                 doc_.PDFLoadBegin += new PDFLibNet.PDFLoadBeginHandler(PDFLoadBegin);
                 doc_.UseMuPDF = USE_MUPDF;
 
-                if (doc_.LoadPDF(dialog.FileName)) {
+                if (this.LoadFile(dialog.FileName)) {
                     doc_.CurrentPage = 1;
                     if (MenuFitToHeight.Checked) doc_.FitToHeight(MainViewer.Handle);
                     else doc_.FitToWidth(MainViewer.Handle);
@@ -370,6 +413,12 @@ namespace Cube {
                     this.Cursor = Cursors.WaitCursor;
                     this.MenuZoomText.Enabled = true;
                     this.ReDraw(); // ここは AsyncReDraw() だとうまくいかない．
+                }
+                else {
+                    MessageBox.Show(Properties.Settings.Default.ERROR_LOAD_FILE,
+                        Properties.Settings.Default.ERROR_TITLE,
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
                 }
             }
         }
@@ -592,12 +641,12 @@ namespace Cube {
             }
         }
 
-#endregion
+        #endregion
 
         /* ----------------------------------------------------------------- */
         //  DoubleBuffer 関連のイベント・ハンドラ
         /* ----------------------------------------------------------------- */
-#region Event handlers about DoubleBuffer which is located in PageViewer
+        #region Event handlers about DoubleBuffer which is located in PageViewer
 
         /* ----------------------------------------------------------------- */
         /// DoubleBuffer_PaintControl
@@ -614,27 +663,27 @@ namespace Cube {
             g.ReleaseHdc();
         }
 
-#endregion
+        #endregion
 
         /* ----------------------------------------------------------------- */
         //  定数の定義
         /* ----------------------------------------------------------------- */
-#region Constant variables
+        #region Constant variables
         private const int DELTA_WIDTH = 40;
         private const int DELTA_HEIGHT = 115;
         private const bool USE_MUPDF = true;
         private const int FIT_NONE = 0;
         private const int FIT_WIDTH = 0x01;
         private const int FIT_HEIGHT = 0x02;
-#endregion
+        #endregion
 
         /* ----------------------------------------------------------------- */
         //  メンバ変数の定義
         /* ----------------------------------------------------------------- */
-#region Member variables
+        #region Member variables
         private PDFLibNet.PDFWrapper doc_ = null;
         private bool from_begin_ = true;
         private int fit_ = 0;
-#endregion
+        #endregion
     }
 }

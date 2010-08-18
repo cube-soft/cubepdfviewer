@@ -11,5 +11,14 @@
     <Setting Name="FILTER_PDF" Type="System.String" Scope="User">
       <Value Profile="(Default)">PDF ファイル(*.pdf)|*.pdf|すべてのファイル(*.*)|*.*</Value>
     </Setting>
+    <Setting Name="ERROR_PASSWORD" Type="System.String" Scope="User">
+      <Value Profile="(Default)">このファイルはパスワードで保護されています。</Value>
+    </Setting>
+    <Setting Name="ERROR_TITLE" Type="System.String" Scope="User">
+      <Value Profile="(Default)">エラー</Value>
+    </Setting>
+    <Setting Name="ERROR_LOAD_FILE" Type="System.String" Scope="User">
+      <Value Profile="(Default)">ファイルを開けませんでした。</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
