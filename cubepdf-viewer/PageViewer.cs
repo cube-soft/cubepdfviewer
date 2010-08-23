@@ -840,6 +840,11 @@ namespace PDFViewer
                 _bMouseCaptured = false;
                 base.OnMouseUp(e);
             }
+            else if (_bMouseCaptured)
+            {
+                Cursor = Cursors.Default;
+                _bMouseCaptured = false;
+            }
             //ReleaseRubberFrame();
         }
     }
