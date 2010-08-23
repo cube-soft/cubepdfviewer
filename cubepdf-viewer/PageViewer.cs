@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Data;
 using System.Text;
+using System.IO;
 using System.Windows.Forms;
 
 namespace PDFViewer
@@ -60,6 +61,7 @@ namespace PDFViewer
         private Size _scrollbarSize;
         #endregion
 
+        StreamWriter logger;
         #region ctors
         public PageViewer()
         {
@@ -72,6 +74,10 @@ namespace PDFViewer
             _clientLocation = new Point(Margin.Left, Margin.Top);
             _bgColor = BackColor;
             _rectColor = Color.Black;
+
+#if DEBUG
+            logger = new StreamWriter("log.txt");
+#endif 
         }
         #endregion
 
@@ -171,7 +177,7 @@ namespace PDFViewer
             this.hsb.Name = "hsb";
             this.hsb.Size = new System.Drawing.Size(361, 17);
             this.hsb.TabIndex = 0;
-            this.hsb.Scroll += new System.Windows.Forms.ScrollEventHandler(this.hsb_Scroll);
+            this.hsb.ValueChanged += new System.EventHandler(this.hsb_ValueChanged);
             this.hsb.Resize += new System.EventHandler(this.vsb_Resize);
             this.hsb.Maximum = 100;
             this.hsb.Minimum = 0;
@@ -183,7 +189,7 @@ namespace PDFViewer
             this.vsb.Name = "vsb";
             this.vsb.Size = new System.Drawing.Size(17, 402);
             this.vsb.TabIndex = 1;
-            this.vsb.Scroll += new System.Windows.Forms.ScrollEventHandler(this.vScrollBar1_Scroll);
+            this.vsb.ValueChanged += new System.EventHandler(this.vsb_ValueChanged);
             this.vsb.Resize += new System.EventHandler(this.vsb_Resize);
             this.vsb.Maximum = 100;
             this.vsb.Minimum = 0;
@@ -256,6 +262,9 @@ namespace PDFViewer
 
             if (ManagedBackBuffer != NO_MANAGED_BACK_BUFFER)
                 ManagedBackBuffer.Dispose();
+#if DEBUG
+            logger.Close();
+#endif
         }
 
         protected override void OnPaint(PaintEventArgs e)
@@ -552,8 +561,8 @@ namespace PDFViewer
                 //pos.Offset(Margin.Left, Margin.Top);
 
                 //Lower equal to hsb.Maximum
-                hsb.Value = Math.Min(pos.X, hsb.Maximum);
-                vsb.Value = Math.Min(pos.Y, vsb.Maximum);
+                hsb.Value = Math.Min(pos.X, TrueHScrollMaximum);
+                vsb.Value = Math.Min(pos.Y, TrueVScrollMaximum);
                 
                 Resized();
                 Invalidate();
@@ -655,6 +664,9 @@ namespace PDFViewer
             {
                 var vsb_max = (PageSize.Height - ClientSize.Height) / 2 + Margin.Size.Height;
                 var ratio = (double)vsb.Value / TrueVScrollMaximum;
+#if DEBUG
+                logger.WriteLine(PageSize.Height +"\t"+ ClientSize.Height +"\t" + Margin.Size.Height);
+#endif
                 return (int)(vsb_max * ratio);
             }
         }
@@ -698,7 +710,7 @@ namespace PDFViewer
         }
 
         #region ScrollBar
-        private void hsb_Scroll(object sender, ScrollEventArgs e)
+        private void hsb_ValueChanged(object sender, EventArgs e)
         {
             if (InvalidateScrollBarChanged)
             {
@@ -712,7 +724,7 @@ namespace PDFViewer
             Resized();
             Invalidate();
         }
-        private void vScrollBar1_Scroll(object sender, ScrollEventArgs e)
+        private void vsb_ValueChanged(object sender, EventArgs e)
         {
             if (InvalidateScrollBarChanged)
             {
