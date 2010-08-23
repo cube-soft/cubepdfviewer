@@ -61,7 +61,7 @@ namespace PDFViewer
         private Size _scrollbarSize;
         #endregion
 
-        StreamWriter logger;
+        //StreamWriter logger;
         #region ctors
         public PageViewer()
         {
