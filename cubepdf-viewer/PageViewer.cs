@@ -203,7 +203,7 @@ namespace PDFViewer
             this.Name = "PageViewer";
             this.Size = new System.Drawing.Size(361, 419);
             this.MarginChanged += new System.EventHandler(this.DoubleBufferControl_MarginChanged);
-            this.Resize += new System.EventHandler(this.DoubleBufferControl_Resize);
+            //this.Resize += new System.EventHandler(this.DoubleBufferControl_Resize);
             this.ResumeLayout(false);
 
         }
