@@ -74,16 +74,16 @@ namespace Cube.Properties {
             }
         }
         
-        internal static System.Drawing.Bitmap arrow_left {
+        internal static System.Drawing.Bitmap arrow_next {
             get {
-                object obj = ResourceManager.GetObject("arrow_left", resourceCulture);
+                object obj = ResourceManager.GetObject("arrow_next", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
         
-        internal static System.Drawing.Bitmap arrow_right {
+        internal static System.Drawing.Bitmap arrow_prev {
             get {
-                object obj = ResourceManager.GetObject("arrow_right", resourceCulture);
+                object obj = ResourceManager.GetObject("arrow_prev", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
