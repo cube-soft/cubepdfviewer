@@ -188,10 +188,8 @@
     <Content Include="cube-soft.ico" />
     <None Include="Resources\arrow_prev.png" />
     <None Include="Resources\arrow_next.png" />
-    <None Include="Resources\arrow_up.png" />
-    <None Include="Resources\arrow_top.png" />
-    <None Include="Resources\arrow_down.png" />
-    <None Include="Resources\arrot_bottom.png" />
+    <None Include="Resources\arrow_last.png" />
+    <None Include="Resources\arrow_first.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
