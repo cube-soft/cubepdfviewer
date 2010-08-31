@@ -265,7 +265,7 @@
             this.MenuCurrentPage.Margin = new System.Windows.Forms.Padding(2);
             this.MenuCurrentPage.Name = "MenuCurrentPage";
             this.MenuCurrentPage.Padding = new System.Windows.Forms.Padding(2);
-            this.MenuCurrentPage.Size = new System.Drawing.Size(46, 27);
+            this.MenuCurrentPage.Size = new System.Drawing.Size(42, 27);
             this.MenuCurrentPage.Text = "0";
             this.MenuCurrentPage.TextBoxTextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.MenuCurrentPage.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MenuCurrentPage_KeyDown);
@@ -314,7 +314,7 @@
             this.MenuSearchText.Margin = new System.Windows.Forms.Padding(2);
             this.MenuSearchText.Name = "MenuSearchText";
             this.MenuSearchText.Padding = new System.Windows.Forms.Padding(2);
-            this.MenuSearchText.Size = new System.Drawing.Size(134, 27);
+            this.MenuSearchText.Size = new System.Drawing.Size(130, 27);
             this.MenuSearchText.ToolTipText = "検索ワード";
             this.MenuSearchText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MenuSearchText_KeyDown);
             this.MenuSearchText.TextChanged += new System.EventHandler(this.MenuSearchText_TextChanged);
