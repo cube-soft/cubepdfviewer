@@ -135,62 +135,62 @@
             this.MenuZoomText.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.MenuZoomText.Margin = new System.Windows.Forms.Padding(2);
             this.MenuZoomText.Name = "MenuZoomText";
-            this.MenuZoomText.Size = new System.Drawing.Size(54, 42);
+            this.MenuZoomText.Size = new System.Drawing.Size(42, 42);
             this.MenuZoomText.Text = "100%";
             this.MenuZoomText.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.MenuZoomText_DropDownItemClicked);
             // 
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(109, 22);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(94, 22);
             this.toolStripMenuItem2.Text = "25%";
             // 
             // toolStripMenuItem3
             // 
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(109, 22);
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(94, 22);
             this.toolStripMenuItem3.Text = "50%";
             // 
             // toolStripMenuItem4
             // 
             this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-            this.toolStripMenuItem4.Size = new System.Drawing.Size(109, 22);
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(94, 22);
             this.toolStripMenuItem4.Text = "75%";
             // 
             // toolStripMenuItem5
             // 
             this.toolStripMenuItem5.Name = "toolStripMenuItem5";
-            this.toolStripMenuItem5.Size = new System.Drawing.Size(109, 22);
+            this.toolStripMenuItem5.Size = new System.Drawing.Size(94, 22);
             this.toolStripMenuItem5.Text = "100%";
             // 
             // toolStripMenuItem6
             // 
             this.toolStripMenuItem6.Name = "toolStripMenuItem6";
-            this.toolStripMenuItem6.Size = new System.Drawing.Size(109, 22);
+            this.toolStripMenuItem6.Size = new System.Drawing.Size(94, 22);
             this.toolStripMenuItem6.Text = "125%";
             // 
             // toolStripMenuItem7
             // 
             this.toolStripMenuItem7.Name = "toolStripMenuItem7";
-            this.toolStripMenuItem7.Size = new System.Drawing.Size(109, 22);
+            this.toolStripMenuItem7.Size = new System.Drawing.Size(94, 22);
             this.toolStripMenuItem7.Text = "150%";
             // 
             // toolStripMenuItem8
             // 
             this.toolStripMenuItem8.Name = "toolStripMenuItem8";
-            this.toolStripMenuItem8.Size = new System.Drawing.Size(109, 22);
+            this.toolStripMenuItem8.Size = new System.Drawing.Size(94, 22);
             this.toolStripMenuItem8.Text = "200%";
             // 
             // toolStripMenuItem9
             // 
             this.toolStripMenuItem9.Name = "toolStripMenuItem9";
-            this.toolStripMenuItem9.Size = new System.Drawing.Size(109, 22);
+            this.toolStripMenuItem9.Size = new System.Drawing.Size(94, 22);
             this.toolStripMenuItem9.Text = "400%";
             // 
             // toolStripMenuItem10
             // 
             this.toolStripMenuItem10.Name = "toolStripMenuItem10";
-            this.toolStripMenuItem10.Size = new System.Drawing.Size(109, 22);
+            this.toolStripMenuItem10.Size = new System.Drawing.Size(94, 22);
             this.toolStripMenuItem10.Text = "800%";
             // 
             // MenuZoomOut
@@ -249,7 +249,7 @@
             // MenuPrevious
             // 
             this.MenuPrevious.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.MenuPrevious.Image = global::Cube.Properties.Resources.arrow_left;
+            this.MenuPrevious.Image = global::Cube.Properties.Resources.arrow_prev;
             this.MenuPrevious.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.MenuPrevious.Margin = new System.Windows.Forms.Padding(2);
             this.MenuPrevious.Name = "MenuPrevious";
@@ -265,7 +265,7 @@
             this.MenuCurrentPage.Margin = new System.Windows.Forms.Padding(2);
             this.MenuCurrentPage.Name = "MenuCurrentPage";
             this.MenuCurrentPage.Padding = new System.Windows.Forms.Padding(2);
-            this.MenuCurrentPage.Size = new System.Drawing.Size(50, 27);
+            this.MenuCurrentPage.Size = new System.Drawing.Size(46, 27);
             this.MenuCurrentPage.Text = "0";
             this.MenuCurrentPage.TextBoxTextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.MenuCurrentPage.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MenuCurrentPage_KeyDown);
@@ -281,7 +281,7 @@
             // MenuNext
             // 
             this.MenuNext.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.MenuNext.Image = global::Cube.Properties.Resources.arrow_right;
+            this.MenuNext.Image = global::Cube.Properties.Resources.arrow_next;
             this.MenuNext.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.MenuNext.Margin = new System.Windows.Forms.Padding(2);
             this.MenuNext.Name = "MenuNext";
@@ -314,7 +314,7 @@
             this.MenuSearchText.Margin = new System.Windows.Forms.Padding(2);
             this.MenuSearchText.Name = "MenuSearchText";
             this.MenuSearchText.Padding = new System.Windows.Forms.Padding(2);
-            this.MenuSearchText.Size = new System.Drawing.Size(138, 27);
+            this.MenuSearchText.Size = new System.Drawing.Size(134, 27);
             this.MenuSearchText.ToolTipText = "検索ワード";
             this.MenuSearchText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MenuSearchText_KeyDown);
             this.MenuSearchText.TextChanged += new System.EventHandler(this.MenuSearchText_TextChanged);
@@ -334,16 +334,16 @@
             // 
             this.StatausBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.StatusText});
-            this.StatausBar.Location = new System.Drawing.Point(0, 739);
+            this.StatausBar.Location = new System.Drawing.Point(0, 740);
             this.StatausBar.Name = "StatausBar";
-            this.StatausBar.Size = new System.Drawing.Size(784, 23);
+            this.StatausBar.Size = new System.Drawing.Size(784, 22);
             this.StatausBar.TabIndex = 2;
             this.StatausBar.Text = "statusStrip1";
             // 
             // StatusText
             // 
             this.StatusText.Name = "StatusText";
-            this.StatusText.Size = new System.Drawing.Size(44, 18);
+            this.StatusText.Size = new System.Drawing.Size(37, 17);
             this.StatusText.Text = "Ready";
             // 
             // MainViewer

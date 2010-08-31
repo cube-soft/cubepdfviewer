@@ -175,12 +175,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\arrow_left.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\arrow_right.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\fit2height.png" />
     <None Include="Resources\fit2width.png" />
     <None Include="Resources\cube-soft.ico" />
@@ -190,6 +184,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="cube-soft.ico" />
+    <None Include="Resources\arrow_prev.png" />
+    <None Include="Resources\arrow_next.png" />
     <None Include="Resources\arrow_last.png" />
     <None Include="Resources\arrow_first.png" />
   </ItemGroup>
