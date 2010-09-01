@@ -38,6 +38,7 @@ namespace Cube {
             int x = Screen.PrimaryScreen.Bounds.Height - 100;
             this.Size = new Size(System.Math.Max(x, 800), x);
             this.MainSplitContainer.Panel1Collapsed = true;
+            this.SubMenuSplitContainer.SplitterDistance = this.SubMenuToolStrip.Width;
             this.DefaultTabPage.VerticalScroll.SmallChange = 3;
             this.DefaultTabPage.HorizontalScroll.SmallChange = 3;
             this.FitToHeightButton.Checked = true;
@@ -331,6 +332,13 @@ namespace Cube {
                     this.Refresh(canvas);
                 }
             }
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// ThumbButton_Click
+        /* ----------------------------------------------------------------- */
+        private void ThumbButton_Click(object sender, EventArgs e) {
+            this.MainSplitContainer.Panel1Collapsed = !this.MainSplitContainer.Panel1Collapsed;
         }
 
         #endregion
