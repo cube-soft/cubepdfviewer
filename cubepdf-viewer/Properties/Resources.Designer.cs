@@ -109,6 +109,13 @@ namespace Cube.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap hidemenu {
+            get {
+                object obj = ResourceManager.GetObject("hidemenu", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap newtab {
             get {
                 object obj = ResourceManager.GetObject("newtab", resourceCulture);

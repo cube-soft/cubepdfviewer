@@ -37,7 +37,8 @@ namespace Cube {
 
             int x = Screen.PrimaryScreen.Bounds.Height - 100;
             this.Size = new Size(System.Math.Max(x, 800), x);
-            this.MainSplitContainer.Panel1Collapsed = true;
+            this.NavigationSplitContainer.Panel1Collapsed = true;
+            this.MenuSplitContainer.SplitterDistance = this.MenuToolStrip.Height;
             this.SubMenuSplitContainer.SplitterDistance = this.SubMenuToolStrip.Width;
             this.DefaultTabPage.VerticalScroll.SmallChange = 3;
             this.DefaultTabPage.HorizontalScroll.SmallChange = 3;
@@ -335,10 +336,17 @@ namespace Cube {
         }
 
         /* ----------------------------------------------------------------- */
+        /// MenuModeButton_Click
+        /* ----------------------------------------------------------------- */
+        private void MenuModeButton_Click(object sender, EventArgs e) {
+            this.MenuSplitContainer.Panel1Collapsed = !this.MenuSplitContainer.Panel1Collapsed;
+        }
+
+        /* ----------------------------------------------------------------- */
         /// ThumbButton_Click
         /* ----------------------------------------------------------------- */
         private void ThumbButton_Click(object sender, EventArgs e) {
-            this.MainSplitContainer.Panel1Collapsed = !this.MainSplitContainer.Panel1Collapsed;
+            this.NavigationSplitContainer.Panel1Collapsed = !this.NavigationSplitContainer.Panel1Collapsed;
         }
 
         #endregion

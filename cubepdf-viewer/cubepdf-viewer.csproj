@@ -96,6 +96,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="cube-soft.ico" />
+    <None Include="Resources\hidemenu.png" />
     <None Include="Resources\thumbnail.png" />
     <None Include="Resources\print.png" />
     <None Include="Resources\newtab.png" />
