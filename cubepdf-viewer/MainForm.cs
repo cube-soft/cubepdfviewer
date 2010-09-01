@@ -93,7 +93,9 @@ namespace Cube {
         private void MainForm_SizeChanged(object sender, EventArgs e) {
             var tab = this.PageViewerTabControl.SelectedTab;
             var canvas = CanvasPolicy.Get(tab);
-            CanvasPolicy.Adjust(canvas);
+            if (this.FitToWidthButton.Checked) CanvasPolicy.FitToWidth(canvas);
+            else if (this.FitToHeightButton.Checked) CanvasPolicy.FitToHeight(canvas);
+            else CanvasPolicy.Adjust(canvas);
             this.Refresh(canvas);
         }
 
@@ -374,6 +376,12 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         private void MenuModeButton_Click(object sender, EventArgs e) {
             this.MenuSplitContainer.Panel1Collapsed = !this.MenuSplitContainer.Panel1Collapsed;
+            var tab = this.PageViewerTabControl.SelectedTab;
+            var canvas = CanvasPolicy.Get(tab);
+            if (this.FitToWidthButton.Checked) CanvasPolicy.FitToWidth(canvas);
+            else if (this.FitToHeightButton.Checked) CanvasPolicy.FitToHeight(canvas);
+            else CanvasPolicy.Adjust(canvas);
+            this.Refresh(canvas);
         }
 
         /* ----------------------------------------------------------------- */

@@ -145,12 +145,12 @@
             // OnlyDisplayFileOpenCategorySeparator
             // 
             this.OnlyDisplayFileOpenCategorySeparator.Name = "OnlyDisplayFileOpenCategorySeparator";
-            this.OnlyDisplayFileOpenCategorySeparator.Size = new System.Drawing.Size(149, 6);
+            this.OnlyDisplayFileOpenCategorySeparator.Size = new System.Drawing.Size(164, 6);
             // 
             // CloseMenuItem
             // 
             this.CloseMenuItem.Name = "CloseMenuItem";
-            this.CloseMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.CloseMenuItem.Size = new System.Drawing.Size(167, 22);
             this.CloseMenuItem.Text = "閉じる";
             // 
             // PrintButton

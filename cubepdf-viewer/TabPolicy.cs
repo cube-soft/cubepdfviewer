@@ -23,7 +23,6 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-using Canvas = System.Windows.Forms.PictureBox;
 
 namespace Cube {
     /* --------------------------------------------------------------------- */
@@ -56,7 +55,7 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         public static void Destroy(TabPage tab) {
             var parent = (TabControl)tab.Parent;
-            CanvasPolicy.Destroy((Canvas)tab.Controls["Canvas"]);
+            CanvasPolicy.Destroy(CanvasPolicy.Get(tab));
             parent.TabPages.Remove(tab);
         }
 
@@ -104,13 +103,15 @@ namespace Cube {
             var item = (ToolStripMenuItem)sender;
             var menu = (ContextMenuStrip)item.Owner;
             var control = (TabControl)menu.Tag;
-            if (control.TabCount <= 1) return;
 
             for (int i = 0; i < control.TabCount; i++) {
                 var rect = control.GetTabRect(i);
                 if (position_.X > rect.Left && position_.X < rect.Right &&
                     position_.Y > rect.Top && position_.Y < rect.Bottom) {
-                    TabPolicy.Destroy(control.TabPages[i]);
+                    TabPage tab = control.TabPages[i];
+                    CanvasPolicy.Destroy(CanvasPolicy.Get(tab));
+                    if (control.TabCount > 1) TabPolicy.Destroy(tab);
+                    break;
                 }
             }
         }
