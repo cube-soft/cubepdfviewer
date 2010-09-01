@@ -101,21 +101,28 @@ namespace Cube {
                 CanvasPolicy.Close((Canvas)child);
                 parent.Controls.Remove(child);
             }
-            parent.Text = "(無題)";
         }
         
         /* ----------------------------------------------------------------- */
+        ///
         /// Open
+        /// 
+        /// <summary>
+        /// 指定された PDF ファイルを開いて，最初のページを描画する．
+        /// MEMO: パスの記憶場所を検討中．現在は，Parent.Tag を利用
+        /// している．
+        /// </summary>
+        /// 
         /* ----------------------------------------------------------------- */
         public static void Open(Canvas canvas, string path, FitCondition which = FitCondition.Height) {
             if (canvas == null) return;
-
+            
             var core = (PDF)canvas.Tag;
             if (core != null) core.Dispose();
             core = new PDF();
             core.UseMuPDF = true;
             canvas.Tag = core;
-
+            
             if (core.LoadPDF(path)) {
                 core.CurrentPage = 1;
                 if (which == FitCondition.Height) core.FitToHeight(canvas.Parent.Handle);
@@ -123,19 +130,39 @@ namespace Cube {
                 else core.Zoom = 100;
                 core.RenderPage(IntPtr.Zero);
                 canvas.Parent.Text = System.IO.Path.GetFileNameWithoutExtension(path);
+                canvas.Parent.Tag = path;
                 CanvasPolicy.Adjust(canvas);
             }
         }
 
         /* ----------------------------------------------------------------- */
+        /// 
         /// Close
+        /// 
+        /// <summary>
+        /// ファイルを閉じる．
+        /// 
+        /// MEMO: 今のところ，Close() 自体は非公開とする．
+        /// ユーザには，代わりに Destroy() を用いて，描画領域の破棄と
+        /// 同時に行ってもらう．
+        /// 
+        /// TODO: 現在，ファイルを開いているかどうかを描画領域が生成されて
+        /// いるかどうかで判断している．これを Canvas.Parent.Tag にパスが
+        /// 設定されているかどうかに変える（その時点で public にしても
+        /// OK か）．
+        /// </summary>
+        /// 
         /* ----------------------------------------------------------------- */
-        public static void Close(Canvas canvas) {
+        private static void Close(Canvas canvas) {
             if (canvas == null || canvas.Tag == null) return;
 
             var core = (PDF)canvas.Tag;
             core.Dispose();
             canvas.Tag = null;
+
+            var parent = (ScrollableControl)canvas.Parent;
+            parent.Tag = null;
+            parent.Text = "(無題)";
         }
 
         /* ----------------------------------------------------------------- */
