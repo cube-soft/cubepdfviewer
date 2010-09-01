@@ -146,6 +146,9 @@ namespace Cube {
         /// FileButton_DropDownItemClicked
         /* ----------------------------------------------------------------- */
         private void FileButton_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e) {
+            var control = (ToolStripSplitButton)sender;
+            control.HideDropDown();
+
             if (e.ClickedItem.Name == "CloseMenuItem") {
                 CloseButton_Click(sender, e);
                 return;
