@@ -101,7 +101,7 @@
             this.NewTabButton.Margin = new System.Windows.Forms.Padding(2);
             this.NewTabButton.Name = "NewTabButton";
             this.NewTabButton.Size = new System.Drawing.Size(28, 36);
-            this.NewTabButton.Text = "toolStripButton1";
+            this.NewTabButton.Text = "新しいタブ";
             this.NewTabButton.Click += new System.EventHandler(this.NewTabButton_Click);
             // 
             // OpenButton
@@ -112,7 +112,7 @@
             this.OpenButton.Margin = new System.Windows.Forms.Padding(2);
             this.OpenButton.Name = "OpenButton";
             this.OpenButton.Size = new System.Drawing.Size(28, 36);
-            this.OpenButton.Text = "toolStripButton1";
+            this.OpenButton.Text = "開く";
             this.OpenButton.Click += new System.EventHandler(this.OpenButton_Click);
             // 
             // toolStripSeparator1
@@ -128,7 +128,7 @@
             this.ZoomInButton.Margin = new System.Windows.Forms.Padding(2);
             this.ZoomInButton.Name = "ZoomInButton";
             this.ZoomInButton.Size = new System.Drawing.Size(28, 36);
-            this.ZoomInButton.Text = "toolStripButton1";
+            this.ZoomInButton.Text = "拡大する";
             this.ZoomInButton.Click += new System.EventHandler(this.ZoomInButton_Click);
             // 
             // ZoomDropDownButton
@@ -151,60 +151,61 @@
             this.ZoomDropDownButton.Name = "ZoomDropDownButton";
             this.ZoomDropDownButton.Size = new System.Drawing.Size(48, 36);
             this.ZoomDropDownButton.Text = "100%";
+            this.ZoomDropDownButton.ToolTipText = "倍率";
             this.ZoomDropDownButton.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.ZoomDropDownButton_DropDownItemClicked);
             // 
             // Zoom25
             // 
             this.Zoom25.Name = "Zoom25";
-            this.Zoom25.Size = new System.Drawing.Size(102, 22);
+            this.Zoom25.Size = new System.Drawing.Size(152, 22);
             this.Zoom25.Text = "25%";
             // 
             // Zoom50
             // 
             this.Zoom50.Name = "Zoom50";
-            this.Zoom50.Size = new System.Drawing.Size(102, 22);
+            this.Zoom50.Size = new System.Drawing.Size(152, 22);
             this.Zoom50.Text = "50%";
             // 
             // Zoom75
             // 
             this.Zoom75.Name = "Zoom75";
-            this.Zoom75.Size = new System.Drawing.Size(102, 22);
+            this.Zoom75.Size = new System.Drawing.Size(152, 22);
             this.Zoom75.Text = "75%";
             // 
             // Zoom100
             // 
             this.Zoom100.Name = "Zoom100";
-            this.Zoom100.Size = new System.Drawing.Size(102, 22);
+            this.Zoom100.Size = new System.Drawing.Size(152, 22);
             this.Zoom100.Text = "100%";
             // 
             // Zoom125
             // 
             this.Zoom125.Name = "Zoom125";
-            this.Zoom125.Size = new System.Drawing.Size(102, 22);
+            this.Zoom125.Size = new System.Drawing.Size(152, 22);
             this.Zoom125.Text = "125%";
             // 
             // Zoom150
             // 
             this.Zoom150.Name = "Zoom150";
-            this.Zoom150.Size = new System.Drawing.Size(102, 22);
+            this.Zoom150.Size = new System.Drawing.Size(152, 22);
             this.Zoom150.Text = "150%";
             // 
             // Zoom200
             // 
             this.Zoom200.Name = "Zoom200";
-            this.Zoom200.Size = new System.Drawing.Size(102, 22);
+            this.Zoom200.Size = new System.Drawing.Size(152, 22);
             this.Zoom200.Text = "200%";
             // 
             // Zoom400
             // 
             this.Zoom400.Name = "Zoom400";
-            this.Zoom400.Size = new System.Drawing.Size(102, 22);
+            this.Zoom400.Size = new System.Drawing.Size(152, 22);
             this.Zoom400.Text = "400%";
             // 
             // Zoom800
             // 
             this.Zoom800.Name = "Zoom800";
-            this.Zoom800.Size = new System.Drawing.Size(102, 22);
+            this.Zoom800.Size = new System.Drawing.Size(152, 22);
             this.Zoom800.Text = "800%";
             // 
             // ZoomOutButton
@@ -215,7 +216,7 @@
             this.ZoomOutButton.Margin = new System.Windows.Forms.Padding(2);
             this.ZoomOutButton.Name = "ZoomOutButton";
             this.ZoomOutButton.Size = new System.Drawing.Size(28, 36);
-            this.ZoomOutButton.Text = "toolStripButton1";
+            this.ZoomOutButton.Text = "縮小する";
             this.ZoomOutButton.Click += new System.EventHandler(this.ZoomOutButton_Click);
             // 
             // FitToWidthButton
@@ -227,7 +228,7 @@
             this.FitToWidthButton.Margin = new System.Windows.Forms.Padding(2);
             this.FitToWidthButton.Name = "FitToWidthButton";
             this.FitToWidthButton.Size = new System.Drawing.Size(28, 36);
-            this.FitToWidthButton.Text = "toolStripButton1";
+            this.FitToWidthButton.Text = "ウィンドウの幅に合わせる";
             this.FitToWidthButton.Click += new System.EventHandler(this.FitToWidthButton_Click);
             // 
             // FitToHeightButton
@@ -239,7 +240,7 @@
             this.FitToHeightButton.Margin = new System.Windows.Forms.Padding(2);
             this.FitToHeightButton.Name = "FitToHeightButton";
             this.FitToHeightButton.Size = new System.Drawing.Size(28, 36);
-            this.FitToHeightButton.Text = "toolStripButton1";
+            this.FitToHeightButton.Text = "ウィンドウの高さに合わせる";
             this.FitToHeightButton.Click += new System.EventHandler(this.FitToHeightButton_Click);
             // 
             // toolStripSeparator2
@@ -255,7 +256,7 @@
             this.FirstPageButton.Margin = new System.Windows.Forms.Padding(2);
             this.FirstPageButton.Name = "FirstPageButton";
             this.FirstPageButton.Size = new System.Drawing.Size(28, 36);
-            this.FirstPageButton.Text = "toolStripButton1";
+            this.FirstPageButton.Text = "最初のページ";
             this.FirstPageButton.Click += new System.EventHandler(this.FirstPageButton_Click);
             // 
             // PreviousPageButton
@@ -266,7 +267,7 @@
             this.PreviousPageButton.Margin = new System.Windows.Forms.Padding(2);
             this.PreviousPageButton.Name = "PreviousPageButton";
             this.PreviousPageButton.Size = new System.Drawing.Size(28, 36);
-            this.PreviousPageButton.Text = "toolStripButton1";
+            this.PreviousPageButton.Text = "前のページ";
             this.PreviousPageButton.Click += new System.EventHandler(this.PreviousPageButton_Click);
             // 
             // CurrentPageTextBox
@@ -296,7 +297,7 @@
             this.NextPageButton.Margin = new System.Windows.Forms.Padding(2);
             this.NextPageButton.Name = "NextPageButton";
             this.NextPageButton.Size = new System.Drawing.Size(28, 36);
-            this.NextPageButton.Text = "toolStripButton1";
+            this.NextPageButton.Text = "次のページ";
             this.NextPageButton.Click += new System.EventHandler(this.NextPageButton_Click);
             // 
             // LastPageButton
@@ -307,7 +308,7 @@
             this.LastPageButton.Margin = new System.Windows.Forms.Padding(2);
             this.LastPageButton.Name = "LastPageButton";
             this.LastPageButton.Size = new System.Drawing.Size(28, 36);
-            this.LastPageButton.Text = "toolStripButton1";
+            this.LastPageButton.Text = "最後のページ";
             this.LastPageButton.Click += new System.EventHandler(this.LastPageButton_Click);
             // 
             // toolStripSeparator3
@@ -330,7 +331,7 @@
             this.SearchButton.Margin = new System.Windows.Forms.Padding(2);
             this.SearchButton.Name = "SearchButton";
             this.SearchButton.Size = new System.Drawing.Size(28, 36);
-            this.SearchButton.Text = "toolStripButton1";
+            this.SearchButton.Text = "検索する";
             // 
             // FooterStatusStrip
             // 
