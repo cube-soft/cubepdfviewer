@@ -157,55 +157,55 @@
             // Zoom25
             // 
             this.Zoom25.Name = "Zoom25";
-            this.Zoom25.Size = new System.Drawing.Size(152, 22);
+            this.Zoom25.Size = new System.Drawing.Size(102, 22);
             this.Zoom25.Text = "25%";
             // 
             // Zoom50
             // 
             this.Zoom50.Name = "Zoom50";
-            this.Zoom50.Size = new System.Drawing.Size(152, 22);
+            this.Zoom50.Size = new System.Drawing.Size(102, 22);
             this.Zoom50.Text = "50%";
             // 
             // Zoom75
             // 
             this.Zoom75.Name = "Zoom75";
-            this.Zoom75.Size = new System.Drawing.Size(152, 22);
+            this.Zoom75.Size = new System.Drawing.Size(102, 22);
             this.Zoom75.Text = "75%";
             // 
             // Zoom100
             // 
             this.Zoom100.Name = "Zoom100";
-            this.Zoom100.Size = new System.Drawing.Size(152, 22);
+            this.Zoom100.Size = new System.Drawing.Size(102, 22);
             this.Zoom100.Text = "100%";
             // 
             // Zoom125
             // 
             this.Zoom125.Name = "Zoom125";
-            this.Zoom125.Size = new System.Drawing.Size(152, 22);
+            this.Zoom125.Size = new System.Drawing.Size(102, 22);
             this.Zoom125.Text = "125%";
             // 
             // Zoom150
             // 
             this.Zoom150.Name = "Zoom150";
-            this.Zoom150.Size = new System.Drawing.Size(152, 22);
+            this.Zoom150.Size = new System.Drawing.Size(102, 22);
             this.Zoom150.Text = "150%";
             // 
             // Zoom200
             // 
             this.Zoom200.Name = "Zoom200";
-            this.Zoom200.Size = new System.Drawing.Size(152, 22);
+            this.Zoom200.Size = new System.Drawing.Size(102, 22);
             this.Zoom200.Text = "200%";
             // 
             // Zoom400
             // 
             this.Zoom400.Name = "Zoom400";
-            this.Zoom400.Size = new System.Drawing.Size(152, 22);
+            this.Zoom400.Size = new System.Drawing.Size(102, 22);
             this.Zoom400.Text = "400%";
             // 
             // Zoom800
             // 
             this.Zoom800.Name = "Zoom800";
-            this.Zoom800.Size = new System.Drawing.Size(152, 22);
+            this.Zoom800.Size = new System.Drawing.Size(102, 22);
             this.Zoom800.Text = "800%";
             // 
             // ZoomOutButton
