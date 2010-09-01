@@ -25,8 +25,6 @@
         private void InitializeComponent() {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.MenuToolStrip = new System.Windows.Forms.ToolStrip();
-            this.NewTabButton = new System.Windows.Forms.ToolStripButton();
-            this.OpenButton = new System.Windows.Forms.ToolStripButton();
             this.PrintButton = new System.Windows.Forms.ToolStripButton();
             this.OnlyDisplayCommonCategorySeparator = new System.Windows.Forms.ToolStripSeparator();
             this.ZoomInButton = new System.Windows.Forms.ToolStripButton();
@@ -63,6 +61,9 @@
             this.MenuModeButton = new System.Windows.Forms.ToolStripButton();
             this.ThumbButton = new System.Windows.Forms.ToolStripButton();
             this.MenuSplitContainer = new System.Windows.Forms.SplitContainer();
+            this.OpenButton = new System.Windows.Forms.ToolStripSplitButton();
+            this.OpenNewTabMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.OpenExistedTabMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuToolStrip.SuspendLayout();
             this.NavigationSplitContainer.Panel1.SuspendLayout();
             this.NavigationSplitContainer.Panel2.SuspendLayout();
@@ -85,7 +86,6 @@
             this.MenuToolStrip.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.MenuToolStrip.ImageScalingSize = new System.Drawing.Size(32, 32);
             this.MenuToolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.NewTabButton,
             this.OpenButton,
             this.PrintButton,
             this.OnlyDisplayCommonCategorySeparator,
@@ -109,28 +109,6 @@
             this.MenuToolStrip.Size = new System.Drawing.Size(792, 40);
             this.MenuToolStrip.TabIndex = 0;
             this.MenuToolStrip.Text = "メニュー";
-            // 
-            // NewTabButton
-            // 
-            this.NewTabButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.NewTabButton.Image = global::Cube.Properties.Resources.newtab;
-            this.NewTabButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.NewTabButton.Margin = new System.Windows.Forms.Padding(2);
-            this.NewTabButton.Name = "NewTabButton";
-            this.NewTabButton.Size = new System.Drawing.Size(36, 36);
-            this.NewTabButton.Text = "新しいタブ";
-            this.NewTabButton.Click += new System.EventHandler(this.NewTabButton_Click);
-            // 
-            // OpenButton
-            // 
-            this.OpenButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.OpenButton.Image = global::Cube.Properties.Resources.open;
-            this.OpenButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.OpenButton.Margin = new System.Windows.Forms.Padding(2);
-            this.OpenButton.Name = "OpenButton";
-            this.OpenButton.Size = new System.Drawing.Size(36, 36);
-            this.OpenButton.Text = "開く";
-            this.OpenButton.Click += new System.EventHandler(this.OpenButton_Click);
             // 
             // PrintButton
             // 
@@ -452,7 +430,7 @@
             this.MenuModeButton});
             this.SubMenuToolStrip.Location = new System.Drawing.Point(0, 0);
             this.SubMenuToolStrip.Name = "SubMenuToolStrip";
-            this.SubMenuToolStrip.Size = new System.Drawing.Size(32, 510);
+            this.SubMenuToolStrip.Size = new System.Drawing.Size(29, 510);
             this.SubMenuToolStrip.TabIndex = 0;
             this.SubMenuToolStrip.Text = "toolStrip1";
             // 
@@ -463,7 +441,7 @@
             this.MenuModeButton.Image = global::Cube.Properties.Resources.hidemenu;
             this.MenuModeButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.MenuModeButton.Name = "MenuModeButton";
-            this.MenuModeButton.Size = new System.Drawing.Size(29, 28);
+            this.MenuModeButton.Size = new System.Drawing.Size(26, 28);
             this.MenuModeButton.Text = "メニュー表示の切り替え";
             this.MenuModeButton.Click += new System.EventHandler(this.MenuModeButton_Click);
             // 
@@ -497,6 +475,34 @@
             this.MenuSplitContainer.SplitterDistance = 40;
             this.MenuSplitContainer.SplitterWidth = 1;
             this.MenuSplitContainer.TabIndex = 4;
+            // 
+            // OpenButton
+            // 
+            this.OpenButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.OpenButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.OpenNewTabMenuItem,
+            this.OpenExistedTabMenuItem});
+            this.OpenButton.Image = global::Cube.Properties.Resources.open;
+            this.OpenButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.OpenButton.Name = "OpenButton";
+            this.OpenButton.Size = new System.Drawing.Size(48, 37);
+            this.OpenButton.Text = "開く";
+            this.OpenButton.ButtonClick += new System.EventHandler(this.OpenButton_Click);
+            this.OpenButton.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.OpenButton_DropDownItemClicked);
+            // 
+            // OpenNewTabMenuItem
+            // 
+            this.OpenNewTabMenuItem.Name = "OpenNewTabMenuItem";
+            this.OpenNewTabMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.OpenNewTabMenuItem.Text = "新しいタブ";
+            this.OpenNewTabMenuItem.ToolTipText = "新しいタブ";
+            // 
+            // OpenExistedTabMenuItem
+            // 
+            this.OpenExistedTabMenuItem.Name = "OpenExistedTabMenuItem";
+            this.OpenExistedTabMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.OpenExistedTabMenuItem.Text = "アクティブなタブ";
+            this.OpenExistedTabMenuItem.ToolTipText = "アクティブなタブ";
             // 
             // MainForm
             // 
@@ -532,7 +538,6 @@
         #endregion
 
         private System.Windows.Forms.ToolStrip MenuToolStrip;
-        private System.Windows.Forms.ToolStripButton OpenButton;
         private System.Windows.Forms.ToolStripSeparator OnlyDisplayCommonCategorySeparator;
         private System.Windows.Forms.ToolStripButton ZoomInButton;
         private System.Windows.Forms.ToolStripDropDownButton ZoomDropDownButton;
@@ -562,7 +567,6 @@
         private System.Windows.Forms.SplitContainer NavigationSplitContainer;
         private System.Windows.Forms.TabControl PageViewerTabControl;
         private System.Windows.Forms.TabPage DefaultTabPage;
-        private System.Windows.Forms.ToolStripButton NewTabButton;
         private System.Windows.Forms.SplitContainer SubMenuSplitContainer;
         private System.Windows.Forms.ToolStrip SubMenuToolStrip;
         private System.Windows.Forms.ToolStripButton PrintButton;
@@ -570,6 +574,9 @@
         private System.Windows.Forms.Panel NavigationPanel;
         private System.Windows.Forms.SplitContainer MenuSplitContainer;
         private System.Windows.Forms.ToolStripButton MenuModeButton;
+        private System.Windows.Forms.ToolStripSplitButton OpenButton;
+        private System.Windows.Forms.ToolStripMenuItem OpenNewTabMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem OpenExistedTabMenuItem;
     }
 }
 

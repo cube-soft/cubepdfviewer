@@ -133,6 +133,14 @@ namespace Cube {
         #region Other controls event handlers
 
         /* ----------------------------------------------------------------- */
+        /// NewTabButton_Click
+        /* ----------------------------------------------------------------- */
+        private void NewTabButton_Click(object sender, EventArgs e) {
+            TabPolicy.Create(this.PageViewerTabControl);
+            this.Refresh(null);
+        }
+
+        /* ----------------------------------------------------------------- */
         /// OpenButton_Click
         /* ----------------------------------------------------------------- */
         private void OpenButton_Click(object sender, EventArgs e) {
@@ -146,11 +154,21 @@ namespace Cube {
         }
 
         /* ----------------------------------------------------------------- */
-        /// NewTabButton_Click
+        /// OpenButton_DropDownItemClicked
         /* ----------------------------------------------------------------- */
-        private void NewTabButton_Click(object sender, EventArgs e) {
-            TabPolicy.Create(this.PageViewerTabControl);
-            this.Refresh(null);
+        private void OpenButton_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e) {
+            if (e.ClickedItem.Name == "OpenNewTabMenuItem") {
+                TabPage selected = null;
+                foreach (TabPage child in this.PageViewerTabControl.TabPages) {
+                    if (child.Controls["Canvas"] == null) { // 未使用タブ
+                        selected = child;
+                        child.Select();
+                        break;
+                    }
+                }
+                if (selected == null) TabPolicy.Create(this.PageViewerTabControl);
+            }
+            this.OpenButton_Click(sender, e);
         }
 
         /* ----------------------------------------------------------------- */
