@@ -83,6 +83,18 @@ namespace Cube {
         }
 
         /* ----------------------------------------------------------------- */
+        /// Resize
+        /* ----------------------------------------------------------------- */
+        private void Resize() {
+            var tab = this.PageViewerTabControl.SelectedTab;
+            var canvas = CanvasPolicy.Get(tab);
+            if (this.FitToWidthButton.Checked) CanvasPolicy.FitToWidth(canvas);
+            else if (this.FitToHeightButton.Checked) CanvasPolicy.FitToHeight(canvas);
+            else CanvasPolicy.Adjust(canvas);
+            this.Refresh(canvas);
+        }
+
+        /* ----------------------------------------------------------------- */
         //  メインフォームに関する各種イベント・ハンドラ
         /* ----------------------------------------------------------------- */
         #region MainForm Event handlers
@@ -91,12 +103,7 @@ namespace Cube {
         /// MainForm_SizeChanged
         /* ----------------------------------------------------------------- */
         private void MainForm_SizeChanged(object sender, EventArgs e) {
-            var tab = this.PageViewerTabControl.SelectedTab;
-            var canvas = CanvasPolicy.Get(tab);
-            if (this.FitToWidthButton.Checked) CanvasPolicy.FitToWidth(canvas);
-            else if (this.FitToHeightButton.Checked) CanvasPolicy.FitToHeight(canvas);
-            else CanvasPolicy.Adjust(canvas);
-            this.Refresh(canvas);
+            this.Resize();
         }
 
         /* ----------------------------------------------------------------- */
@@ -379,12 +386,7 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         private void MenuModeButton_Click(object sender, EventArgs e) {
             this.MenuSplitContainer.Panel1Collapsed = !this.MenuSplitContainer.Panel1Collapsed;
-            var tab = this.PageViewerTabControl.SelectedTab;
-            var canvas = CanvasPolicy.Get(tab);
-            if (this.FitToWidthButton.Checked) CanvasPolicy.FitToWidth(canvas);
-            else if (this.FitToHeightButton.Checked) CanvasPolicy.FitToHeight(canvas);
-            else CanvasPolicy.Adjust(canvas);
-            this.Refresh(canvas);
+            this.Resize();
         }
 
         /* ----------------------------------------------------------------- */
@@ -392,6 +394,7 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         private void ThumbButton_Click(object sender, EventArgs e) {
             this.NavigationSplitContainer.Panel1Collapsed = !this.NavigationSplitContainer.Panel1Collapsed;
+            this.Resize();
         }
 
         #endregion
