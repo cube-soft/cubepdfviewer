@@ -101,6 +101,7 @@ namespace Cube {
                 CanvasPolicy.Close((Canvas)child);
                 parent.Controls.Remove(child);
             }
+            parent.Text = "(無題)";
         }
         
         /* ----------------------------------------------------------------- */

@@ -141,22 +141,14 @@ namespace Cube {
         }
 
         /* ----------------------------------------------------------------- */
-        /// OpenButton_Click
+        /// FileButton_DropDownItemClicked
         /* ----------------------------------------------------------------- */
-        private void OpenButton_Click(object sender, EventArgs e) {
-            var dialog = new OpenFileDialog();
-            if (dialog.ShowDialog() == DialogResult.OK) {
-                var tab = this.PageViewerTabControl.SelectedTab;
-                var canvas = CanvasPolicy.Create(tab);
-                CanvasPolicy.Open(canvas, dialog.FileName, fit_);
-                this.Refresh(canvas);
+        private void FileButton_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e) {
+            if (e.ClickedItem.Name == "CloseMenuItem") {
+                CloseButton_Click(sender, e);
+                return;
             }
-        }
 
-        /* ----------------------------------------------------------------- */
-        /// OpenButton_DropDownItemClicked
-        /* ----------------------------------------------------------------- */
-        private void OpenButton_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e) {
             if (e.ClickedItem.Name == "OpenNewTabMenuItem") {
                 TabPage selected = null;
                 foreach (TabPage child in this.PageViewerTabControl.TabPages) {
@@ -169,6 +161,30 @@ namespace Cube {
                 if (selected == null) TabPolicy.Create(this.PageViewerTabControl);
             }
             this.OpenButton_Click(sender, e);
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// OpenButton_Click
+        /* ----------------------------------------------------------------- */
+        private void OpenButton_Click(object sender, EventArgs e) {
+            var dialog = new OpenFileDialog();
+            if (dialog.ShowDialog() == DialogResult.OK) {
+                var tab = this.PageViewerTabControl.SelectedTab;
+                var canvas = CanvasPolicy.Create(tab);
+                CanvasPolicy.Open(canvas, dialog.FileName, fit_);
+                this.Refresh(canvas);
+            }
+        }
+
+
+        /* ----------------------------------------------------------------- */
+        /// CloseButton_Click
+        /* ----------------------------------------------------------------- */
+        private void CloseButton_Click(object sender, EventArgs e) {
+            var tab = this.PageViewerTabControl.SelectedTab;
+            var canvas = CanvasPolicy.Get(tab);
+            CanvasPolicy.Destroy(canvas);
+            if (this.PageViewerTabControl.TabCount > 1) TabPolicy.Destroy(tab);
         }
 
         /* ----------------------------------------------------------------- */

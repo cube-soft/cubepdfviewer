@@ -25,6 +25,11 @@
         private void InitializeComponent() {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.MenuToolStrip = new System.Windows.Forms.ToolStrip();
+            this.FileButton = new System.Windows.Forms.ToolStripSplitButton();
+            this.OpenNewTabMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.OpenExistedTabMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.OnlyDisplayFileOpenCategorySeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.CloseMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.PrintButton = new System.Windows.Forms.ToolStripButton();
             this.OnlyDisplayCommonCategorySeparator = new System.Windows.Forms.ToolStripSeparator();
             this.ZoomInButton = new System.Windows.Forms.ToolStripButton();
@@ -58,12 +63,9 @@
             this.DefaultTabPage = new System.Windows.Forms.TabPage();
             this.SubMenuSplitContainer = new System.Windows.Forms.SplitContainer();
             this.SubMenuToolStrip = new System.Windows.Forms.ToolStrip();
-            this.MenuModeButton = new System.Windows.Forms.ToolStripButton();
             this.ThumbButton = new System.Windows.Forms.ToolStripButton();
+            this.MenuModeButton = new System.Windows.Forms.ToolStripButton();
             this.MenuSplitContainer = new System.Windows.Forms.SplitContainer();
-            this.OpenButton = new System.Windows.Forms.ToolStripSplitButton();
-            this.OpenNewTabMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.OpenExistedTabMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuToolStrip.SuspendLayout();
             this.NavigationSplitContainer.Panel1.SuspendLayout();
             this.NavigationSplitContainer.Panel2.SuspendLayout();
@@ -86,7 +88,7 @@
             this.MenuToolStrip.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.MenuToolStrip.ImageScalingSize = new System.Drawing.Size(32, 32);
             this.MenuToolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.OpenButton,
+            this.FileButton,
             this.PrintButton,
             this.OnlyDisplayCommonCategorySeparator,
             this.ZoomInButton,
@@ -109,6 +111,47 @@
             this.MenuToolStrip.Size = new System.Drawing.Size(792, 40);
             this.MenuToolStrip.TabIndex = 0;
             this.MenuToolStrip.Text = "メニュー";
+            // 
+            // FileButton
+            // 
+            this.FileButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.FileButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.OpenNewTabMenuItem,
+            this.OpenExistedTabMenuItem,
+            this.OnlyDisplayFileOpenCategorySeparator,
+            this.CloseMenuItem});
+            this.FileButton.Image = global::Cube.Properties.Resources.open;
+            this.FileButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.FileButton.Name = "FileButton";
+            this.FileButton.Size = new System.Drawing.Size(48, 37);
+            this.FileButton.Text = "ファイル";
+            this.FileButton.ButtonClick += new System.EventHandler(this.OpenButton_Click);
+            this.FileButton.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.FileButton_DropDownItemClicked);
+            // 
+            // OpenNewTabMenuItem
+            // 
+            this.OpenNewTabMenuItem.Name = "OpenNewTabMenuItem";
+            this.OpenNewTabMenuItem.Size = new System.Drawing.Size(167, 22);
+            this.OpenNewTabMenuItem.Text = "新しいタブで開く";
+            this.OpenNewTabMenuItem.ToolTipText = "新しいタブで開く";
+            // 
+            // OpenExistedTabMenuItem
+            // 
+            this.OpenExistedTabMenuItem.Name = "OpenExistedTabMenuItem";
+            this.OpenExistedTabMenuItem.Size = new System.Drawing.Size(167, 22);
+            this.OpenExistedTabMenuItem.Text = "アクティブなタブで開く";
+            this.OpenExistedTabMenuItem.ToolTipText = "アクティブなタブで開く";
+            // 
+            // OnlyDisplayFileOpenCategorySeparator
+            // 
+            this.OnlyDisplayFileOpenCategorySeparator.Name = "OnlyDisplayFileOpenCategorySeparator";
+            this.OnlyDisplayFileOpenCategorySeparator.Size = new System.Drawing.Size(149, 6);
+            // 
+            // CloseMenuItem
+            // 
+            this.CloseMenuItem.Name = "CloseMenuItem";
+            this.CloseMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.CloseMenuItem.Text = "閉じる";
             // 
             // PrintButton
             // 
@@ -434,6 +477,16 @@
             this.SubMenuToolStrip.TabIndex = 0;
             this.SubMenuToolStrip.Text = "toolStrip1";
             // 
+            // ThumbButton
+            // 
+            this.ThumbButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.ThumbButton.Image = global::Cube.Properties.Resources.thumbnail;
+            this.ThumbButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.ThumbButton.Name = "ThumbButton";
+            this.ThumbButton.Size = new System.Drawing.Size(26, 28);
+            this.ThumbButton.Text = "サムネイル";
+            this.ThumbButton.Click += new System.EventHandler(this.ThumbButton_Click);
+            // 
             // MenuModeButton
             // 
             this.MenuModeButton.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
@@ -444,16 +497,6 @@
             this.MenuModeButton.Size = new System.Drawing.Size(26, 28);
             this.MenuModeButton.Text = "メニュー表示の切り替え";
             this.MenuModeButton.Click += new System.EventHandler(this.MenuModeButton_Click);
-            // 
-            // ThumbButton
-            // 
-            this.ThumbButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.ThumbButton.Image = global::Cube.Properties.Resources.thumbnail;
-            this.ThumbButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.ThumbButton.Name = "ThumbButton";
-            this.ThumbButton.Size = new System.Drawing.Size(26, 28);
-            this.ThumbButton.Text = "サムネイル";
-            this.ThumbButton.Click += new System.EventHandler(this.ThumbButton_Click);
             // 
             // MenuSplitContainer
             // 
@@ -475,34 +518,6 @@
             this.MenuSplitContainer.SplitterDistance = 40;
             this.MenuSplitContainer.SplitterWidth = 1;
             this.MenuSplitContainer.TabIndex = 4;
-            // 
-            // OpenButton
-            // 
-            this.OpenButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.OpenButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.OpenNewTabMenuItem,
-            this.OpenExistedTabMenuItem});
-            this.OpenButton.Image = global::Cube.Properties.Resources.open;
-            this.OpenButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.OpenButton.Name = "OpenButton";
-            this.OpenButton.Size = new System.Drawing.Size(48, 37);
-            this.OpenButton.Text = "開く";
-            this.OpenButton.ButtonClick += new System.EventHandler(this.OpenButton_Click);
-            this.OpenButton.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.OpenButton_DropDownItemClicked);
-            // 
-            // OpenNewTabMenuItem
-            // 
-            this.OpenNewTabMenuItem.Name = "OpenNewTabMenuItem";
-            this.OpenNewTabMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.OpenNewTabMenuItem.Text = "新しいタブ";
-            this.OpenNewTabMenuItem.ToolTipText = "新しいタブ";
-            // 
-            // OpenExistedTabMenuItem
-            // 
-            this.OpenExistedTabMenuItem.Name = "OpenExistedTabMenuItem";
-            this.OpenExistedTabMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.OpenExistedTabMenuItem.Text = "アクティブなタブ";
-            this.OpenExistedTabMenuItem.ToolTipText = "アクティブなタブ";
             // 
             // MainForm
             // 
@@ -574,9 +589,11 @@
         private System.Windows.Forms.Panel NavigationPanel;
         private System.Windows.Forms.SplitContainer MenuSplitContainer;
         private System.Windows.Forms.ToolStripButton MenuModeButton;
-        private System.Windows.Forms.ToolStripSplitButton OpenButton;
+        private System.Windows.Forms.ToolStripSplitButton FileButton;
         private System.Windows.Forms.ToolStripMenuItem OpenNewTabMenuItem;
         private System.Windows.Forms.ToolStripMenuItem OpenExistedTabMenuItem;
+        private System.Windows.Forms.ToolStripSeparator OnlyDisplayFileOpenCategorySeparator;
+        private System.Windows.Forms.ToolStripMenuItem CloseMenuItem;
     }
 }
 
