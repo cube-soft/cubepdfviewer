@@ -53,6 +53,7 @@
             this.MenuSearch = new System.Windows.Forms.ToolStripButton();
             this.StatausBar = new System.Windows.Forms.StatusStrip();
             this.StatusText = new System.Windows.Forms.ToolStripStatusLabel();
+            this.MainViewer = new PDFViewer.PageViewer();
             this.MenuTool.SuspendLayout();
             this.StatausBar.SuspendLayout();
             this.SuspendLayout();
@@ -264,7 +265,7 @@
             this.MenuCurrentPage.Margin = new System.Windows.Forms.Padding(2);
             this.MenuCurrentPage.Name = "MenuCurrentPage";
             this.MenuCurrentPage.Padding = new System.Windows.Forms.Padding(2);
-            this.MenuCurrentPage.Size = new System.Drawing.Size(42, 27);
+            this.MenuCurrentPage.Size = new System.Drawing.Size(38, 27);
             this.MenuCurrentPage.Text = "0";
             this.MenuCurrentPage.TextBoxTextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.MenuCurrentPage.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MenuCurrentPage_KeyDown);
@@ -313,7 +314,7 @@
             this.MenuSearchText.Margin = new System.Windows.Forms.Padding(2);
             this.MenuSearchText.Name = "MenuSearchText";
             this.MenuSearchText.Padding = new System.Windows.Forms.Padding(2);
-            this.MenuSearchText.Size = new System.Drawing.Size(130, 27);
+            this.MenuSearchText.Size = new System.Drawing.Size(126, 27);
             this.MenuSearchText.ToolTipText = "検索ワード";
             this.MenuSearchText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MenuSearchText_KeyDown);
             this.MenuSearchText.TextChanged += new System.EventHandler(this.MenuSearchText_TextChanged);
@@ -345,6 +346,24 @@
             this.StatusText.Size = new System.Drawing.Size(37, 17);
             this.StatusText.Text = "Ready";
             // 
+            // MainViewer
+            // 
+            this.MainViewer.AutoSize = true;
+            this.MainViewer.BackColor = System.Drawing.SystemColors.AppWorkspace;
+            this.MainViewer.BorderColor = System.Drawing.Color.DimGray;
+            this.MainViewer.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.MainViewer.DrawBorder = false;
+            this.MainViewer.DrawShadow = false;
+            this.MainViewer.Location = new System.Drawing.Point(11, 50);
+            this.MainViewer.Margin = new System.Windows.Forms.Padding(0);
+            this.MainViewer.Name = "MainViewer";
+            this.MainViewer.PageColor = System.Drawing.SystemColors.AppWorkspace;
+            this.MainViewer.PageSize = new System.Drawing.Size(0, 0);
+            this.MainViewer.PaintMethod = PDFViewer.PageViewer.DoubleBufferMethod.BuiltInOptimizedDoubleBuffer;
+            this.MainViewer.ScrollPosition = new System.Drawing.Point(0, 0);
+            this.MainViewer.Size = new System.Drawing.Size(760, 685);
+            this.MainViewer.TabIndex = 0;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -352,6 +371,7 @@
             this.ClientSize = new System.Drawing.Size(784, 762);
             this.Controls.Add(this.StatausBar);
             this.Controls.Add(this.MenuTool);
+            this.Controls.Add(this.MainViewer);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainForm";
             this.Text = "CubePDF Viewer";
@@ -396,8 +416,8 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem9;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem10;
         private System.Windows.Forms.ToolStripStatusLabel StatusText;
-        private System.Windows.Forms.ToolStripButton MenuLastPage;
         private System.Windows.Forms.ToolStripButton MenuFirstPage;
+        private System.Windows.Forms.ToolStripButton MenuLastPage;
 
     }
 }
