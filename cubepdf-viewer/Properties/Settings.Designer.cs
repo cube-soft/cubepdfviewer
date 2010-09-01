@@ -22,59 +22,5 @@ namespace Cube.Properties {
                 return defaultInstance;
             }
         }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("CubePDF Viewer")]
-        public string TITLE {
-            get {
-                return ((string)(this["TITLE"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("文書の検索が終了しました。")]
-        public string STATUS_EOS {
-            get {
-                return ((string)(this["STATUS_EOS"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("PDF ファイル(*.pdf)|*.pdf|すべてのファイル(*.*)|*.*")]
-        public string FILTER_PDF {
-            get {
-                return ((string)(this["FILTER_PDF"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("このファイルはパスワードで保護されています。")]
-        public string ERROR_PASSWORD {
-            get {
-                return ((string)(this["ERROR_PASSWORD"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("エラー")]
-        public string ERROR_TITLE {
-            get {
-                return ((string)(this["ERROR_TITLE"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("ファイルを開けませんでした。")]
-        public string ERROR_LOAD_FILE {
-            get {
-                return ((string)(this["ERROR_LOAD_FILE"]));
-            }
-        }
     }
 }

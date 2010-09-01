@@ -17,7 +17,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see < http://www.gnu.org/licenses/ >.
  *
- *  Last-modified: Tue 24 Aug 2010 22:01:00 JST
+ *  Last-modified: Wed 01 Sep 2010 00:10:00 JST
  */
 /* ------------------------------------------------------------------------- */
 using System;
@@ -26,417 +26,94 @@ using System.Windows.Forms;
 
 namespace Cube {
     /* --------------------------------------------------------------------- */
-    ///
     /// MainForm
-    /// 
-    /// <summary>
-    /// NOTE: PDFViewer ではファイルをロードしている間，「リサイズ」，
-    /// 「フォームを閉じる」，「各種マウスイベント」を無効化している．
-    /// ただ，PDFViewer はこの処理が原因で異常終了するケースが散見される
-    /// ため，CubePDF Viewer ではこの処理は保留する．
-    /// 
-    /// また，現在は使用していないが，PDFLoadBegin, PDFLoadCompleted
-    /// イベントが用意されてある．
-    /// ファイルのロード時間がやや長いので，この辺りのイベントに適切な
-    /// ハンドラを指定する必要があるか．
-    /// 追記: PDFLoad() よりは，その後の RenderPage() メソッドの方に
-    /// 大きく時間を食われている模様．そのため，これらのイベントは
-    /// あまり気にしなくて良い．
-    /// 
-    /// RenderFinished の他に RenderNotifyFinished と言うイベントも存在
-    /// する．現状では，どのような条件でこのイベントが発生するのかは不明．
-    /// </summary>
-    /// 
     /* --------------------------------------------------------------------- */
     public partial class MainForm : Form {
         /* ----------------------------------------------------------------- */
-        /// <summary>
-        /// コンストラクタ
-        /// </summary>
+        /// Constructor
         /* ----------------------------------------------------------------- */
         public MainForm() {
             InitializeComponent();
-            InitializeMainViewer();
-            InitializeLibrary();
-            
-            this.MouseEnter += new System.EventHandler(this.MainForm_MouseEnter);
-            this.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.MainForm_MouseWheel);
-            this.KeyPreview = true;
-            this.MenuZoomText.Enabled = false;
+
+            int x = Screen.PrimaryScreen.Bounds.Height - 100;
+            this.Size = new Size(System.Math.Max(x, 800), x);
+            this.MainSplitContainer.Panel1Collapsed = true;
+            this.DefaultTabPage.VerticalScroll.SmallChange = 3;
+            this.DefaultTabPage.HorizontalScroll.SmallChange = 3;
+            this.FitToHeightButton.Checked = true;
+            TabPolicy.ContextMenu(this.PageViewerTabControl);
+
+            this.MouseEnter += new EventHandler(this.MainForm_MouseEnter);
+            this.MouseWheel += new MouseEventHandler(this.MainForm_MouseWheel);
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// Refresh
+        /// 
+        /// <summary>
+        /// システムの Refresh() を呼ぶ前に，必要な情報を全て更新する．
+        /// </summary>
+        /// 
+        /* ----------------------------------------------------------------- */
+        private void Refresh(PictureBox canvas, string message = "") {
+            if (canvas == null || canvas.Tag == null) {
+                CurrentPageTextBox.Text = "0";
+                TotalPageLabel.Text = "/ 0";
+                ZoomDropDownButton.Text = "100%";
+            }
+            else {
+                var core = (PDFLibNet.PDFWrapper)canvas.Tag;
+                CurrentPageTextBox.Text = core.CurrentPage.ToString();
+                TotalPageLabel.Text = "/ " + core.PageCount.ToString();
+                ZoomDropDownButton.Text = ((int)core.Zoom).ToString() + "%";
+            }
+            this.Refresh();
         }
 
         /* ----------------------------------------------------------------- */
         /// UpdateFitCondtion
         /* ----------------------------------------------------------------- */
-        private void UpdateFitCondition(int which) {
+        private void UpdateFitCondition(FitCondition which) {
             fit_ = which;
-            MenuFitToWidth.Checked = ((fit_ & FIT_WIDTH) != 0);
-            MenuFitToHeight.Checked = ((fit_ & FIT_HEIGHT) != 0);
-            this.Refresh();
+            this.FitToWidthButton.Checked = ((fit_ & FitCondition.Width) != 0);
+            this.FitToHeightButton.Checked = ((fit_ & FitCondition.Height) != 0);
         }
 
         /* ----------------------------------------------------------------- */
-        ///
-        /// ReDraw
-        /// 
-        /// <summary>
-        /// 再描画処理
-        /// </summary>
-        /// 
+        //  メインフォームに関する各種イベント・ハンドラ
         /* ----------------------------------------------------------------- */
-        private void ReDraw(string status = "Ready") {
-            if (doc_ != null) {
-                StatusText.Text = status;
-                doc_.RenderPage(MainViewer.Handle);
-                this.PostReDraw();
-            }
-            else this.Refresh();
-        }
+        #region MainForm Event handlers
 
         /* ----------------------------------------------------------------- */
-        ///
-        /// AsyncReDraw
-        /// 
-        /// <summary>
-        /// 再描画処理．時間のかかるような再描画処理をスレッドを利用して
-        /// 非同期で行う．
-        /// </summary>
-        /// 
-        /* ----------------------------------------------------------------- */
-        private void AsyncReDraw(string status = "Ready") {
-            if (doc_ != null) {
-                StatusText.Text = status;
-                doc_.RenderFinished -= new PDFLibNet.RenderFinishedHandler(PostReDraw);
-                doc_.RenderFinished += new PDFLibNet.RenderFinishedHandler(PostReDraw);
-                doc_.RenderPageThread(MainViewer.Handle, false);
-                this.PostReDraw();
-
-                // まだ描画されていない領域を白色で表示しておく．
-                MainViewer.PageColor = System.Drawing.Color.White;
-                // this.Cursor = Cursors.WaitCursor;
-                this.Refresh();
-            }
-            else this.Refresh();
-        }
-
-        /* ----------------------------------------------------------------- */
-        ///
-        /// PostReDraw
-        /// 
-        /// <summary>
-        /// 再描画の最後に行う処理．
-        /// </summary>
-        /// 
-        /* ----------------------------------------------------------------- */
-        void PostReDraw() {
-            if (doc_ != null) {
-                MainViewer.PageSize = new Size(doc_.PageWidth, doc_.PageHeight);
-                MainViewer.PageColor = System.Drawing.Color.Transparent;
-                this.Cursor = Cursors.Default;
-
-                // メニューバーの各種情報の更新．
-                MenuCurrentPage.Text = doc_.CurrentPage.ToString();
-                MenuTotalPage.Text = "/ " + doc_.PageCount.ToString();
-                MenuZoomText.Text = ((int)(doc_.Zoom)).ToString() + "%";
-            }
-            this.Refresh();
-        }
-
-        /* ----------------------------------------------------------------- */
-        ///
-        /// LoadFile
-        /// 
-        /// <summary>
-        /// ユーザから指定されたファイルを開く．
-        /// </summary>
-        ///
-        /* ----------------------------------------------------------------- */
-        private bool LoadFile(string filename) {
-            if (doc_ == null) return false;
-
-            try {
-                return doc_.LoadPDF(filename);
-            }
-            catch (System.Security.SecurityException) {
-                PasswordDialog frm = new PasswordDialog();
-                if (frm.ShowDialog() == DialogResult.OK) {
-                    if (!frm.Password.Equals(String.Empty)) doc_.UserPassword = frm.Password;
-                    return LoadFile(filename);
-                }
-                else {
-                    MessageBox.Show(Properties.Settings.Default.ERROR_PASSWORD,
-                        Properties.Settings.Default.ERROR_TITLE,
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Error);
-                    return false;
-                }
-            }
-        }
-
-        /* ----------------------------------------------------------------- */
-        /// NextPage
-        /* ----------------------------------------------------------------- */
-        private bool NextPage(object sender, EventArgs e) {
-            if (doc_ == null) return false;
-            if (doc_.CurrentPage < doc_.PageCount) {
-                doc_.NextPage();
-                this.ReDraw();
-                return true;
-            }
-            return false;
-        }
-
-        /* ----------------------------------------------------------------- */
-        /// PreviousPage
-        /* ----------------------------------------------------------------- */
-        private bool PreviousPage(object sender, EventArgs e) {
-            if (doc_ == null) return false;
-            if (doc_.CurrentPage > 1) {
-                doc_.PreviousPage();
-                this.ReDraw();
-                return true;
-            }
-            return false;
-        }
-
-        /* ----------------------------------------------------------------- */
-        ///
-        /// Search
-        /// 
-        /// <summary>
-        /// 検索結果を描画する．
-        /// TODO: あるページ内の検索結果に対するスクロールバーの調整を
-        /// 行っていない (FocusSearchResult) 為，その部分の実装．
-        /// 処理部分の記述にバグがある気がする．
-        /// </summary>
-        /// 
-        /* ----------------------------------------------------------------- */
-        private void Search(object sender, SearchArgs e) {
-            if (doc_ == null) return;
-
-            int result = 0;
-            doc_.SearchCaseSensitive = !e.IgnoreCase;
-
-            if (e.FromBegin) {
-                result = doc_.FindFirst(
-                    e.Text,
-                    e.WholeDocument ? PDFLibNet.PDFSearchOrder.PDFSearchFromdBegin : PDFLibNet.PDFSearchOrder.PDFSearchFromCurrent,
-                    !e.FindNext,
-                    e.WholeWord
-                );
-            }
-            else if (e.FindNext) {
-                if (e.FindNext) result = doc_.FindNext(e.Text);
-                else result = doc_.FindPrevious(e.Text);
-            }
-            else {
-                result = doc_.FindText(
-                    e.Text,
-                    doc_.CurrentPage,
-                    e.WholeDocument ? PDFLibNet.PDFSearchOrder.PDFSearchFromdBegin : PDFLibNet.PDFSearchOrder.PDFSearchFromCurrent,
-                    !e.IgnoreCase,
-                    !e.FindNext,
-                    true,
-                    e.WholeWord
-                );
-            }
-
-            if (result > 0) {
-                doc_.CurrentPage = doc_.SearchResults[0].Page;
-                // FocusSearchResult(doc_.SearchResults[0]);
-                this.ReDraw();
-            }
-            else {
-                Console.Beep();
-                from_begin_ = true;
-                this.ReDraw(Properties.Settings.Default.STATUS_EOS);
-            }
-           
-        }
-
-        /* ----------------------------------------------------------------- */
-        ///
-        /// Search
-        ///
-        /// <summary>
-        /// 検索方向を指定して検索する．
-        /// </summary>
-        /// 
-        /// <param name="vector"">
-        /// 検索方向
-        ///   true:  現在の位置よりも後方向．
-        ///   false: 現在の位置よりも前方向．
-        /// </param>
-        /// 
-        /* ----------------------------------------------------------------- */
-        private void Search(object sender, bool vector) {
-            try {
-                var query = new SearchArgs();
-                query.Text = MenuSearchText.Text;
-                query.FromBegin = from_begin_;
-                query.IgnoreCase = true;
-                query.WholeDocument = true;
-                query.WholeWord = false;
-                query.FindNext = vector;
-                from_begin_ = false;
-
-                this.Search(sender, query);
-            }
-            catch (Exception /* err */) { }
-        }
-
-        /* ----------------------------------------------------------------- */
-        //  各種初期化処理
-        /* ----------------------------------------------------------------- */
-        #region Initialize methods
-
-        /* ----------------------------------------------------------------- */
-        /// InitializeLibrary
-        /* ----------------------------------------------------------------- */
-        private void InitializeLibrary() {
-            // MuPDF の場合は不要．
-            // PDFLibNet.xPDFParams.Antialias = true;
-            // PDFLibNet.xPDFParams.VectorAntialias = true;
-        }
-
-        /* ----------------------------------------------------------------- */
-        ///
-        /// InitializeMainViewer
-        /// 
-        /// <summary>
-        /// PageViewer クラスの初期化処理
-        /// </summary>
-        /// 
-        /* ----------------------------------------------------------------- */
-        private void InitializeMainViewer() {
-            this.MainViewer.PaintControl += new PDFViewer.PageViewer.PaintControlHandler(this.DoubleBuffer_PaintControl);
-
-            int x = Screen.PrimaryScreen.Bounds.Height - 100;
-            this.Size = new Size(System.Math.Max(x, 800), x);
-            this.MainViewer.Size = new Size(System.Math.Max(x, 800) - DELTA_WIDTH, x - DELTA_HEIGHT);
-
-            // TODO: サイズの設定がおかしい．
-            //int width = this.MainViewer.Width;
-            //this.MainViewer.PageSize = new Size(width, (int)(width * 11 / 8.5));
-            this.MainViewer.PageSize = this.MainViewer.Size;
-            this.MainViewer.Visible = true;
-        }
-        #endregion
-        
-        /* ----------------------------------------------------------------- */
-        //  各種イベント・ハンドラ
-        /* ----------------------------------------------------------------- */
-        #region Event handlers
-
-        /* ----------------------------------------------------------------- */
-        ///
-        /// MainForm_KeyDown
-        /// 
-        /// <summary>
-        /// 各種ショートカットキーの設定．
-        /// TODO: 前方向検索がうまくいかない．
-        /// </summary>
-        /// 
-        /* ----------------------------------------------------------------- */
-        private void MainForm_KeyDown(object sender, KeyEventArgs e) {
-            switch (e.KeyCode) {
-            case Keys.Escape: // 検索の解除
-                // SearchResultを空にするため空文字で検索
-                if (doc_ != null) {
-                    doc_.FindText("", doc_.CurrentPage, PDFLibNet.PDFSearchOrder.PDFSearchFromCurrent,
-                        false, false, true, false);
-                }
-                this.ReDraw(Properties.Settings.Default.STATUS_EOS);
-                break;
-            case Keys.F3: // 次の検索
-                //if (MenuSearchText.Text != "") this.Search(sender, !e.Shift);
-                if (MenuSearchText.Text != "") this.Search(sender, true);
-                break;
-            case Keys.F: // 検索
-                if (e.Control) this.MenuSearchText.Focus();
-                break;
-            case Keys.O: // ファイルを開く
-                if (e.Control) this.MenuOpen_Click(sender, (EventArgs)e);
-                break;
-            default:
-                break;
-            }
-        }
-
-        /* ----------------------------------------------------------------- */
-        ///
         /// MainForm_SizeChanged
-        /// 
-        /// <summary>
-        /// ウィンドウサイズを変更する．
-        /// TODO: スクロールバーがおかしい．
-        /// </summary>
-        /// 
         /* ----------------------------------------------------------------- */
         private void MainForm_SizeChanged(object sender, EventArgs e) {
-            int width = this.Size.Width - DELTA_WIDTH;
-            int height = this.Size.Height - DELTA_HEIGHT;
-            this.MainViewer.Size = new Size(width, height);
-            if (MenuFitToWidth.Checked) this.MenuFitToWidth_Click(sender, e);
-            else if (MenuFitToHeight.Checked) this.MenuFitToHeight_Click(sender, e);
-            else this.ReDraw();
+            var tab = this.PageViewerTabControl.SelectedTab;
+            var canvas = CanvasPolicy.Get(tab);
+            CanvasPolicy.Adjust(canvas);
+            this.Refresh(canvas);
         }
-        
+
         /* ----------------------------------------------------------------- */
         ///
-        /// MenuOpen_Click
+        /// MainForm_MouseWheel
         /// 
         /// <summary>
-        /// ToolStrip->MenuOpen の Click イベントハンドラ
-        /// NOTE: PDFLoadBegin(), PDFLoadCompleted はそれぞれ
-        /// doc_.LoadPDF() の実行開始直後，終了直前に呼ばれる．
+        /// マウスホイールによるスクロールの処理．
         /// </summary>
         /// 
         /* ----------------------------------------------------------------- */
-        private void MenuOpen_Click(object sender, EventArgs e) {
-            var dialog = new OpenFileDialog();
-            dialog.Filter = Properties.Settings.Default.FILTER_PDF;
-
-            if (dialog.ShowDialog() == DialogResult.OK) {
-                if (doc_ != null) doc_.Dispose();
-
-                doc_ = new PDFLibNet.PDFWrapper();
-                doc_.PDFLoadCompleted += new PDFLibNet.PDFLoadCompletedHandler(PDFLoadCompleted);
-                doc_.PDFLoadBegin += new PDFLibNet.PDFLoadBeginHandler(PDFLoadBegin);
-                doc_.UseMuPDF = USE_MUPDF;
-
-                if (this.LoadFile(dialog.FileName)) {
-                    doc_.CurrentPage = 1;
-                    if (MenuFitToHeight.Checked) doc_.FitToHeight(MainViewer.Handle);
-                    else doc_.FitToWidth(MainViewer.Handle);
-                    this.Text = System.IO.Path.GetFileName(dialog.FileName) + " - " + Properties.Settings.Default.TITLE;
-                    this.Cursor = Cursors.WaitCursor;
-                    this.MenuZoomText.Enabled = true;
-                    this.ReDraw(); // ここは AsyncReDraw() だとうまくいかない．
-                }
-                else {
-                    MessageBox.Show(Properties.Settings.Default.ERROR_LOAD_FILE,
-                        Properties.Settings.Default.ERROR_TITLE,
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Error);
-                }
+        private void MainForm_MouseWheel(object sender, MouseEventArgs e) {
+            var tab = this.PageViewerTabControl.SelectedTab;
+            var scroll = tab.VerticalScroll;
+            if (!scroll.Visible) return;
+            
+            int delta = -(e.Delta / 120) * scroll.SmallChange;
+            if (scroll.Value + delta > scroll.Minimum &&
+                scroll.Value + delta < scroll.Maximum) {
+                scroll.Value += delta;
             }
-        }
-
-        /* ----------------------------------------------------------------- */
-        /// PDFLoadBegin
-        /* ----------------------------------------------------------------- */
-        private void PDFLoadBegin() {
-            this.Cursor = Cursors.WaitCursor;
-            this.Refresh();
-        }
-
-        /* ----------------------------------------------------------------- */
-        /// PDFLoadCompleted
-        /* ----------------------------------------------------------------- */
-        private void PDFLoadCompleted() {
-            this.Cursor = Cursors.Default;
-            this.PostReDraw();
         }
 
         /* ----------------------------------------------------------------- */
@@ -446,244 +123,223 @@ namespace Cube {
             this.Focus();
         }
 
-        /* ----------------------------------------------------------------- */
-        ///
-        /// MainForm_MouseWheel
-        /// 
-        /// <summary>
-        /// マウスホイールのイベントハンドラ．マウスホイールには，
-        /// 前ページ/次ページ の挙動を割り当てる．
-        /// </summary>
-        /// 
-        /* ----------------------------------------------------------------- */
-        private void MainForm_MouseWheel(object sender, EventArgs e) {
-            var mouse = (System.Windows.Forms.MouseEventArgs)e;
-
-            /*
-             * 1 wheel up で（1回上側にカチっと音がするまでずらす）+120，
-             * 1 wheel down で -120
-             */
-            if (mouse.Delta < 0) NextPage(sender, e);
-            else PreviousPage(sender, e);
-        }
+        #endregion
 
         /* ----------------------------------------------------------------- */
-        /// MenuFirstPage_Click
+        //  メインフォームに登録している各種コントロールのイベントハンドラ
         /* ----------------------------------------------------------------- */
-        private void MenuFirstPage_Click(object sender, EventArgs e) {
-            if (doc_ == null) return;
-            if (doc_.CurrentPage <= 1) return;
-            
-            doc_.CurrentPage = 1;
-            this.ReDraw();
-        }
+        #region Other controls event handlers
 
         /* ----------------------------------------------------------------- */
-        /// MenuPrevious_Click
+        /// OpenButton_Click
         /* ----------------------------------------------------------------- */
-        private void MenuPrevious_Click(object sender, EventArgs e) {
-            PreviousPage(sender, e);
-        }
-
-        /* ----------------------------------------------------------------- */
-        /// MenuNext_Click
-        /* ----------------------------------------------------------------- */
-        private void MenuNext_Click(object sender, EventArgs e) {
-            NextPage(sender, e);
-        }
-
-        /* ----------------------------------------------------------------- */
-        /// MenuLastPage_Click
-        /* ----------------------------------------------------------------- */
-        private void MenuLastPage_Click(object sender, EventArgs e) {
-            if (doc_ == null) return;
-            if (doc_.CurrentPage >= doc_.PageCount) return;
-
-            doc_.CurrentPage = doc_.PageCount;
-            this.ReDraw();
-        }
-
-        /* ----------------------------------------------------------------- */
-        ///
-        /// MenuCurrentPage_KeyDown
-        /// 
-        /// <summary>
-        /// ユーザがページ数を直接指定してエンターキーを押した場合の
-        /// イベントハンドラ．最終ページ以降の値が指定された場合には，
-        /// 最終ページを表示させる．
-        /// TODO: 数字以外が入力された場合にどうなるか．
-        /// </summary>
-        /// 
-        /* ----------------------------------------------------------------- */
-        private void MenuCurrentPage_KeyDown(object sender, KeyEventArgs e) {
-            if (doc_ == null) return;
-
-            if (e.KeyCode == Keys.Enter) {
-                try {
-                    doc_.CurrentPage = System.Math.Min(int.Parse(MenuCurrentPage.Text), doc_.PageCount);
-                }
-                catch (Exception /* err */) { }
-                finally {
-                    this.ReDraw();
-                }
+        private void OpenButton_Click(object sender, EventArgs e) {
+            var dialog = new OpenFileDialog();
+            if (dialog.ShowDialog() == DialogResult.OK) {
+                var tab = this.PageViewerTabControl.SelectedTab;
+                var canvas = CanvasPolicy.Create(tab);
+                CanvasPolicy.Open(canvas, dialog.FileName, fit_);
+                this.Refresh(canvas);
             }
         }
 
         /* ----------------------------------------------------------------- */
-        /// MenuZoomIn_Click
+        /// NewTabButton_Click
         /* ----------------------------------------------------------------- */
-        private void MenuZoomIn_Click(object sender, EventArgs e) {
-            UpdateFitCondition(FIT_NONE);
-            if (doc_ == null) return;
+        private void NewTabButton_Click(object sender, EventArgs e) {
+            TabPolicy.Create(this.PageViewerTabControl);
+            this.Refresh(null);
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// PageViewerTabControl_SelectedIndexChanged
+        /* ----------------------------------------------------------------- */
+        private void PageViewerTabControl_SelectedIndexChanged(object sender, EventArgs e) {
+            var control = (TabControl)sender;
+            var canvas = CanvasPolicy.Get(control.SelectedTab);
+            if (canvas == null) return;
+
+            CanvasPolicy.Adjust(canvas);
+            this.Refresh(canvas);
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// ZoomInButton_Click
+        /* ----------------------------------------------------------------- */
+        private void ZoomInButton_Click(object sender, EventArgs e) {
+            this.UpdateFitCondition(FitCondition.None);
+            var canvas = CanvasPolicy.Get(this.PageViewerTabControl.SelectedTab);
+            if (canvas == null) return;
 
             try {
-                doc_.ZoomIN();
+                CanvasPolicy.ZoomIn(canvas);
             }
             catch (Exception /* err */) { }
             finally {
-                this.AsyncReDraw();
+                this.Refresh(canvas);
             }
         }
 
         /* ----------------------------------------------------------------- */
-        /// MenuZoomOut_Click
+        /// ZoomOutButton_Click
         /* ----------------------------------------------------------------- */
-        private void MenuZoomOut_Click(object sender, EventArgs e) {
-            UpdateFitCondition(FIT_NONE);
-            if (doc_ == null) return;
+        private void ZoomOutButton_Click(object sender, EventArgs e) {
+            this.UpdateFitCondition(FitCondition.None);
+            var canvas = CanvasPolicy.Get(this.PageViewerTabControl.SelectedTab);
+            if (canvas == null) return;
 
             try {
-                doc_.ZoomOut();
+                CanvasPolicy.ZoomOut(canvas);
             }
             catch (Exception /* err */) { }
             finally {
-                this.AsyncReDraw();
+                this.Refresh(canvas);
             }
         }
 
         /* ----------------------------------------------------------------- */
-        /// MenuZoomText_DropDownItemClicked
+        /// ZoomDropDownButton_DropDownItemClicked
         /* ----------------------------------------------------------------- */
-        private void MenuZoomText_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e) {
-            UpdateFitCondition(FIT_NONE);
-            if (doc_ == null) return;
+        private void ZoomDropDownButton_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e) {
+            this.UpdateFitCondition(FitCondition.None);
+            var canvas = CanvasPolicy.Get(this.PageViewerTabControl.SelectedTab);
+            if (canvas == null) return;
 
             try {
                 var zoom = e.ClickedItem.Text.Replace("%", "");
-                doc_.Zoom = int.Parse(zoom);
+                CanvasPolicy.Zoom(canvas, int.Parse(zoom));
             }
             catch (Exception /* err */) { }
             finally {
-                this.AsyncReDraw();
+                this.Refresh(canvas);
             }
         }
-        
+
         /* ----------------------------------------------------------------- */
-        /// MenuFitToWidth_Click
+        /// FitToWidthButton_Click
         /* ----------------------------------------------------------------- */
-        private void MenuFitToWidth_Click(object sender, EventArgs e) {
-            UpdateFitCondition(MenuFitToWidth.Checked ? FIT_WIDTH : FIT_NONE);
-            if (doc_ == null) return;
+        private void FitToWidthButton_Click(object sender, EventArgs e) {
+            this.UpdateFitCondition(this.FitToWidthButton.Checked ? FitCondition.Width : FitCondition.None);
+            var canvas = CanvasPolicy.Get(this.PageViewerTabControl.SelectedTab);
+            if (canvas == null) return;
 
             try {
-                if (MenuFitToWidth.Checked) {
-                    doc_.FitToWidth(MainViewer.Handle);
-                }
+                if (this.FitToWidthButton.Checked) CanvasPolicy.FitToWidth(canvas);
             }
             catch (Exception /* err */) { }
             finally {
-                this.ReDraw();
+                this.Refresh(canvas);
             }
         }
 
         /* ----------------------------------------------------------------- */
-        /// MenuFitToHeight_Click
+        /// FitToHeightButton_Click
         /* ----------------------------------------------------------------- */
-        private void MenuFitToHeight_Click(object sender, EventArgs e) {
-            UpdateFitCondition(MenuFitToHeight.Checked ? FIT_HEIGHT : FIT_NONE);
-            if (doc_ == null) return;
+        private void FitToHeightButton_Click(object sender, EventArgs e) {
+            this.UpdateFitCondition(this.FitToHeightButton.Checked ? FitCondition.Height : FitCondition.None);
+            var canvas = CanvasPolicy.Get(this.PageViewerTabControl.SelectedTab);
+            if (canvas == null) return;
 
             try {
-                if (MenuFitToHeight.Checked) {
-                    doc_.FitToHeight(MainViewer.Handle);
-                }
+                if (this.FitToHeightButton.Checked) CanvasPolicy.FitToHeight(canvas);
             }
             catch (Exception /* err */) { }
             finally {
-                this.ReDraw();
+                this.Refresh(canvas);
             }
         }
 
         /* ----------------------------------------------------------------- */
-        /// MenuSearch_Click
+        /// NextPageButton_Click
         /* ----------------------------------------------------------------- */
-        private void MenuSearch_Click(object sender, EventArgs e) {
-            if (doc_ == null || MenuSearchText.Text == "") return;
+        private void NextPageButton_Click(object sender, EventArgs e) {
+            var canvas = CanvasPolicy.Get(this.PageViewerTabControl.SelectedTab);
+            if (canvas == null) return;
+
             try {
-                this.Search(sender, true);
+                CanvasPolicy.NextPage(canvas);
             }
             catch (Exception /* err */) { }
+            finally {
+                this.Refresh(canvas);
+            }
         }
 
         /* ----------------------------------------------------------------- */
-        /// MenuSearchText_TextChanged
+        /// PreviousPageButton_Click
         /* ----------------------------------------------------------------- */
-        private void MenuSearchText_TextChanged(object sender, EventArgs e) {
-            from_begin_ = true;
+        private void PreviousPageButton_Click(object sender, EventArgs e) {
+            var canvas = CanvasPolicy.Get(this.PageViewerTabControl.SelectedTab);
+            if (canvas == null) return;
+
+            try {
+                CanvasPolicy.PreviousPage(canvas);
+            }
+            catch (Exception /* err */) { }
+            finally {
+                this.Refresh(canvas);
+            }
         }
 
         /* ----------------------------------------------------------------- */
-        /// MenuSearchText_KeyDown
+        /// FirstPageButton_Click
         /* ----------------------------------------------------------------- */
-        private void MenuSearchText_KeyDown(object sender, KeyEventArgs e) {
+        private void FirstPageButton_Click(object sender, EventArgs e) {
+            var canvas = CanvasPolicy.Get(this.PageViewerTabControl.SelectedTab);
+            if (canvas == null) return;
+
+            try {
+                CanvasPolicy.FirstPage(canvas);
+            }
+            catch (Exception /* err */) { }
+            finally {
+                this.Refresh(canvas);
+            }
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// LastPageButton_Click
+        /* ----------------------------------------------------------------- */
+        private void LastPageButton_Click(object sender, EventArgs e) {
+            var canvas = CanvasPolicy.Get(this.PageViewerTabControl.SelectedTab);
+            if (canvas == null) return;
+
+            try {
+                CanvasPolicy.LastPage(canvas);
+            }
+            catch (Exception /* err */) { }
+            finally {
+                this.Refresh(canvas);
+            }
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// CurrentPageTextBox_KeyDown
+        /* ----------------------------------------------------------------- */
+        private void CurrentPageTextBox_KeyDown(object sender, KeyEventArgs e) {
+            var canvas = CanvasPolicy.Get(this.PageViewerTabControl.SelectedTab);
+            if (canvas == null) return;
+
             if (e.KeyCode == Keys.Enter) {
-                this.MenuSearch_Click(sender, (EventArgs)e);
+                try {
+                    var control = (ToolStripTextBox)sender;
+                    int page = int.Parse(control.Text);
+                    CanvasPolicy.MovePage(canvas, page);
+                }
+                catch (Exception /* err */) { }
+                finally {
+                    this.Refresh(canvas);
+                }
             }
         }
 
-        #endregion
-
-        /* ----------------------------------------------------------------- */
-        //  DoubleBuffer 関連のイベント・ハンドラ
-        /* ----------------------------------------------------------------- */
-        #region Event handlers about DoubleBuffer which is located in PageViewer
-
-        /* ----------------------------------------------------------------- */
-        /// DoubleBuffer_PaintControl
-        /* ----------------------------------------------------------------- */
-        private void DoubleBuffer_PaintControl(object sender, Rectangle view, Point location, Graphics g) {
-            if (doc_ == null) return;
-
-            Size sF = new Size(view.Right, view.Bottom);
-            Rectangle r = new Rectangle(location, sF);
-            doc_.ClientBounds = r;
-            doc_.CurrentX = view.X;
-            doc_.CurrentY = view.Y;
-            doc_.DrawPageHDC(g.GetHdc());
-            g.ReleaseHdc();
-        }
-
-        #endregion
-
-        /* ----------------------------------------------------------------- */
-        //  定数の定義
-        /* ----------------------------------------------------------------- */
-        #region Constant variables
-        private const int DELTA_WIDTH = 40;
-        private const int DELTA_HEIGHT = 115;
-        private const bool USE_MUPDF = true;
-        private const int FIT_NONE = 0;
-        private const int FIT_WIDTH = 0x01;
-        private const int FIT_HEIGHT = 0x02;
         #endregion
 
         /* ----------------------------------------------------------------- */
         //  メンバ変数の定義
         /* ----------------------------------------------------------------- */
         #region Member variables
-        private PDFLibNet.PDFWrapper doc_ = null;
-        private bool from_begin_ = true;
-        private int fit_ = 0;
+        private FitCondition fit_ = FitCondition.Height;
         #endregion
     }
 }

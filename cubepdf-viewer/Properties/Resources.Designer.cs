@@ -109,6 +109,13 @@ namespace Cube.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap newtab {
+            get {
+                object obj = ResourceManager.GetObject("newtab", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap open {
             get {
                 object obj = ResourceManager.GetObject("open", resourceCulture);
@@ -119,41 +126,6 @@ namespace Cube.Properties {
         internal static System.Drawing.Bitmap search {
             get {
                 object obj = ResourceManager.GetObject("search", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        internal static System.Drawing.Bitmap tshadowdown {
-            get {
-                object obj = ResourceManager.GetObject("tshadowdown", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        internal static System.Drawing.Bitmap tshadowdownleft {
-            get {
-                object obj = ResourceManager.GetObject("tshadowdownleft", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        internal static System.Drawing.Bitmap tshadowdownright {
-            get {
-                object obj = ResourceManager.GetObject("tshadowdownright", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        internal static System.Drawing.Bitmap tshadowright {
-            get {
-                object obj = ResourceManager.GetObject("tshadowright", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        internal static System.Drawing.Bitmap tshadowtopright {
-            get {
-                object obj = ResourceManager.GetObject("tshadowtopright", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

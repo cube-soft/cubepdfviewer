@@ -1,24 +1,7 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Cube.Properties" GeneratedClassName="Settings">
-  <Profiles />
-  <Settings>
-    <Setting Name="TITLE" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">CubePDF Viewer</Value>
-    </Setting>
-    <Setting Name="STATUS_EOS" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">文書の検索が終了しました。</Value>
-    </Setting>
-    <Setting Name="FILTER_PDF" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">PDF ファイル(*.pdf)|*.pdf|すべてのファイル(*.*)|*.*</Value>
-    </Setting>
-    <Setting Name="ERROR_PASSWORD" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">このファイルはパスワードで保護されています。</Value>
-    </Setting>
-    <Setting Name="ERROR_TITLE" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">エラー</Value>
-    </Setting>
-    <Setting Name="ERROR_LOAD_FILE" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">ファイルを開けませんでした。</Value>
-    </Setting>
-  </Settings>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)">
+  <Profiles>
+    <Profile Name="(Default)" />
+  </Profiles>
+  <Settings />
 </SettingsFile>
