@@ -28,39 +28,39 @@
             this.NewTabButton = new System.Windows.Forms.ToolStripButton();
             this.OpenButton = new System.Windows.Forms.ToolStripButton();
             this.PrintButton = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.OnlyDisplayCommonCategorySeparator = new System.Windows.Forms.ToolStripSeparator();
             this.ZoomInButton = new System.Windows.Forms.ToolStripButton();
             this.ZoomDropDownButton = new System.Windows.Forms.ToolStripDropDownButton();
-            this.Zoom25 = new System.Windows.Forms.ToolStripMenuItem();
-            this.Zoom50 = new System.Windows.Forms.ToolStripMenuItem();
-            this.Zoom75 = new System.Windows.Forms.ToolStripMenuItem();
-            this.Zoom100 = new System.Windows.Forms.ToolStripMenuItem();
-            this.Zoom125 = new System.Windows.Forms.ToolStripMenuItem();
-            this.Zoom150 = new System.Windows.Forms.ToolStripMenuItem();
-            this.Zoom200 = new System.Windows.Forms.ToolStripMenuItem();
-            this.Zoom400 = new System.Windows.Forms.ToolStripMenuItem();
-            this.Zoom800 = new System.Windows.Forms.ToolStripMenuItem();
+            this.OnlyDisplayZoom25 = new System.Windows.Forms.ToolStripMenuItem();
+            this.OnlyDisplayZoom50 = new System.Windows.Forms.ToolStripMenuItem();
+            this.OnlyDisplayZoom75 = new System.Windows.Forms.ToolStripMenuItem();
+            this.OnlyDisplayZoom100 = new System.Windows.Forms.ToolStripMenuItem();
+            this.OnlyDisplayZoom125 = new System.Windows.Forms.ToolStripMenuItem();
+            this.OnlyDisplayZoom150 = new System.Windows.Forms.ToolStripMenuItem();
+            this.OnlyDisplayZoom200 = new System.Windows.Forms.ToolStripMenuItem();
+            this.OnlyDisplayZoom400 = new System.Windows.Forms.ToolStripMenuItem();
+            this.OnlyDisplayZoom800 = new System.Windows.Forms.ToolStripMenuItem();
             this.ZoomOutButton = new System.Windows.Forms.ToolStripButton();
             this.FitToWidthButton = new System.Windows.Forms.ToolStripButton();
             this.FitToHeightButton = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.OnlyDisplayZoomCategorySeparator = new System.Windows.Forms.ToolStripSeparator();
             this.FirstPageButton = new System.Windows.Forms.ToolStripButton();
             this.PreviousPageButton = new System.Windows.Forms.ToolStripButton();
             this.CurrentPageTextBox = new System.Windows.Forms.ToolStripTextBox();
             this.TotalPageLabel = new System.Windows.Forms.ToolStripLabel();
             this.NextPageButton = new System.Windows.Forms.ToolStripButton();
             this.LastPageButton = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.OnlyDisplayPageCategorySeparator = new System.Windows.Forms.ToolStripSeparator();
             this.SearchTextBox = new System.Windows.Forms.ToolStripTextBox();
             this.SearchButton = new System.Windows.Forms.ToolStripButton();
             this.FooterStatusStrip = new System.Windows.Forms.StatusStrip();
             this.MainSplitContainer = new System.Windows.Forms.SplitContainer();
+            this.NavigationPanel = new System.Windows.Forms.Panel();
             this.PageViewerTabControl = new System.Windows.Forms.TabControl();
             this.DefaultTabPage = new System.Windows.Forms.TabPage();
             this.SubMenuSplitContainer = new System.Windows.Forms.SplitContainer();
             this.SubMenuToolStrip = new System.Windows.Forms.ToolStrip();
             this.ThumbButton = new System.Windows.Forms.ToolStripButton();
-            this.NavigationPanel = new System.Windows.Forms.Panel();
             this.MenuToolStrip.SuspendLayout();
             this.MainSplitContainer.Panel1.SuspendLayout();
             this.MainSplitContainer.Panel2.SuspendLayout();
@@ -83,20 +83,20 @@
             this.NewTabButton,
             this.OpenButton,
             this.PrintButton,
-            this.toolStripSeparator1,
+            this.OnlyDisplayCommonCategorySeparator,
             this.ZoomInButton,
             this.ZoomDropDownButton,
             this.ZoomOutButton,
             this.FitToWidthButton,
             this.FitToHeightButton,
-            this.toolStripSeparator2,
+            this.OnlyDisplayZoomCategorySeparator,
             this.FirstPageButton,
             this.PreviousPageButton,
             this.CurrentPageTextBox,
             this.TotalPageLabel,
             this.NextPageButton,
             this.LastPageButton,
-            this.toolStripSeparator3,
+            this.OnlyDisplayPageCategorySeparator,
             this.SearchTextBox,
             this.SearchButton});
             this.MenuToolStrip.Location = new System.Drawing.Point(0, 0);
@@ -136,10 +136,10 @@
             this.PrintButton.Size = new System.Drawing.Size(28, 37);
             this.PrintButton.Text = "印刷する";
             // 
-            // toolStripSeparator1
+            // OnlyDisplayCommonCategorySeparator
             // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 40);
+            this.OnlyDisplayCommonCategorySeparator.Name = "OnlyDisplayCommonCategorySeparator";
+            this.OnlyDisplayCommonCategorySeparator.Size = new System.Drawing.Size(6, 40);
             // 
             // ZoomInButton
             // 
@@ -156,15 +156,15 @@
             // 
             this.ZoomDropDownButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.ZoomDropDownButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.Zoom25,
-            this.Zoom50,
-            this.Zoom75,
-            this.Zoom100,
-            this.Zoom125,
-            this.Zoom150,
-            this.Zoom200,
-            this.Zoom400,
-            this.Zoom800});
+            this.OnlyDisplayZoom25,
+            this.OnlyDisplayZoom50,
+            this.OnlyDisplayZoom75,
+            this.OnlyDisplayZoom100,
+            this.OnlyDisplayZoom125,
+            this.OnlyDisplayZoom150,
+            this.OnlyDisplayZoom200,
+            this.OnlyDisplayZoom400,
+            this.OnlyDisplayZoom800});
             this.ZoomDropDownButton.Font = new System.Drawing.Font("MS UI Gothic", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.ZoomDropDownButton.Image = ((System.Drawing.Image)(resources.GetObject("ZoomDropDownButton.Image")));
             this.ZoomDropDownButton.ImageTransparentColor = System.Drawing.Color.Magenta;
@@ -175,59 +175,59 @@
             this.ZoomDropDownButton.ToolTipText = "倍率";
             this.ZoomDropDownButton.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.ZoomDropDownButton_DropDownItemClicked);
             // 
-            // Zoom25
+            // OnlyDisplayZoom25
             // 
-            this.Zoom25.Name = "Zoom25";
-            this.Zoom25.Size = new System.Drawing.Size(102, 22);
-            this.Zoom25.Text = "25%";
+            this.OnlyDisplayZoom25.Name = "OnlyDisplayZoom25";
+            this.OnlyDisplayZoom25.Size = new System.Drawing.Size(152, 22);
+            this.OnlyDisplayZoom25.Text = "25%";
             // 
-            // Zoom50
+            // OnlyDisplayZoom50
             // 
-            this.Zoom50.Name = "Zoom50";
-            this.Zoom50.Size = new System.Drawing.Size(102, 22);
-            this.Zoom50.Text = "50%";
+            this.OnlyDisplayZoom50.Name = "OnlyDisplayZoom50";
+            this.OnlyDisplayZoom50.Size = new System.Drawing.Size(152, 22);
+            this.OnlyDisplayZoom50.Text = "50%";
             // 
-            // Zoom75
+            // OnlyDisplayZoom75
             // 
-            this.Zoom75.Name = "Zoom75";
-            this.Zoom75.Size = new System.Drawing.Size(102, 22);
-            this.Zoom75.Text = "75%";
+            this.OnlyDisplayZoom75.Name = "OnlyDisplayZoom75";
+            this.OnlyDisplayZoom75.Size = new System.Drawing.Size(152, 22);
+            this.OnlyDisplayZoom75.Text = "75%";
             // 
-            // Zoom100
+            // OnlyDisplayZoom100
             // 
-            this.Zoom100.Name = "Zoom100";
-            this.Zoom100.Size = new System.Drawing.Size(102, 22);
-            this.Zoom100.Text = "100%";
+            this.OnlyDisplayZoom100.Name = "OnlyDisplayZoom100";
+            this.OnlyDisplayZoom100.Size = new System.Drawing.Size(152, 22);
+            this.OnlyDisplayZoom100.Text = "100%";
             // 
-            // Zoom125
+            // OnlyDisplayZoom125
             // 
-            this.Zoom125.Name = "Zoom125";
-            this.Zoom125.Size = new System.Drawing.Size(102, 22);
-            this.Zoom125.Text = "125%";
+            this.OnlyDisplayZoom125.Name = "OnlyDisplayZoom125";
+            this.OnlyDisplayZoom125.Size = new System.Drawing.Size(152, 22);
+            this.OnlyDisplayZoom125.Text = "125%";
             // 
-            // Zoom150
+            // OnlyDisplayZoom150
             // 
-            this.Zoom150.Name = "Zoom150";
-            this.Zoom150.Size = new System.Drawing.Size(102, 22);
-            this.Zoom150.Text = "150%";
+            this.OnlyDisplayZoom150.Name = "OnlyDisplayZoom150";
+            this.OnlyDisplayZoom150.Size = new System.Drawing.Size(152, 22);
+            this.OnlyDisplayZoom150.Text = "150%";
             // 
-            // Zoom200
+            // OnlyDisplayZoom200
             // 
-            this.Zoom200.Name = "Zoom200";
-            this.Zoom200.Size = new System.Drawing.Size(102, 22);
-            this.Zoom200.Text = "200%";
+            this.OnlyDisplayZoom200.Name = "OnlyDisplayZoom200";
+            this.OnlyDisplayZoom200.Size = new System.Drawing.Size(152, 22);
+            this.OnlyDisplayZoom200.Text = "200%";
             // 
-            // Zoom400
+            // OnlyDisplayZoom400
             // 
-            this.Zoom400.Name = "Zoom400";
-            this.Zoom400.Size = new System.Drawing.Size(102, 22);
-            this.Zoom400.Text = "400%";
+            this.OnlyDisplayZoom400.Name = "OnlyDisplayZoom400";
+            this.OnlyDisplayZoom400.Size = new System.Drawing.Size(152, 22);
+            this.OnlyDisplayZoom400.Text = "400%";
             // 
-            // Zoom800
+            // OnlyDisplayZoom800
             // 
-            this.Zoom800.Name = "Zoom800";
-            this.Zoom800.Size = new System.Drawing.Size(102, 22);
-            this.Zoom800.Text = "800%";
+            this.OnlyDisplayZoom800.Name = "OnlyDisplayZoom800";
+            this.OnlyDisplayZoom800.Size = new System.Drawing.Size(152, 22);
+            this.OnlyDisplayZoom800.Text = "800%";
             // 
             // ZoomOutButton
             // 
@@ -264,10 +264,10 @@
             this.FitToHeightButton.Text = "ウィンドウの高さに合わせる";
             this.FitToHeightButton.Click += new System.EventHandler(this.FitToHeightButton_Click);
             // 
-            // toolStripSeparator2
+            // OnlyDisplayZoomCategorySeparator
             // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 40);
+            this.OnlyDisplayZoomCategorySeparator.Name = "OnlyDisplayZoomCategorySeparator";
+            this.OnlyDisplayZoomCategorySeparator.Size = new System.Drawing.Size(6, 40);
             // 
             // FirstPageButton
             // 
@@ -332,10 +332,10 @@
             this.LastPageButton.Text = "最後のページ";
             this.LastPageButton.Click += new System.EventHandler(this.LastPageButton_Click);
             // 
-            // toolStripSeparator3
+            // OnlyDisplayPageCategorySeparator
             // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 40);
+            this.OnlyDisplayPageCategorySeparator.Name = "OnlyDisplayPageCategorySeparator";
+            this.OnlyDisplayPageCategorySeparator.Size = new System.Drawing.Size(6, 40);
             // 
             // SearchTextBox
             // 
@@ -382,6 +382,16 @@
             this.MainSplitContainer.SplitterDistance = 100;
             this.MainSplitContainer.SplitterWidth = 1;
             this.MainSplitContainer.TabIndex = 2;
+            // 
+            // NavigationPanel
+            // 
+            this.NavigationPanel.BackColor = System.Drawing.Color.DimGray;
+            this.NavigationPanel.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.NavigationPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.NavigationPanel.Location = new System.Drawing.Point(0, 0);
+            this.NavigationPanel.Name = "NavigationPanel";
+            this.NavigationPanel.Size = new System.Drawing.Size(100, 511);
+            this.NavigationPanel.TabIndex = 0;
             // 
             // PageViewerTabControl
             // 
@@ -449,16 +459,6 @@
             this.ThumbButton.Text = "サムネイル";
             this.ThumbButton.Click += new System.EventHandler(this.ThumbButton_Click);
             // 
-            // NavigationPanel
-            // 
-            this.NavigationPanel.BackColor = System.Drawing.Color.DimGray;
-            this.NavigationPanel.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.NavigationPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.NavigationPanel.Location = new System.Drawing.Point(0, 0);
-            this.NavigationPanel.Name = "NavigationPanel";
-            this.NavigationPanel.Size = new System.Drawing.Size(100, 511);
-            this.NavigationPanel.TabIndex = 0;
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -492,29 +492,29 @@
 
         private System.Windows.Forms.ToolStrip MenuToolStrip;
         private System.Windows.Forms.ToolStripButton OpenButton;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripSeparator OnlyDisplayCommonCategorySeparator;
         private System.Windows.Forms.ToolStripButton ZoomInButton;
         private System.Windows.Forms.ToolStripDropDownButton ZoomDropDownButton;
-        private System.Windows.Forms.ToolStripMenuItem Zoom25;
-        private System.Windows.Forms.ToolStripMenuItem Zoom50;
-        private System.Windows.Forms.ToolStripMenuItem Zoom75;
-        private System.Windows.Forms.ToolStripMenuItem Zoom100;
-        private System.Windows.Forms.ToolStripMenuItem Zoom125;
-        private System.Windows.Forms.ToolStripMenuItem Zoom150;
-        private System.Windows.Forms.ToolStripMenuItem Zoom200;
-        private System.Windows.Forms.ToolStripMenuItem Zoom400;
-        private System.Windows.Forms.ToolStripMenuItem Zoom800;
+        private System.Windows.Forms.ToolStripMenuItem OnlyDisplayZoom25;
+        private System.Windows.Forms.ToolStripMenuItem OnlyDisplayZoom50;
+        private System.Windows.Forms.ToolStripMenuItem OnlyDisplayZoom75;
+        private System.Windows.Forms.ToolStripMenuItem OnlyDisplayZoom100;
+        private System.Windows.Forms.ToolStripMenuItem OnlyDisplayZoom125;
+        private System.Windows.Forms.ToolStripMenuItem OnlyDisplayZoom150;
+        private System.Windows.Forms.ToolStripMenuItem OnlyDisplayZoom200;
+        private System.Windows.Forms.ToolStripMenuItem OnlyDisplayZoom400;
+        private System.Windows.Forms.ToolStripMenuItem OnlyDisplayZoom800;
         private System.Windows.Forms.ToolStripButton ZoomOutButton;
         private System.Windows.Forms.ToolStripButton FitToWidthButton;
         private System.Windows.Forms.ToolStripButton FitToHeightButton;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripSeparator OnlyDisplayZoomCategorySeparator;
         private System.Windows.Forms.ToolStripButton FirstPageButton;
         private System.Windows.Forms.ToolStripButton PreviousPageButton;
         private System.Windows.Forms.ToolStripTextBox CurrentPageTextBox;
         private System.Windows.Forms.ToolStripLabel TotalPageLabel;
         private System.Windows.Forms.ToolStripButton NextPageButton;
         private System.Windows.Forms.ToolStripButton LastPageButton;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private System.Windows.Forms.ToolStripSeparator OnlyDisplayPageCategorySeparator;
         private System.Windows.Forms.ToolStripTextBox SearchTextBox;
         private System.Windows.Forms.ToolStripButton SearchButton;
         private System.Windows.Forms.StatusStrip FooterStatusStrip;
