@@ -386,6 +386,9 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         private void MenuModeButton_Click(object sender, EventArgs e) {
             this.MenuSplitContainer.Panel1Collapsed = !this.MenuSplitContainer.Panel1Collapsed;
+            this.MenuModeButton.Image = this.MenuSplitContainer.Panel1Collapsed ?
+                global::Cube.Properties.Resources.showmenu :
+                global::Cube.Properties.Resources.hidemenu;
             this.Adjust();
         }
 

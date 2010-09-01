@@ -63,8 +63,8 @@
             this.DefaultTabPage = new System.Windows.Forms.TabPage();
             this.SubMenuSplitContainer = new System.Windows.Forms.SplitContainer();
             this.SubMenuToolStrip = new System.Windows.Forms.ToolStrip();
-            this.ThumbButton = new System.Windows.Forms.ToolStripButton();
             this.MenuModeButton = new System.Windows.Forms.ToolStripButton();
+            this.ThumbButton = new System.Windows.Forms.ToolStripButton();
             this.MenuSplitContainer = new System.Windows.Forms.SplitContainer();
             this.MenuToolStrip.SuspendLayout();
             this.NavigationSplitContainer.Panel1.SuspendLayout();
@@ -467,15 +467,26 @@
             this.SubMenuToolStrip.BackColor = System.Drawing.SystemColors.Control;
             this.SubMenuToolStrip.Dock = System.Windows.Forms.DockStyle.Left;
             this.SubMenuToolStrip.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-            this.SubMenuToolStrip.ImageScalingSize = new System.Drawing.Size(24, 24);
+            this.SubMenuToolStrip.ImageScalingSize = new System.Drawing.Size(26, 26);
             this.SubMenuToolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.ThumbButton,
-            this.MenuModeButton});
+            this.MenuModeButton,
+            this.ThumbButton});
             this.SubMenuToolStrip.Location = new System.Drawing.Point(0, 0);
             this.SubMenuToolStrip.Name = "SubMenuToolStrip";
-            this.SubMenuToolStrip.Size = new System.Drawing.Size(29, 510);
+            this.SubMenuToolStrip.Size = new System.Drawing.Size(31, 510);
             this.SubMenuToolStrip.TabIndex = 0;
             this.SubMenuToolStrip.Text = "toolStrip1";
+            // 
+            // MenuModeButton
+            // 
+            this.MenuModeButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.MenuModeButton.Image = global::Cube.Properties.Resources.hidemenu;
+            this.MenuModeButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.MenuModeButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.MenuModeButton.Name = "MenuModeButton";
+            this.MenuModeButton.Size = new System.Drawing.Size(28, 16);
+            this.MenuModeButton.Text = "メニュー表示の切り替え";
+            this.MenuModeButton.Click += new System.EventHandler(this.MenuModeButton_Click);
             // 
             // ThumbButton
             // 
@@ -483,20 +494,9 @@
             this.ThumbButton.Image = global::Cube.Properties.Resources.thumbnail;
             this.ThumbButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.ThumbButton.Name = "ThumbButton";
-            this.ThumbButton.Size = new System.Drawing.Size(26, 28);
+            this.ThumbButton.Size = new System.Drawing.Size(29, 28);
             this.ThumbButton.Text = "サムネイル";
             this.ThumbButton.Click += new System.EventHandler(this.ThumbButton_Click);
-            // 
-            // MenuModeButton
-            // 
-            this.MenuModeButton.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.MenuModeButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.MenuModeButton.Image = global::Cube.Properties.Resources.hidemenu;
-            this.MenuModeButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.MenuModeButton.Name = "MenuModeButton";
-            this.MenuModeButton.Size = new System.Drawing.Size(26, 28);
-            this.MenuModeButton.Text = "メニュー表示の切り替え";
-            this.MenuModeButton.Click += new System.EventHandler(this.MenuModeButton_Click);
             // 
             // MenuSplitContainer
             // 
