@@ -83,9 +83,9 @@ namespace Cube {
         }
 
         /* ----------------------------------------------------------------- */
-        /// Resize
+        /// Adjust
         /* ----------------------------------------------------------------- */
-        private void Resize() {
+        private void Adjust() {
             var tab = this.PageViewerTabControl.SelectedTab;
             var canvas = CanvasPolicy.Get(tab);
             if (this.FitToWidthButton.Checked) CanvasPolicy.FitToWidth(canvas);
@@ -103,7 +103,7 @@ namespace Cube {
         /// MainForm_SizeChanged
         /* ----------------------------------------------------------------- */
         private void MainForm_SizeChanged(object sender, EventArgs e) {
-            this.Resize();
+            this.Adjust();
         }
 
         /* ----------------------------------------------------------------- */
@@ -386,7 +386,7 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         private void MenuModeButton_Click(object sender, EventArgs e) {
             this.MenuSplitContainer.Panel1Collapsed = !this.MenuSplitContainer.Panel1Collapsed;
-            this.Resize();
+            this.Adjust();
         }
 
         /* ----------------------------------------------------------------- */
@@ -394,7 +394,7 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         private void ThumbButton_Click(object sender, EventArgs e) {
             this.NavigationSplitContainer.Panel1Collapsed = !this.NavigationSplitContainer.Panel1Collapsed;
-            this.Resize();
+            this.Adjust();
         }
 
         #endregion
