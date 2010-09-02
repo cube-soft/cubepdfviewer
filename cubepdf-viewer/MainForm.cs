@@ -75,6 +75,8 @@ namespace Cube {
         /// 
         /// <summary>
         /// システムの Refresh() を呼ぶ前に，必要な情報を全て更新する．
+        /// MEMO: サムネイル画面を更新するとちらつきがひどいので，最小限の更新
+        /// になるようにしている．
         /// </summary>
         /// 
         /* ----------------------------------------------------------------- */
@@ -89,8 +91,11 @@ namespace Cube {
                 CurrentPageTextBox.Text = core.CurrentPage.ToString();
                 TotalPageLabel.Text = "/ " + core.PageCount.ToString();
                 ZoomDropDownButton.Text = ((int)core.Zoom).ToString() + "%";
+                if (this.PageViewerTabControl != null) this.PageViewerTabControl.Refresh();
             }
-            this.Refresh();
+
+            if (this.MainMenuStrip != null) this.MainMenuStrip.Refresh();
+            if (this.FooterStatusStrip != null) this.FooterStatusStrip.Refresh();
         }
 
         /* ----------------------------------------------------------------- */
@@ -112,6 +117,16 @@ namespace Cube {
             else if (this.FitToHeightButton.Checked) CanvasPolicy.FitToHeight(canvas);
             else CanvasPolicy.Adjust(canvas);
             this.Refresh(canvas);
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// CreateThumbnail
+        /* ----------------------------------------------------------------- */
+        private void CreateThumbnail(PictureBox canvas) {
+            var old = CanvasPolicy.GetThumbnail(this.NavigationSplitContainer.Panel1);
+            if (old != null) CanvasPolicy.DestroyThumbnail(old);
+            ListView thumb = CanvasPolicy.CreateThumbnail(canvas, this.NavigationSplitContainer.Panel1, RenderThumbnailFinished);
+            thumb.SelectedIndexChanged += new EventHandler(PageChanged);
         }
 
         /* -----------------------;------------------------------------------ */
@@ -200,13 +215,10 @@ namespace Cube {
         private void OpenButton_Click(object sender, EventArgs e) {
             var dialog = new OpenFileDialog();
             if (dialog.ShowDialog() == DialogResult.OK) {
-                var old = CanvasPolicy.GetThumbnail(this.NavigationSplitContainer.Panel1);
-                if (old != null) CanvasPolicy.DestroyThumbnail(old);
-
                 var tab = this.PageViewerTabControl.SelectedTab;
                 var canvas = CanvasPolicy.Create(tab);
                 CanvasPolicy.Open(canvas, dialog.FileName, fit_);
-                CanvasPolicy.CreateThumbnail(canvas, this.NavigationSplitContainer.Panel1, RenderThumbnailFinished);
+                this.CreateThumbnail(canvas);
                 this.Refresh(canvas);
             }
         }
@@ -232,9 +244,7 @@ namespace Cube {
             var canvas = CanvasPolicy.Get(control.SelectedTab);
             if (canvas == null) return;
 
-            var old = CanvasPolicy.GetThumbnail(this.NavigationSplitContainer.Panel1);
-            if (old != null) CanvasPolicy.DestroyThumbnail(old);
-            CanvasPolicy.CreateThumbnail(canvas, this.NavigationSplitContainer.Panel1, RenderThumbnailFinished);
+            this.CreateThumbnail(canvas);
             CanvasPolicy.Adjust(canvas);
             this.Refresh(canvas);
         }
@@ -421,7 +431,7 @@ namespace Cube {
         }
 
         /* ----------------------------------------------------------------- */
-        /// RenderThumbnailFinished
+        /// ThumbButton_Click
         /* ----------------------------------------------------------------- */
         private void ThumbButton_Click(object sender, EventArgs e) {
             this.NavigationSplitContainer.Panel1Collapsed = !this.NavigationSplitContainer.Panel1Collapsed;
@@ -443,8 +453,21 @@ namespace Cube {
             if (thumb == null) return;
 
             if (!successs) thumb.Invalidate();
-            //thumb.Invalidate(thumb.Items[page - 1].Bounds);
-            thumb.Invalidate();
+            else thumb.Invalidate(thumb.Items[page - 1].Bounds);
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// PageChanged
+        /* ----------------------------------------------------------------- */
+        private void PageChanged(object sender, EventArgs e) {
+            var thumb = (ListView)sender;
+            if (thumb.SelectedItems.Count == 0) return;
+            var page = thumb.SelectedItems[0].Index + 1;
+
+            var tab = this.PageViewerTabControl.SelectedTab;
+            var canvas = CanvasPolicy.Get(tab);
+            CanvasPolicy.MovePage(canvas, page);
+            this.Refresh(canvas);
         }
 
         #endregion

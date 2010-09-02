@@ -382,6 +382,13 @@ namespace Cube {
         }
 
         /* ----------------------------------------------------------------- */
+        /// GetThumbnail
+        /* ----------------------------------------------------------------- */
+        public static Thumbnail GetThumbnail(Control parent) {
+            return (Thumbnail)parent.Controls["Thumbnail"];
+        }
+
+        /* ----------------------------------------------------------------- */
         ///
         /// CreateThumbnail
         /// 
@@ -426,13 +433,6 @@ namespace Cube {
         }
 
         /* ----------------------------------------------------------------- */
-        /// GetThumbnail
-        /* ----------------------------------------------------------------- */
-        public static Thumbnail GetThumbnail(Control parent) {
-            return (Thumbnail)parent.Controls["Thumbnail"];
-        }
-
-        /* ----------------------------------------------------------------- */
         ///
         /// CreateThumbnail
         /// 
@@ -444,9 +444,9 @@ namespace Cube {
         /// </summary>
         /// 
         /* ----------------------------------------------------------------- */
-        public static void CreateThumbnail(Canvas src, Control parent, RenderNotifyFinishedHandler finished) {
+        public static Thumbnail CreateThumbnail(Canvas src, Control parent, RenderNotifyFinishedHandler finished) {
             thumb_finished_ = finished;
-            CanvasPolicy.CreateThumbnail(src, parent);
+            return CanvasPolicy.CreateThumbnail(src, parent);
         }
 
         /* ----------------------------------------------------------------- */
@@ -531,7 +531,7 @@ namespace Cube {
                 }
 
                 Rectangle rect = new Rectangle(e.Bounds.Location, e.Bounds.Size);
-                rect.Inflate(-2, -2);
+                rect.Inflate(-5, -5);
                 int width = canvas.TileSize.Width - 10;
                 double ratio = page.Height / (double)page.Width;
                 Image image = page.LoadThumbnail(width, (int)(width * ratio));
