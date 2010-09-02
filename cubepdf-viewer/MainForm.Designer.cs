@@ -58,7 +58,7 @@
             this.SearchButton = new System.Windows.Forms.ToolStripButton();
             this.FooterStatusStrip = new System.Windows.Forms.StatusStrip();
             this.NavigationSplitContainer = new System.Windows.Forms.SplitContainer();
-            this.NavigationPanel = new System.Windows.Forms.Panel();
+            this.ThumbListView = new System.Windows.Forms.ListView();
             this.PageViewerTabControl = new System.Windows.Forms.TabControl();
             this.DefaultTabPage = new System.Windows.Forms.TabPage();
             this.SubMenuSplitContainer = new System.Windows.Forms.SplitContainer();
@@ -399,25 +399,31 @@
             // NavigationSplitContainer.Panel1
             // 
             this.NavigationSplitContainer.Panel1.BackColor = System.Drawing.SystemColors.Control;
-            this.NavigationSplitContainer.Panel1.Controls.Add(this.NavigationPanel);
+            this.NavigationSplitContainer.Panel1.Controls.Add(this.ThumbListView);
             // 
             // NavigationSplitContainer.Panel2
             // 
             this.NavigationSplitContainer.Panel2.Controls.Add(this.PageViewerTabControl);
             this.NavigationSplitContainer.Size = new System.Drawing.Size(759, 510);
-            this.NavigationSplitContainer.SplitterDistance = 100;
+            this.NavigationSplitContainer.SplitterDistance = 128;
             this.NavigationSplitContainer.SplitterWidth = 1;
             this.NavigationSplitContainer.TabIndex = 2;
             // 
-            // NavigationPanel
+            // ThumbListView
             // 
-            this.NavigationPanel.BackColor = System.Drawing.Color.DimGray;
-            this.NavigationPanel.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.NavigationPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.NavigationPanel.Location = new System.Drawing.Point(0, 0);
-            this.NavigationPanel.Name = "NavigationPanel";
-            this.NavigationPanel.Size = new System.Drawing.Size(100, 510);
-            this.NavigationPanel.TabIndex = 0;
+            this.ThumbListView.Alignment = System.Windows.Forms.ListViewAlignment.Default;
+            this.ThumbListView.BackColor = System.Drawing.Color.DimGray;
+            this.ThumbListView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ThumbListView.Location = new System.Drawing.Point(0, 0);
+            this.ThumbListView.Margin = new System.Windows.Forms.Padding(0);
+            this.ThumbListView.MultiSelect = false;
+            this.ThumbListView.Name = "ThumbListView";
+            this.ThumbListView.OwnerDraw = true;
+            this.ThumbListView.Size = new System.Drawing.Size(128, 510);
+            this.ThumbListView.TabIndex = 0;
+            this.ThumbListView.UseCompatibleStateImageBehavior = false;
+            this.ThumbListView.View = System.Windows.Forms.View.Tile;
+            this.ThumbListView.DrawItem += new System.Windows.Forms.DrawListViewItemEventHandler(this.ThumbListView_DrawItem);
             // 
             // PageViewerTabControl
             // 
@@ -426,7 +432,7 @@
             this.PageViewerTabControl.Location = new System.Drawing.Point(0, 0);
             this.PageViewerTabControl.Name = "PageViewerTabControl";
             this.PageViewerTabControl.SelectedIndex = 0;
-            this.PageViewerTabControl.Size = new System.Drawing.Size(658, 510);
+            this.PageViewerTabControl.Size = new System.Drawing.Size(630, 510);
             this.PageViewerTabControl.TabIndex = 0;
             this.PageViewerTabControl.SelectedIndexChanged += new System.EventHandler(this.PageViewerTabControl_SelectedIndexChanged);
             // 
@@ -438,7 +444,7 @@
             this.DefaultTabPage.Location = new System.Drawing.Point(4, 22);
             this.DefaultTabPage.Name = "DefaultTabPage";
             this.DefaultTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.DefaultTabPage.Size = new System.Drawing.Size(650, 484);
+            this.DefaultTabPage.Size = new System.Drawing.Size(622, 484);
             this.DefaultTabPage.TabIndex = 0;
             this.DefaultTabPage.Text = "(無題)";
             // 
@@ -494,7 +500,7 @@
             this.ThumbButton.Image = global::Cube.Properties.Resources.thumbnail;
             this.ThumbButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.ThumbButton.Name = "ThumbButton";
-            this.ThumbButton.Size = new System.Drawing.Size(29, 28);
+            this.ThumbButton.Size = new System.Drawing.Size(28, 30);
             this.ThumbButton.Text = "サムネイル";
             this.ThumbButton.Click += new System.EventHandler(this.ThumbButton_Click);
             // 
@@ -586,7 +592,6 @@
         private System.Windows.Forms.ToolStrip SubMenuToolStrip;
         private System.Windows.Forms.ToolStripButton PrintButton;
         private System.Windows.Forms.ToolStripButton ThumbButton;
-        private System.Windows.Forms.Panel NavigationPanel;
         private System.Windows.Forms.SplitContainer MenuSplitContainer;
         private System.Windows.Forms.ToolStripButton MenuModeButton;
         private System.Windows.Forms.ToolStripSplitButton FileButton;
@@ -594,6 +599,7 @@
         private System.Windows.Forms.ToolStripMenuItem OpenExistedTabMenuItem;
         private System.Windows.Forms.ToolStripSeparator OnlyDisplayFileOpenCategorySeparator;
         private System.Windows.Forms.ToolStripMenuItem CloseMenuItem;
+        private System.Windows.Forms.ListView ThumbListView;
     }
 }
 

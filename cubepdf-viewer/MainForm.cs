@@ -26,7 +26,27 @@ using System.Windows.Forms;
 
 namespace Cube {
     /* --------------------------------------------------------------------- */
+    ///
     /// MainForm
+    /// 
+    /// <summary>
+    /// NOTE: PDFViewer ではファイルをロードしている間，「リサイズ」，
+    /// 「フォームを閉じる」，「各種マウスイベント」を無効化している．
+    /// ただ，PDFViewer はこの処理が原因で異常終了するケースが散見される
+    /// ため，CubePDF Viewer ではこの処理は保留する．
+    /// 
+    /// また，現在は使用していないが，PDFLoadBegin, PDFLoadCompleted
+    /// イベントが用意されてある．
+    /// ファイルのロード時間がやや長いので，この辺りのイベントに適切な
+    /// ハンドラを指定する必要があるか．
+    /// 追記: PDFLoad() よりは，その後の RenderPage() メソッドの方に
+    /// 大きく時間を食われている模様．そのため，これらのイベントは
+    /// あまり気にしなくて良い．
+    /// 
+    /// RenderFinished の他に RenderNotifyFinished と言うイベントも存在
+    /// する．現状では，どのような条件でこのイベントが発生するのかは不明．
+    /// </summary>
+    /// 
     /* --------------------------------------------------------------------- */
     public partial class MainForm : Form {
         /* ----------------------------------------------------------------- */
@@ -94,7 +114,82 @@ namespace Cube {
             this.Refresh(canvas);
         }
 
-        /* ----------------------------------------------------------------- */
+        private void LoadThumbnail(PictureBox src, ListView dest) {
+            var core = (PDFLibNet.PDFWrapper)src.Tag;
+            if (core == null) return;
+            
+            dest.Tag = core;
+
+            // 水平スクロールバーが出ないサイズ．
+            // 16 は垂直スクロールバーの幅（TODO: 垂直スクロールバーの幅の取得方法）．
+            double ratio = core.Pages[1].Height / (double)core.Pages[1].Width;
+            int width = dest.ClientSize.Width;
+            if (width * ratio * core.PageCount > dest.Size.Height) width -= 16;
+            
+            dest.View = View.Tile;
+            dest.TileSize = new Size(width, (int)(width * ratio));
+            dest.BeginUpdate();
+            dest.Clear();
+            for (int i = 0; i < core.PageCount; i++) dest.Items.Add((i + 1).ToString());
+            dest.EndUpdate();
+        }
+
+
+        private void ThumbListView_DrawItem(object sender, DrawListViewItemEventArgs e) {
+            var canvas = (ListView)sender;
+            var core = (PDFLibNet.PDFWrapper)canvas.Tag;
+            if (core == null) return;
+
+            while (core.IsBusy) System.Threading.Thread.Sleep(100);
+
+            Rectangle bounds = e.Bounds;
+            //bounds.Offset(-1, -5);
+
+            //Rectangle shadowRect = new Rectangle(bounds.Location, bounds.Size);
+            Rectangle pageRect = new Rectangle(bounds.Location, bounds.Size);
+
+            int pgNum = e.ItemIndex + 1;
+            PDFLibNet.PDFPage pg;
+            if (!core.Pages.TryGetValue(pgNum, out pg))
+                return;
+            pg.RenderThumbnailFinished -= new PDFLibNet.RenderNotifyFinishedHandler(RenderThumbnailFinished);
+            pg.RenderThumbnailFinished += new PDFLibNet.RenderNotifyFinishedHandler(RenderThumbnailFinished);
+
+            //shadowRect.Offset(3, 3);
+            //shadowRect.Inflate(-6, -10);
+            pageRect.Inflate(-2, -2);
+
+            //e.Graphics.FillRectangle(Brushes.LightGray, shadowRect);
+
+            int width = canvas.TileSize.Width - 10;
+            double ratio = pg.Height / (double)pg.Width;
+            Bitmap bmp = pg.LoadThumbnail(width, (int)(width * ratio));
+            if (bmp != null)
+                e.Graphics.DrawImageUnscaledAndClipped(bmp, pageRect);
+
+            e.Graphics.DrawRectangle(Pens.LightGray, pageRect);
+
+            //StringFormat stringFormat = new StringFormat();
+            //stringFormat.Alignment = StringAlignment.Center;
+            //stringFormat.LineAlignment = StringAlignment.Center;
+
+            //e.Graphics.DrawString(e.Item.Text, canvas.Font, Brushes.Black, new RectangleF(e.Bounds.X, e.Bounds.Y + e.Bounds.Height - 10, e.Bounds.Width, 10), stringFormat);
+
+            e.DrawFocusRectangle();
+        }
+
+        private void RenderThumbnailFinished(int page, bool successs) {
+            //if (!successs) this.ThumbListView.Invalidate();
+            //this.ThumbListView.Invalidate(this.ThumbListView.Items[page - 1].Bounds);
+            Invoke(new PDFLibNet.RenderNotifyFinishedHandler(RenderThumbnailFinishedInvoke), page, successs);
+        }
+
+        void RenderThumbnailFinishedInvoke(int page, bool successs) {
+            if (!successs) this.ThumbListView.Invalidate();
+            this.ThumbListView.Invalidate(this.ThumbListView.Items[page - 1].Bounds);
+        }
+
+        /* -----------------------;------------------------------------------ */
         //  メインフォームに関する各種イベント・ハンドラ
         /* ----------------------------------------------------------------- */
         #region MainForm Event handlers
@@ -184,6 +279,7 @@ namespace Cube {
                 var tab = this.PageViewerTabControl.SelectedTab;
                 var canvas = CanvasPolicy.Create(tab);
                 CanvasPolicy.Open(canvas, dialog.FileName, fit_);
+                this.LoadThumbnail(canvas, this.ThumbListView);
                 this.Refresh(canvas);
             }
         }
