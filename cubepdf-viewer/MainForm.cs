@@ -70,6 +70,15 @@ namespace Cube {
         }
 
         /* ----------------------------------------------------------------- */
+        /// UpdateFitCondtion
+        /* ----------------------------------------------------------------- */
+        private void UpdateFitCondition(FitCondition which) {
+            fit_ = which;
+            this.FitToWidthButton.Checked = ((fit_ & FitCondition.Width) != 0);
+            this.FitToHeightButton.Checked = ((fit_ & FitCondition.Height) != 0);
+        }
+
+        /* ----------------------------------------------------------------- */
         ///
         /// Refresh
         /// 
@@ -99,15 +108,6 @@ namespace Cube {
         }
 
         /* ----------------------------------------------------------------- */
-        /// UpdateFitCondtion
-        /* ----------------------------------------------------------------- */
-        private void UpdateFitCondition(FitCondition which) {
-            fit_ = which;
-            this.FitToWidthButton.Checked = ((fit_ & FitCondition.Width) != 0);
-            this.FitToHeightButton.Checked = ((fit_ & FitCondition.Height) != 0);
-        }
-
-        /* ----------------------------------------------------------------- */
         /// Open
         /* ----------------------------------------------------------------- */
         private void Open(TabPage tab, string path) {
@@ -120,8 +120,7 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         /// Adjust
         /* ----------------------------------------------------------------- */
-        private void Adjust() {
-            var tab = this.PageViewerTabControl.SelectedTab;
+        private void Adjust(TabPage tab) {
             var canvas = CanvasPolicy.Get(tab);
             if (this.FitToWidthButton.Checked) CanvasPolicy.FitToWidth(canvas);
             else if (this.FitToHeightButton.Checked) CanvasPolicy.FitToHeight(canvas);
@@ -208,7 +207,7 @@ namespace Cube {
         /// MainForm_SizeChanged
         /* ----------------------------------------------------------------- */
         private void MainForm_SizeChanged(object sender, EventArgs e) {
-            this.Adjust();
+            this.Adjust(this.PageViewerTabControl.SelectedTab);
         }
 
         /* ----------------------------------------------------------------- */
@@ -482,7 +481,7 @@ namespace Cube {
             this.MenuModeButton.Image = this.MenuSplitContainer.Panel1Collapsed ?
                 global::Cube.Properties.Resources.showmenu :
                 global::Cube.Properties.Resources.hidemenu;
-            this.Adjust();
+            this.Adjust(this.PageViewerTabControl.SelectedTab);
         }
 
         /* ----------------------------------------------------------------- */
@@ -490,7 +489,7 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         private void ThumbButton_Click(object sender, EventArgs e) {
             this.NavigationSplitContainer.Panel1Collapsed = !this.NavigationSplitContainer.Panel1Collapsed;
-            this.Adjust();
+            this.Adjust(this.PageViewerTabControl.SelectedTab);
         }
 
         /* ----------------------------------------------------------------- */
