@@ -408,6 +408,7 @@
             // 
             // PageViewerTabControl
             // 
+            this.PageViewerTabControl.AllowDrop = true;
             this.PageViewerTabControl.Controls.Add(this.DefaultTabPage);
             this.PageViewerTabControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.PageViewerTabControl.Location = new System.Drawing.Point(0, 0);
@@ -416,6 +417,8 @@
             this.PageViewerTabControl.Size = new System.Drawing.Size(608, 510);
             this.PageViewerTabControl.TabIndex = 0;
             this.PageViewerTabControl.SelectedIndexChanged += new System.EventHandler(this.PageViewerTabControl_SelectedIndexChanged);
+            this.PageViewerTabControl.DragDrop += new System.Windows.Forms.DragEventHandler(this.PageViewerTabControl_DragDrop);
+            this.PageViewerTabControl.DragEnter += new System.Windows.Forms.DragEventHandler(this.PageViewerTabControl_DragEnter);
             // 
             // DefaultTabPage
             // 

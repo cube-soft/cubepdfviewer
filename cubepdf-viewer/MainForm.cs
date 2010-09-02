@@ -108,6 +108,16 @@ namespace Cube {
         }
 
         /* ----------------------------------------------------------------- */
+        /// Open
+        /* ----------------------------------------------------------------- */
+        private void Open(TabPage tab, string path) {
+            var canvas = CanvasPolicy.Create(tab);
+            CanvasPolicy.Open(canvas, path, fit_);
+            this.CreateThumbnail(canvas);
+            this.Refresh(canvas);
+        }
+
+        /* ----------------------------------------------------------------- */
         /// Adjust
         /* ----------------------------------------------------------------- */
         private void Adjust() {
@@ -237,14 +247,6 @@ namespace Cube {
         #region Other controls event handlers
 
         /* ----------------------------------------------------------------- */
-        /// NewTabButton_Click
-        /* ----------------------------------------------------------------- */
-        private void NewTabButton_Click(object sender, EventArgs e) {
-            CreateTab(this.PageViewerTabControl);
-            this.Refresh(null);
-        }
-
-        /* ----------------------------------------------------------------- */
         /// FileButton_DropDownItemClicked
         /* ----------------------------------------------------------------- */
         private void FileButton_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e) {
@@ -276,10 +278,7 @@ namespace Cube {
             var dialog = new OpenFileDialog();
             if (dialog.ShowDialog() == DialogResult.OK) {
                 var tab = this.PageViewerTabControl.SelectedTab;
-                var canvas = CanvasPolicy.Create(tab);
-                CanvasPolicy.Open(canvas, dialog.FileName, fit_);
-                this.CreateThumbnail(canvas);
-                this.Refresh(canvas);
+                this.Open(tab, dialog.FileName);
             }
         }
 
@@ -492,6 +491,30 @@ namespace Cube {
         private void ThumbButton_Click(object sender, EventArgs e) {
             this.NavigationSplitContainer.Panel1Collapsed = !this.NavigationSplitContainer.Panel1Collapsed;
             this.Adjust();
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// PageViewerTabControl_DragEnter
+        /* ----------------------------------------------------------------- */
+        private void PageViewerTabControl_DragEnter(object sender, DragEventArgs e) {
+            e.Effect = DragDropEffects.All;
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// PageViewerTabControl_DragDrop
+        /* ----------------------------------------------------------------- */
+        private void PageViewerTabControl_DragDrop(object sender, DragEventArgs e) {
+            var control = (TabControl)sender;
+
+            bool current = true;
+            if (e.Data.GetDataPresent(DataFormats.FileDrop)) {
+                var files = (string[])e.Data.GetData(DataFormats.FileDrop);
+                foreach (var path in files) {
+                    var tab = current ? control.SelectedTab : this.CreateTab(control);
+                    current = false;
+                    this.Open(tab, path);
+                }
+            }
         }
 
         /* ----------------------------------------------------------------- */
