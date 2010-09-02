@@ -63,7 +63,7 @@ namespace Cube {
             this.DefaultTabPage.VerticalScroll.SmallChange = 3;
             this.DefaultTabPage.HorizontalScroll.SmallChange = 3;
             this.FitToHeightButton.Checked = true;
-            TabContextMenu(this.PageViewerTabControl);
+            CreateTabContextMenu(this.PageViewerTabControl);
 
             this.MouseEnter += new EventHandler(this.MainForm_MouseEnter);
             this.MouseWheel += new MouseEventHandler(this.MainForm_MouseWheel);
@@ -117,6 +117,66 @@ namespace Cube {
             else if (this.FitToHeightButton.Checked) CanvasPolicy.FitToHeight(canvas);
             else CanvasPolicy.Adjust(canvas);
             this.Refresh(canvas);
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// CreateTab
+        /* ----------------------------------------------------------------- */
+        public TabPage CreateTab(TabControl parent) {
+            var tab = new TabPage();
+
+            // TabPage の設定
+            tab.AutoScroll = true;
+            tab.VerticalScroll.SmallChange = 3;
+            tab.HorizontalScroll.SmallChange = 3;
+            tab.BackColor = Color.DimGray;
+            tab.BorderStyle = BorderStyle.Fixed3D;
+            tab.ContextMenuStrip = new ContextMenuStrip();
+            tab.Text = "(無題)";
+
+            parent.Controls.Add(tab);
+            parent.SelectedIndex = parent.TabCount - 1;
+
+            return tab;
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// DestroyTab
+        /* ----------------------------------------------------------------- */
+        public void DestroyTab(TabPage tab) {
+            var parent = (TabControl)tab.Parent;
+            var canvas = CanvasPolicy.Get(tab);
+            var thumb = CanvasPolicy.GetThumbnail(this.NavigationSplitContainer.Panel1);
+            if (thumb != null) CanvasPolicy.DestroyThumbnail(thumb);
+            CanvasPolicy.Destroy(canvas);
+            if (this.PageViewerTabControl.TabCount > 1) parent.TabPages.Remove(tab);
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// ContextMenu
+        ///
+        /// <summary>
+        /// コンテキストメニューを設定する．
+        /// TODO: コンテキストメニューから登録元である TabControl の
+        /// オブジェクトへ辿る方法の調査．現状では，暫定的にコンテキスト
+        /// メニューの Tag に TabControl のオブジェクトを設定しておく
+        /// 事で対処している．
+        /// </summary>
+        /// 
+        /* ----------------------------------------------------------------- */
+        public void CreateTabContextMenu(TabControl parent) {
+            var menu = new ContextMenuStrip();
+            var elem = new ToolStripMenuItem();
+            elem.Text = "閉じる";
+            elem.Click += new EventHandler(TabClosed);
+            menu.Items.Add(elem);
+            parent.MouseDown += new MouseEventHandler(ContextMenu_MouseDown);
+            parent.ContextMenuStrip = menu;
+
+            foreach (TabPage child in parent.TabPages) {
+                child.ContextMenuStrip = new ContextMenuStrip();
+            }
         }
 
         /* ----------------------------------------------------------------- */
@@ -229,11 +289,7 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         private void CloseButton_Click(object sender, EventArgs e) {
             var tab = this.PageViewerTabControl.SelectedTab;
-            var canvas = CanvasPolicy.Get(tab);
-            var thumb = CanvasPolicy.GetThumbnail(this.NavigationSplitContainer.Panel1);
-            if (thumb != null) CanvasPolicy.DestroyThumbnail(thumb);
-            CanvasPolicy.Destroy(canvas);
-            if (this.PageViewerTabControl.TabCount > 1) DestroyTab(tab);
+            this.DestroyTab(tab);
         }
 
         /* ----------------------------------------------------------------- */
@@ -470,6 +526,34 @@ namespace Cube {
             this.Refresh(canvas);
         }
 
+        /* ----------------------------------------------------------------- */
+        ///
+        /// TabClosed
+        /// 
+        /// <summary>
+        /// コンテキストメニューの「閉じる」が押された時のイベントハンドラ．
+        /// </summary>
+        /// 
+        /* ----------------------------------------------------------------- */
+        private void TabClosed(object sender, EventArgs e) {
+            var control = this.PageViewerTabControl;
+            for (int i = 0; i < control.TabCount; i++) {
+                var rect = control.GetTabRect(i);
+                if (pos_.X > rect.Left && pos_.X < rect.Right && pos_.Y > rect.Top && pos_.Y < rect.Bottom) {
+                    TabPage tab = control.TabPages[i];
+                    this.DestroyTab(tab);
+                    break;
+                }
+            }
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// ContextMenu_MouseDown
+        /* ----------------------------------------------------------------- */
+        private void ContextMenu_MouseDown(object sender, MouseEventArgs e) {
+            pos_ = e.Location;
+        }
+
         #endregion
 
         /* ----------------------------------------------------------------- */
@@ -477,114 +561,7 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         #region Member variables
         private FitCondition fit_ = FitCondition.Height;
-        #endregion
-
-        /* ----------------------------------------------------------------- */
-        //  タブ関係の処理
-        //  TODO: この部分は，依存部分を取り除いて抽象クラス辺りで分離したい．
-        /* ----------------------------------------------------------------- */
-        #region Tab controls
-
-        /* ----------------------------------------------------------------- */
-        /// Create
-        /* ----------------------------------------------------------------- */
-        public static TabPage CreateTab(TabControl parent) {
-            var tab = new TabPage();
-
-            // TabPage の設定
-            tab.AutoScroll = true;
-            tab.VerticalScroll.SmallChange = 3;
-            tab.HorizontalScroll.SmallChange = 3;
-            tab.BackColor = Color.DimGray;
-            tab.BorderStyle = BorderStyle.Fixed3D;
-            tab.ContextMenuStrip = new ContextMenuStrip();
-            tab.Text = "(無題)";
-
-            parent.Controls.Add(tab);
-            parent.SelectedIndex = parent.TabCount - 1;
-
-            return tab;
-        }
-
-        /* ----------------------------------------------------------------- */
-        /// Destroy
-        /* ----------------------------------------------------------------- */
-        public static void DestroyTab(TabPage tab) {
-            var parent = (TabControl)tab.Parent;
-            CanvasPolicy.Destroy(CanvasPolicy.Get(tab));
-            parent.TabPages.Remove(tab);
-        }
-
-        /* ----------------------------------------------------------------- */
-        ///
-        /// ContextMenu
-        ///
-        /// <summary>
-        /// コンテキストメニューを設定する．
-        /// TODO: コンテキストメニューから登録元である TabControl の
-        /// オブジェクトへ辿る方法の調査．現状では，暫定的にコンテキスト
-        /// メニューの Tag に TabControl のオブジェクトを設定しておく
-        /// 事で対処している．
-        /// </summary>
-        /// 
-        /* ----------------------------------------------------------------- */
-        public void TabContextMenu(TabControl parent) {
-            var menu = new ContextMenuStrip();
-            var elem = new ToolStripMenuItem();
-            elem.Text = "閉じる";
-            elem.Click += new EventHandler(TabCloseHandler);
-            menu.Items.Add(elem);
-            menu.Tag = parent; // 暫定
-            parent.MouseDown += new MouseEventHandler(TabMouseDownHandler);
-            parent.ContextMenuStrip = menu;
-
-            foreach (TabPage child in parent.TabPages) {
-                child.ContextMenuStrip = new ContextMenuStrip();
-            }
-        }
-
-        /* ----------------------------------------------------------------- */
-        ///
-        /// CloseHandler (private)
-        /// 
-        /// <summary>
-        /// コンテキストメニューの「閉じる」が押された時のイベントハンドラ．
-        /// TODO: 「閉じる」が押されたときの座標を取得する方法．現状では，
-        /// MouseDown イベントにもハンドラを設定しておき，その時の座標から
-        /// 判断している．
-        /// </summary>
-        /// 
-        /* ----------------------------------------------------------------- */
-        private void TabCloseHandler(object sender, EventArgs e) {
-            var item = (ToolStripMenuItem)sender;
-            var menu = (ContextMenuStrip)item.Owner;
-            var control = (TabControl)menu.Tag;
-
-            for (int i = 0; i < control.TabCount; i++) {
-                var rect = control.GetTabRect(i);
-                if (position_.X > rect.Left && position_.X < rect.Right &&
-                    position_.Y > rect.Top && position_.Y < rect.Bottom) {
-                    TabPage tab = control.TabPages[i];
-
-                    // TODO: この部分が MainForm に依存している．この部分をうまく切り離す．
-                    var thumb = CanvasPolicy.GetThumbnail(this.NavigationSplitContainer.Panel1);
-                    if (thumb != null) CanvasPolicy.DestroyThumbnail(thumb);
-
-                    CanvasPolicy.Destroy(CanvasPolicy.Get(tab));
-                    if (control.TabCount > 1) DestroyTab(tab);
-                    break;
-                }
-            }
-        }
-
-        /* ----------------------------------------------------------------- */
-        /// MouseDownHandler (private)
-        /* ----------------------------------------------------------------- */
-        private static void TabMouseDownHandler(object sender, MouseEventArgs e) {
-            position_ = e.Location;
-        }
-
-        private static Point position_;
+        private Point pos_;
         #endregion
     }
 }
