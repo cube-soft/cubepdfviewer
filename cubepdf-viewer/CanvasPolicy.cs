@@ -24,7 +24,10 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 using Canvas = System.Windows.Forms.PictureBox;
+using Thumbnail = System.Windows.Forms.ListView;
 using PDF = PDFLibNet.PDFWrapper;
+using PDFPage = PDFLibNet.PDFPage;
+using RenderNotifyFinishedHandler = PDFLibNet.RenderNotifyFinishedHandler;
 
 namespace Cube {
     /* --------------------------------------------------------------------- */
@@ -74,7 +77,7 @@ namespace Cube {
 
                 // プロパティ
                 canvas.Name = "Canvas";
-                canvas.BackColor = Color.DimGray;
+                canvas.BackColor = background_;
                 canvas.Size = parent.ClientSize;
                 canvas.ClientSize = canvas.Size;
                 //canvas.SizeMode = PictureBoxSizeMode.AutoSize;
@@ -378,6 +381,85 @@ namespace Cube {
             canvas.Location = pos;
         }
 
+        /* ----------------------------------------------------------------- */
+        ///
+        /// CreateThumbnail
+        /// 
+        /// <summary>
+        /// src に指定された画面に表示されている PDF ファイルのサムネイルを
+        /// dest に指定された画面に表示する．
+        /// </summary>
+        /// 
+        /* ----------------------------------------------------------------- */
+        public static Thumbnail CreateThumbnail(Canvas src, Control parent) {
+            var core = (PDF)src.Tag;
+            if (core == null) return null;
+
+            var canvas = new Thumbnail();
+            parent.Controls.Add(canvas);
+
+            canvas.Name = "Thumbnail";
+            canvas.Tag = core;
+            canvas.BackColor = background_;
+            canvas.Alignment = ListViewAlignment.Default;
+            canvas.MultiSelect = false;
+            canvas.Dock = DockStyle.Fill;
+            canvas.OwnerDraw = true;
+            canvas.DrawItem -= new DrawListViewItemEventHandler(CanvasPolicy.DrawItemHandler);
+            canvas.DrawItem += new DrawListViewItemEventHandler(CanvasPolicy.DrawItemHandler);
+
+            // 水平スクロールバーが出ないサイズ．
+            // 16 は垂直スクロールバーの幅（TODO: 垂直スクロールバーの幅の取得方法）．
+            double ratio = core.Pages[1].Height / (double)core.Pages[1].Width;
+            int width = parent.ClientSize.Width;
+            if (width * ratio * core.PageCount > parent.Size.Height) width -= 16;
+
+            canvas.View = View.Tile;
+            canvas.TileSize = new Size(width, (int)(width * ratio));
+            canvas.BeginUpdate();
+            canvas.Clear();
+            for (int i = 0; i < core.PageCount; i++) canvas.Items.Add((i + 1).ToString());
+            canvas.EndUpdate();
+            
+
+            return canvas;
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// GetThumbnail
+        /* ----------------------------------------------------------------- */
+        public static Thumbnail GetThumbnail(Control parent) {
+            return (Thumbnail)parent.Controls["Thumbnail"];
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// CreateThumbnail
+        /// 
+        /// <summary>
+        /// サムネイル画像の描画が終了した際のイベントハンドラを指定する場合．
+        /// DrawThumbnail では，最初に四角だけを描画して内容は遅延して描画
+        /// されるので，イベントハンドラを指定されない場合，ユーザが何らか
+        /// のアクションを起こして再描画が起こるまで内容が描画されない．
+        /// </summary>
+        /// 
+        /* ----------------------------------------------------------------- */
+        public static void CreateThumbnail(Canvas src, Control parent, RenderNotifyFinishedHandler finished) {
+            thumb_finished_ = finished;
+            CanvasPolicy.CreateThumbnail(src, parent);
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// DestroyThumbnail
+        /* ----------------------------------------------------------------- */
+        public static void DestroyThumbnail(Thumbnail canvas) {
+            var parent = canvas.Parent;
+            canvas.Items.Clear();
+            canvas.Tag = null;
+            parent.Controls.Remove(canvas);
+            thumb_finished_ = null;
+        }
+
         #region Private methods
         /* ----------------------------------------------------------------- */
         ///
@@ -426,6 +508,48 @@ namespace Cube {
 
         /* ----------------------------------------------------------------- */
         ///
+        /// DrawItemHandler (private)
+        /// 
+        /// <summary>
+        /// サムネイルの DrawItem イベントハンドラ．
+        /// </summary>
+        /// 
+        /* ----------------------------------------------------------------- */
+        private static void DrawItemHandler(object sender, DrawListViewItemEventArgs e) {
+            lock (sender) {
+                var canvas = (Thumbnail)sender;
+                var core = (PDFLibNet.PDFWrapper)canvas.Tag;
+                if (core == null) return;
+                while (core.IsBusy) System.Threading.Thread.Sleep(50);
+
+                PDFPage page;
+                if (!core.Pages.TryGetValue(e.ItemIndex + 1, out page)) return;
+
+                if (thumb_finished_ != null) {
+                    page.RenderThumbnailFinished -= thumb_finished_;
+                    page.RenderThumbnailFinished += thumb_finished_;
+                }
+
+                Rectangle rect = new Rectangle(e.Bounds.Location, e.Bounds.Size);
+                rect.Inflate(-2, -2);
+                int width = canvas.TileSize.Width - 10;
+                double ratio = page.Height / (double)page.Width;
+                Image image = page.LoadThumbnail(width, (int)(width * ratio));
+                if (image != null) e.Graphics.DrawImageUnscaledAndClipped(image, rect);
+                e.Graphics.DrawRectangle(Pens.LightGray, rect);
+
+                // MEMO: キャプションを描画する方法．
+                // var stringFormat = new StringFormat();
+                // stringFormat.Alignment = StringAlignment.Center;
+                // stringFormat.LineAlignment = StringAlignment.Center;
+                // e.Graphics.DrawString(e.Item.Text, canvas.Font, Brushes.Black, new RectangleF(e.Bounds.X, e.Bounds.Y + e.Bounds.Height - 10, e.Bounds.Width, 10), stringFormat);
+
+                e.DrawFocusRectangle();
+            }
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
         /// MouseMoveHandler
         /// 
         /// <summary>
@@ -465,6 +589,8 @@ namespace Cube {
         #region Variables
         private static bool is_mouse_down_ = false;
         private static Point origin_;
+        private static PDFLibNet.RenderNotifyFinishedHandler thumb_finished_ = null;
+        private static Color background_ = Color.DimGray;
         #endregion
     }
 }

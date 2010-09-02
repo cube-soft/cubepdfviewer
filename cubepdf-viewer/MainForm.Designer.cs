@@ -58,7 +58,6 @@
             this.SearchButton = new System.Windows.Forms.ToolStripButton();
             this.FooterStatusStrip = new System.Windows.Forms.StatusStrip();
             this.NavigationSplitContainer = new System.Windows.Forms.SplitContainer();
-            this.ThumbListView = new System.Windows.Forms.ListView();
             this.PageViewerTabControl = new System.Windows.Forms.TabControl();
             this.DefaultTabPage = new System.Windows.Forms.TabPage();
             this.SubMenuSplitContainer = new System.Windows.Forms.SplitContainer();
@@ -67,7 +66,6 @@
             this.ThumbButton = new System.Windows.Forms.ToolStripButton();
             this.MenuSplitContainer = new System.Windows.Forms.SplitContainer();
             this.MenuToolStrip.SuspendLayout();
-            this.NavigationSplitContainer.Panel1.SuspendLayout();
             this.NavigationSplitContainer.Panel2.SuspendLayout();
             this.NavigationSplitContainer.SuspendLayout();
             this.PageViewerTabControl.SuspendLayout();
@@ -398,8 +396,7 @@
             // 
             // NavigationSplitContainer.Panel1
             // 
-            this.NavigationSplitContainer.Panel1.BackColor = System.Drawing.SystemColors.Control;
-            this.NavigationSplitContainer.Panel1.Controls.Add(this.ThumbListView);
+            this.NavigationSplitContainer.Panel1.BackColor = System.Drawing.Color.DimGray;
             // 
             // NavigationSplitContainer.Panel2
             // 
@@ -408,22 +405,6 @@
             this.NavigationSplitContainer.SplitterDistance = 128;
             this.NavigationSplitContainer.SplitterWidth = 1;
             this.NavigationSplitContainer.TabIndex = 2;
-            // 
-            // ThumbListView
-            // 
-            this.ThumbListView.Alignment = System.Windows.Forms.ListViewAlignment.Default;
-            this.ThumbListView.BackColor = System.Drawing.Color.DimGray;
-            this.ThumbListView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ThumbListView.Location = new System.Drawing.Point(0, 0);
-            this.ThumbListView.Margin = new System.Windows.Forms.Padding(0);
-            this.ThumbListView.MultiSelect = false;
-            this.ThumbListView.Name = "ThumbListView";
-            this.ThumbListView.OwnerDraw = true;
-            this.ThumbListView.Size = new System.Drawing.Size(128, 510);
-            this.ThumbListView.TabIndex = 0;
-            this.ThumbListView.UseCompatibleStateImageBehavior = false;
-            this.ThumbListView.View = System.Windows.Forms.View.Tile;
-            this.ThumbListView.DrawItem += new System.Windows.Forms.DrawListViewItemEventHandler(this.ThumbListView_DrawItem);
             // 
             // PageViewerTabControl
             // 
@@ -441,10 +422,10 @@
             this.DefaultTabPage.AutoScroll = true;
             this.DefaultTabPage.BackColor = System.Drawing.Color.DimGray;
             this.DefaultTabPage.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.DefaultTabPage.Location = new System.Drawing.Point(4, 22);
+            this.DefaultTabPage.Location = new System.Drawing.Point(4, 21);
             this.DefaultTabPage.Name = "DefaultTabPage";
             this.DefaultTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.DefaultTabPage.Size = new System.Drawing.Size(622, 484);
+            this.DefaultTabPage.Size = new System.Drawing.Size(622, 485);
             this.DefaultTabPage.TabIndex = 0;
             this.DefaultTabPage.Text = "(無題)";
             // 
@@ -539,7 +520,6 @@
             this.SizeChanged += new System.EventHandler(this.MainForm_SizeChanged);
             this.MenuToolStrip.ResumeLayout(false);
             this.MenuToolStrip.PerformLayout();
-            this.NavigationSplitContainer.Panel1.ResumeLayout(false);
             this.NavigationSplitContainer.Panel2.ResumeLayout(false);
             this.NavigationSplitContainer.ResumeLayout(false);
             this.PageViewerTabControl.ResumeLayout(false);
@@ -600,7 +580,6 @@
         private System.Windows.Forms.ToolStripMenuItem OpenExistedTabMenuItem;
         private System.Windows.Forms.ToolStripSeparator OnlyDisplayFileOpenCategorySeparator;
         private System.Windows.Forms.ToolStripMenuItem CloseMenuItem;
-        private System.Windows.Forms.ListView ThumbListView;
     }
 }
 

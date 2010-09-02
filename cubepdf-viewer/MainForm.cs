@@ -63,7 +63,7 @@ namespace Cube {
             this.DefaultTabPage.VerticalScroll.SmallChange = 3;
             this.DefaultTabPage.HorizontalScroll.SmallChange = 3;
             this.FitToHeightButton.Checked = true;
-            TabPolicy.ContextMenu(this.PageViewerTabControl);
+            TabContextMenu(this.PageViewerTabControl);
 
             this.MouseEnter += new EventHandler(this.MainForm_MouseEnter);
             this.MouseWheel += new MouseEventHandler(this.MainForm_MouseWheel);
@@ -112,81 +112,6 @@ namespace Cube {
             else if (this.FitToHeightButton.Checked) CanvasPolicy.FitToHeight(canvas);
             else CanvasPolicy.Adjust(canvas);
             this.Refresh(canvas);
-        }
-
-        private void LoadThumbnail(PictureBox src, ListView dest) {
-            var core = (PDFLibNet.PDFWrapper)src.Tag;
-            if (core == null) return;
-            
-            dest.Tag = core;
-
-            // 水平スクロールバーが出ないサイズ．
-            // 16 は垂直スクロールバーの幅（TODO: 垂直スクロールバーの幅の取得方法）．
-            double ratio = core.Pages[1].Height / (double)core.Pages[1].Width;
-            int width = dest.ClientSize.Width;
-            if (width * ratio * core.PageCount > dest.Size.Height) width -= 16;
-            
-            dest.View = View.Tile;
-            dest.TileSize = new Size(width, (int)(width * ratio));
-            dest.BeginUpdate();
-            dest.Clear();
-            for (int i = 0; i < core.PageCount; i++) dest.Items.Add((i + 1).ToString());
-            dest.EndUpdate();
-        }
-
-
-        private void ThumbListView_DrawItem(object sender, DrawListViewItemEventArgs e) {
-            var canvas = (ListView)sender;
-            var core = (PDFLibNet.PDFWrapper)canvas.Tag;
-            if (core == null) return;
-
-            while (core.IsBusy) System.Threading.Thread.Sleep(100);
-
-            Rectangle bounds = e.Bounds;
-            //bounds.Offset(-1, -5);
-
-            //Rectangle shadowRect = new Rectangle(bounds.Location, bounds.Size);
-            Rectangle pageRect = new Rectangle(bounds.Location, bounds.Size);
-
-            int pgNum = e.ItemIndex + 1;
-            PDFLibNet.PDFPage pg;
-            if (!core.Pages.TryGetValue(pgNum, out pg))
-                return;
-            pg.RenderThumbnailFinished -= new PDFLibNet.RenderNotifyFinishedHandler(RenderThumbnailFinished);
-            pg.RenderThumbnailFinished += new PDFLibNet.RenderNotifyFinishedHandler(RenderThumbnailFinished);
-
-            //shadowRect.Offset(3, 3);
-            //shadowRect.Inflate(-6, -10);
-            pageRect.Inflate(-2, -2);
-
-            //e.Graphics.FillRectangle(Brushes.LightGray, shadowRect);
-
-            int width = canvas.TileSize.Width - 10;
-            double ratio = pg.Height / (double)pg.Width;
-            Bitmap bmp = pg.LoadThumbnail(width, (int)(width * ratio));
-            if (bmp != null)
-                e.Graphics.DrawImageUnscaledAndClipped(bmp, pageRect);
-
-            e.Graphics.DrawRectangle(Pens.LightGray, pageRect);
-
-            //StringFormat stringFormat = new StringFormat();
-            //stringFormat.Alignment = StringAlignment.Center;
-            //stringFormat.LineAlignment = StringAlignment.Center;
-
-            //e.Graphics.DrawString(e.Item.Text, canvas.Font, Brushes.Black, new RectangleF(e.Bounds.X, e.Bounds.Y + e.Bounds.Height - 10, e.Bounds.Width, 10), stringFormat);
-
-            e.DrawFocusRectangle();
-        }
-
-        private void RenderThumbnailFinished(int page, bool successs) {
-            //if (!successs) this.ThumbListView.Invalidate();
-            //this.ThumbListView.Invalidate(this.ThumbListView.Items[page - 1].Bounds);
-            Invoke(new PDFLibNet.RenderNotifyFinishedHandler(RenderThumbnailFinishedInvoke), page, successs);
-        }
-
-        void RenderThumbnailFinishedInvoke(int page, bool successs) {
-            if (!successs) this.ThumbListView.Invalidate();
-            this.ThumbListView.Invalidate(this.ThumbListView.Items[page - 1].Bounds);
         }
 
         /* -----------------------;------------------------------------------ */
@@ -240,7 +165,7 @@ namespace Cube {
         /// NewTabButton_Click
         /* ----------------------------------------------------------------- */
         private void NewTabButton_Click(object sender, EventArgs e) {
-            TabPolicy.Create(this.PageViewerTabControl);
+            CreateTab(this.PageViewerTabControl);
             this.Refresh(null);
         }
 
@@ -250,7 +175,6 @@ namespace Cube {
         private void FileButton_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e) {
             var control = (ToolStripSplitButton)sender;
             control.HideDropDown();
-
             if (e.ClickedItem.Name == "CloseMenuItem") {
                 CloseButton_Click(sender, e);
                 return;
@@ -265,7 +189,7 @@ namespace Cube {
                         break;
                     }
                 }
-                if (selected == null) TabPolicy.Create(this.PageViewerTabControl);
+                if (selected == null) CreateTab(this.PageViewerTabControl);
             }
             this.OpenButton_Click(sender, e);
         }
@@ -276,10 +200,13 @@ namespace Cube {
         private void OpenButton_Click(object sender, EventArgs e) {
             var dialog = new OpenFileDialog();
             if (dialog.ShowDialog() == DialogResult.OK) {
+                var old = CanvasPolicy.GetThumbnail(this.NavigationSplitContainer.Panel1);
+                if (old != null) CanvasPolicy.DestroyThumbnail(old);
+
                 var tab = this.PageViewerTabControl.SelectedTab;
                 var canvas = CanvasPolicy.Create(tab);
                 CanvasPolicy.Open(canvas, dialog.FileName, fit_);
-                this.LoadThumbnail(canvas, this.ThumbListView);
+                CanvasPolicy.CreateThumbnail(canvas, this.NavigationSplitContainer.Panel1, RenderThumbnailFinished);
                 this.Refresh(canvas);
             }
         }
@@ -291,8 +218,10 @@ namespace Cube {
         private void CloseButton_Click(object sender, EventArgs e) {
             var tab = this.PageViewerTabControl.SelectedTab;
             var canvas = CanvasPolicy.Get(tab);
+            var thumb = CanvasPolicy.GetThumbnail(this.NavigationSplitContainer.Panel1);
+            if (thumb != null) CanvasPolicy.DestroyThumbnail(thumb);
             CanvasPolicy.Destroy(canvas);
-            if (this.PageViewerTabControl.TabCount > 1) TabPolicy.Destroy(tab);
+            if (this.PageViewerTabControl.TabCount > 1) DestroyTab(tab);
         }
 
         /* ----------------------------------------------------------------- */
@@ -303,6 +232,9 @@ namespace Cube {
             var canvas = CanvasPolicy.Get(control.SelectedTab);
             if (canvas == null) return;
 
+            var old = CanvasPolicy.GetThumbnail(this.NavigationSplitContainer.Panel1);
+            if (old != null) CanvasPolicy.DestroyThumbnail(old);
+            CanvasPolicy.CreateThumbnail(canvas, this.NavigationSplitContainer.Panel1, RenderThumbnailFinished);
             CanvasPolicy.Adjust(canvas);
             this.Refresh(canvas);
         }
@@ -489,11 +421,30 @@ namespace Cube {
         }
 
         /* ----------------------------------------------------------------- */
-        /// ThumbButton_Click
+        /// RenderThumbnailFinished
         /* ----------------------------------------------------------------- */
         private void ThumbButton_Click(object sender, EventArgs e) {
             this.NavigationSplitContainer.Panel1Collapsed = !this.NavigationSplitContainer.Panel1Collapsed;
             this.Adjust();
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// RenderThumbnailFinished
+        /* ----------------------------------------------------------------- */
+        private void RenderThumbnailFinished(int page, bool successs) {
+            Invoke(new PDFLibNet.RenderNotifyFinishedHandler(RenderThumbnailFinishedInvoke), page, successs);
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// RenderThumbnailFinishedInvoke
+        /* ----------------------------------------------------------------- */
+        private void RenderThumbnailFinishedInvoke(int page, bool successs) {
+            var thumb = CanvasPolicy.GetThumbnail(this.NavigationSplitContainer.Panel1);
+            if (thumb == null) return;
+
+            if (!successs) thumb.Invalidate();
+            //thumb.Invalidate(thumb.Items[page - 1].Bounds);
+            thumb.Invalidate();
         }
 
         #endregion
@@ -503,6 +454,114 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         #region Member variables
         private FitCondition fit_ = FitCondition.Height;
+        #endregion
+
+        /* ----------------------------------------------------------------- */
+        //  タブ関係の処理
+        //  TODO: この部分は，依存部分を取り除いて抽象クラス辺りで分離したい．
+        /* ----------------------------------------------------------------- */
+        #region Tab controls
+
+        /* ----------------------------------------------------------------- */
+        /// Create
+        /* ----------------------------------------------------------------- */
+        public static TabPage CreateTab(TabControl parent) {
+            var tab = new TabPage();
+
+            // TabPage の設定
+            tab.AutoScroll = true;
+            tab.VerticalScroll.SmallChange = 3;
+            tab.HorizontalScroll.SmallChange = 3;
+            tab.BackColor = Color.DimGray;
+            tab.BorderStyle = BorderStyle.Fixed3D;
+            tab.ContextMenuStrip = new ContextMenuStrip();
+            tab.Text = "(無題)";
+
+            parent.Controls.Add(tab);
+            parent.SelectedIndex = parent.TabCount - 1;
+
+            return tab;
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// Destroy
+        /* ----------------------------------------------------------------- */
+        public static void DestroyTab(TabPage tab) {
+            var parent = (TabControl)tab.Parent;
+            CanvasPolicy.Destroy(CanvasPolicy.Get(tab));
+            parent.TabPages.Remove(tab);
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// ContextMenu
+        ///
+        /// <summary>
+        /// コンテキストメニューを設定する．
+        /// TODO: コンテキストメニューから登録元である TabControl の
+        /// オブジェクトへ辿る方法の調査．現状では，暫定的にコンテキスト
+        /// メニューの Tag に TabControl のオブジェクトを設定しておく
+        /// 事で対処している．
+        /// </summary>
+        /// 
+        /* ----------------------------------------------------------------- */
+        public void TabContextMenu(TabControl parent) {
+            var menu = new ContextMenuStrip();
+            var elem = new ToolStripMenuItem();
+            elem.Text = "閉じる";
+            elem.Click += new EventHandler(TabCloseHandler);
+            menu.Items.Add(elem);
+            menu.Tag = parent; // 暫定
+            parent.MouseDown += new MouseEventHandler(TabMouseDownHandler);
+            parent.ContextMenuStrip = menu;
+
+            foreach (TabPage child in parent.TabPages) {
+                child.ContextMenuStrip = new ContextMenuStrip();
+            }
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// CloseHandler (private)
+        /// 
+        /// <summary>
+        /// コンテキストメニューの「閉じる」が押された時のイベントハンドラ．
+        /// TODO: 「閉じる」が押されたときの座標を取得する方法．現状では，
+        /// MouseDown イベントにもハンドラを設定しておき，その時の座標から
+        /// 判断している．
+        /// </summary>
+        /// 
+        /* ----------------------------------------------------------------- */
+        private void TabCloseHandler(object sender, EventArgs e) {
+            var item = (ToolStripMenuItem)sender;
+            var menu = (ContextMenuStrip)item.Owner;
+            var control = (TabControl)menu.Tag;
+
+            for (int i = 0; i < control.TabCount; i++) {
+                var rect = control.GetTabRect(i);
+                if (position_.X > rect.Left && position_.X < rect.Right &&
+                    position_.Y > rect.Top && position_.Y < rect.Bottom) {
+                    TabPage tab = control.TabPages[i];
+
+                    // TODO: この部分が MainForm に依存している．この部分をうまく切り離す．
+                    var thumb = CanvasPolicy.GetThumbnail(this.NavigationSplitContainer.Panel1);
+                    if (thumb != null) CanvasPolicy.DestroyThumbnail(thumb);
+
+                    CanvasPolicy.Destroy(CanvasPolicy.Get(tab));
+                    if (control.TabCount > 1) DestroyTab(tab);
+                    break;
+                }
+            }
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// MouseDownHandler (private)
+        /* ----------------------------------------------------------------- */
+        private static void TabMouseDownHandler(object sender, MouseEventArgs e) {
+            position_ = e.Location;
+        }
+
+        private static Point position_;
         #endregion
     }
 }
