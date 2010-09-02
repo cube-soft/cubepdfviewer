@@ -480,7 +480,7 @@
             this.ThumbButton});
             this.SubMenuToolStrip.Location = new System.Drawing.Point(0, 0);
             this.SubMenuToolStrip.Name = "SubMenuToolStrip";
-            this.SubMenuToolStrip.Size = new System.Drawing.Size(32, 510);
+            this.SubMenuToolStrip.Size = new System.Drawing.Size(30, 510);
             this.SubMenuToolStrip.TabIndex = 0;
             this.SubMenuToolStrip.Text = "toolStrip1";
             // 
@@ -491,7 +491,7 @@
             this.MenuModeButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.MenuModeButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.MenuModeButton.Name = "MenuModeButton";
-            this.MenuModeButton.Size = new System.Drawing.Size(28, 11);
+            this.MenuModeButton.Size = new System.Drawing.Size(27, 11);
             this.MenuModeButton.Text = "メニュー表示の切り替え";
             this.MenuModeButton.Click += new System.EventHandler(this.MenuModeButton_Click);
             // 
@@ -501,7 +501,7 @@
             this.ThumbButton.Image = global::Cube.Properties.Resources.thumbnail;
             this.ThumbButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.ThumbButton.Name = "ThumbButton";
-            this.ThumbButton.Size = new System.Drawing.Size(28, 30);
+            this.ThumbButton.Size = new System.Drawing.Size(27, 29);
             this.ThumbButton.Text = "サムネイル";
             this.ThumbButton.Click += new System.EventHandler(this.ThumbButton_Click);
             // 
