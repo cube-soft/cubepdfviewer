@@ -472,14 +472,15 @@
             // 
             this.SubMenuToolStrip.BackColor = System.Drawing.SystemColors.Control;
             this.SubMenuToolStrip.Dock = System.Windows.Forms.DockStyle.Left;
+            this.SubMenuToolStrip.GripMargin = new System.Windows.Forms.Padding(0);
             this.SubMenuToolStrip.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-            this.SubMenuToolStrip.ImageScalingSize = new System.Drawing.Size(26, 26);
+            this.SubMenuToolStrip.ImageScalingSize = new System.Drawing.Size(25, 25);
             this.SubMenuToolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.MenuModeButton,
             this.ThumbButton});
             this.SubMenuToolStrip.Location = new System.Drawing.Point(0, 0);
             this.SubMenuToolStrip.Name = "SubMenuToolStrip";
-            this.SubMenuToolStrip.Size = new System.Drawing.Size(31, 510);
+            this.SubMenuToolStrip.Size = new System.Drawing.Size(32, 510);
             this.SubMenuToolStrip.TabIndex = 0;
             this.SubMenuToolStrip.Text = "toolStrip1";
             // 
@@ -490,7 +491,7 @@
             this.MenuModeButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.MenuModeButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.MenuModeButton.Name = "MenuModeButton";
-            this.MenuModeButton.Size = new System.Drawing.Size(28, 16);
+            this.MenuModeButton.Size = new System.Drawing.Size(28, 11);
             this.MenuModeButton.Text = "メニュー表示の切り替え";
             this.MenuModeButton.Click += new System.EventHandler(this.MenuModeButton_Click);
             // 
