@@ -497,7 +497,8 @@ namespace Cube {
         /// PageViewerTabControl_DragEnter
         /* ----------------------------------------------------------------- */
         private void PageViewerTabControl_DragEnter(object sender, DragEventArgs e) {
-            e.Effect = DragDropEffects.All;
+            if (e.Data.GetDataPresent(DataFormats.FileDrop)) e.Effect = DragDropEffects.All;
+            else e.Effect = DragDropEffects.None;
         }
 
         /* ----------------------------------------------------------------- */
@@ -510,6 +511,7 @@ namespace Cube {
             if (e.Data.GetDataPresent(DataFormats.FileDrop)) {
                 var files = (string[])e.Data.GetData(DataFormats.FileDrop);
                 foreach (var path in files) {
+                    if (System.IO.Path.GetExtension(path).ToLower() != ".pdf") continue;
                     var tab = current ? control.SelectedTab : this.CreateTab(control);
                     current = false;
                     this.Open(tab, path);
