@@ -402,7 +402,7 @@
             // 
             this.NavigationSplitContainer.Panel2.Controls.Add(this.PageViewerTabControl);
             this.NavigationSplitContainer.Size = new System.Drawing.Size(759, 510);
-            this.NavigationSplitContainer.SplitterDistance = 128;
+            this.NavigationSplitContainer.SplitterDistance = 150;
             this.NavigationSplitContainer.SplitterWidth = 1;
             this.NavigationSplitContainer.TabIndex = 2;
             // 
@@ -413,7 +413,7 @@
             this.PageViewerTabControl.Location = new System.Drawing.Point(0, 0);
             this.PageViewerTabControl.Name = "PageViewerTabControl";
             this.PageViewerTabControl.SelectedIndex = 0;
-            this.PageViewerTabControl.Size = new System.Drawing.Size(630, 510);
+            this.PageViewerTabControl.Size = new System.Drawing.Size(608, 510);
             this.PageViewerTabControl.TabIndex = 0;
             this.PageViewerTabControl.SelectedIndexChanged += new System.EventHandler(this.PageViewerTabControl_SelectedIndexChanged);
             // 
@@ -425,7 +425,7 @@
             this.DefaultTabPage.Location = new System.Drawing.Point(4, 21);
             this.DefaultTabPage.Name = "DefaultTabPage";
             this.DefaultTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.DefaultTabPage.Size = new System.Drawing.Size(622, 485);
+            this.DefaultTabPage.Size = new System.Drawing.Size(600, 485);
             this.DefaultTabPage.TabIndex = 0;
             this.DefaultTabPage.Text = "(無題)";
             // 

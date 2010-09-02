@@ -420,6 +420,7 @@ namespace Cube {
             double ratio = core.Pages[1].Height / (double)core.Pages[1].Width;
             int width = parent.ClientSize.Width;
             if (width * ratio * core.PageCount > parent.Size.Height) width -= 16;
+            width -= 3;
 
             canvas.View = View.Tile;
             canvas.TileSize = new Size(width, (int)(width * ratio));
