@@ -116,15 +116,17 @@ namespace Cube {
         /// </summary>
         /// 
         /* ----------------------------------------------------------------- */
-        public static void Open(Canvas canvas, string path, FitCondition which = FitCondition.Height) {
+        public static void Open(Canvas canvas, string path, string password, FitCondition which = FitCondition.None) {
             if (canvas == null) return;
-            
+
             var core = (PDF)canvas.Tag;
             if (core != null) core.Dispose();
             core = new PDF();
             core.UseMuPDF = true;
             canvas.Tag = core;
-            
+            core.UserPassword = password;
+            core.OwnerPassword = password;
+
             if (core.LoadPDF(path)) {
                 core.CurrentPage = 1;
                 if (which == FitCondition.Height) core.FitToHeight(canvas.Parent.Handle);
@@ -135,6 +137,13 @@ namespace Cube {
                 canvas.Parent.Tag = path;
                 CanvasPolicy.Adjust(canvas);
             }
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// Open
+        /* ----------------------------------------------------------------- */
+        public static void Open(Canvas canvas, string path, FitCondition which = FitCondition.None) {
+            CanvasPolicy.Open(canvas, path, "", which);
         }
 
         /* ----------------------------------------------------------------- */

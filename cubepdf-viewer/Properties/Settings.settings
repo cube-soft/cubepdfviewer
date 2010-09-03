@@ -1,7 +1,12 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)">
-  <Profiles>
-    <Profile Name="(Default)" />
-  </Profiles>
-  <Settings />
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Cube.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="ERROR_TITLE" Type="System.String" Scope="User">
+      <Value Profile="(Default)">エラー</Value>
+    </Setting>
+    <Setting Name="ERROR_PASSWORD" Type="System.String" Scope="User">
+      <Value Profile="(Default)">このファイルはパスワードで保護されています。</Value>
+    </Setting>
+  </Settings>
 </SettingsFile>

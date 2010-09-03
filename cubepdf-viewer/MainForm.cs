@@ -110,12 +110,17 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         /// Open
         /* ----------------------------------------------------------------- */
-        private void Open(TabPage tab, string path) {
+        private void Open(TabPage tab, string path, string password = "") {
             var canvas = CanvasPolicy.Create(tab);
 
             try {
-                CanvasPolicy.Open(canvas, path, fit_);
+                CanvasPolicy.Open(canvas, path, password, fit_);
                 this.CreateThumbnail(canvas);
+            }
+            catch (System.Security.SecurityException /* err */) {
+                PasswordDialog dialog = new PasswordDialog(path);
+                dialog.ShowDialog();
+                if (dialog.Password.Length > 0) this.Open(tab, path, dialog.Password);
             }
             catch (Exception /* err */) { }
             finally {
