@@ -452,7 +452,7 @@ namespace Cube {
             double ratio = core.Pages[1].Height / (double)core.Pages[1].Width;
             int width = parent.ClientSize.Width;
             if (width * ratio * core.PageCount > parent.Size.Height) width -= 16;
-            width -= 3;
+            width -= 3; // NOTE: 余白を持たせる．手動で微調整したもの
 
             canvas.View = View.Tile;
             canvas.TileSize = new Size(width, (int)(width * ratio));
@@ -461,7 +461,6 @@ namespace Cube {
             for (int i = 0; i < core.PageCount; i++) canvas.Items.Add((i + 1).ToString());
             canvas.EndUpdate();
             
-
             return canvas;
         }
 
