@@ -673,9 +673,7 @@ namespace Cube {
         private void RenderThumbnailFinishedInvoke(int page, bool successs) {
             var thumb = CanvasPolicy.GetThumbnail(this.NavigationSplitContainer.Panel1);
             if (thumb == null) return;
-
-            if (!successs) thumb.Invalidate();
-            else thumb.Invalidate(thumb.Items[page - 1].Bounds);
+            if (successs) thumb.Invalidate(thumb.Items[page - 1].Bounds);
         }
 
         /* ----------------------------------------------------------------- */
