@@ -506,13 +506,15 @@ namespace Cube {
         /// 
         /// 拡大した結果，余白がなくなった場合に位置情報をリセットする．
         /// </summary>
-        /// 
+        /// NOTE: 2010/09/03 強制的にリセットに変更
         /* ----------------------------------------------------------------- */
         private static void ResetPosition(Canvas canvas, PDF core, Size prev) {
             var view = canvas.Parent.ClientSize;
             var pos = canvas.Location;
-            if (prev.Width <= view.Width && core.PageWidth > view.Width) pos.X = 0;
-            if (prev.Height <= view.Height && core.PageHeight > view.Height) pos.Y = 0;
+            pos.X = 0;
+            pos.Y = 0;
+            //if (prev.Width <= view.Width && core.PageWidth > view.Width) pos.X = 0;
+            //if (prev.Height <= view.Height && core.PageHeight > view.Height) pos.Y = 0;
             canvas.Location = pos;
         }
 

@@ -105,6 +105,13 @@ namespace Cube {
 
             if (this.MainMenuStrip != null) this.MainMenuStrip.Refresh();
             if (this.FooterStatusStrip != null) this.FooterStatusStrip.Refresh();
+
+            // scrollbarのsmallchangeの更新
+            var vsb = this.PageViewerTabControl.SelectedTab.VerticalScroll;
+            var hsb = this.PageViewerTabControl.SelectedTab.HorizontalScroll;
+            // Minimumは0と仮定
+            vsb.SmallChange = (vsb.Maximum - vsb.LargeChange) / 20;
+            hsb.SmallChange = (hsb.Maximum - hsb.LargeChange) / 20;
         }
 
         /* ----------------------------------------------------------------- */
@@ -200,8 +207,8 @@ namespace Cube {
 
             // TabPage の設定
             tab.AutoScroll = true;
-            tab.VerticalScroll.SmallChange = 3;
-            tab.HorizontalScroll.SmallChange = 3;
+            tab.VerticalScroll.SmallChange = (tab.VerticalScroll.Maximum - tab.VerticalScroll.Minimum) / 20;
+            tab.HorizontalScroll.SmallChange = (tab.HorizontalScroll.Maximum - tab.HorizontalScroll.Minimum) / 20;
             tab.BackColor = Color.DimGray;
             tab.BorderStyle = BorderStyle.Fixed3D;
             tab.ContextMenuStrip = new ContextMenuStrip();
@@ -347,18 +354,51 @@ namespace Cube {
         /// </summary>
         /// 
         /* ----------------------------------------------------------------- */
+        private int mouseWheelPrevCount = 0;
+        private int mouseWheelNextCount = 0;
         private void MainForm_MouseWheel(object sender, MouseEventArgs e) {
             var tab = this.PageViewerTabControl.SelectedTab;
             var scroll = tab.VerticalScroll;
             if (!scroll.Visible) return;
             
+            var realMaximum = 1 + scroll.Maximum - scroll.LargeChange; // ユーザのコントロールで取れるscroll.Valueの最大値
             int delta = -(e.Delta / 120) * scroll.SmallChange;
-            if (scroll.Value + delta > scroll.Minimum &&
-                scroll.Value + delta < scroll.Maximum) {
-                scroll.Value += delta;
+            if (scroll.Value == scroll.Minimum && delta < 0)
+            {
+                if (mouseWheelPrevCount > 3) {
+                    if (PreviousPage())
+                    {
+                        tab.AutoScrollPosition = new Point(0, 0);
+                    }
+                    mouseWheelPrevCount = 0;
+                }
+                else mouseWheelPrevCount++;
             }
+            else if (scroll.Value == realMaximum && delta > 0)
+            {
+                if (mouseWheelNextCount > 3) {
+                    if (NextPage())
+                    {
+                        tab.AutoScrollPosition = new Point(0, 0);
+                    }
+                    mouseWheelNextCount = 0; 
+                } else mouseWheelNextCount++;
+            } 
+            else  if (scroll.Value >= scroll.Minimum &&
+                scroll.Value <= realMaximum) 
+            {
+                scroll.Value = Between(scroll.Minimum, scroll.Value + delta, realMaximum);
+                mouseWheelNextCount = 0; mouseWheelPrevCount = 0;
+            }
+            
         }
 
+        private int Between(int min, int value, int max)
+        {
+            if (value < min) return min;
+            else if (value > max) return max;
+            else return value;
+        }
         /* ----------------------------------------------------------------- */
         /// MainForm_MouseEnter
         /* ----------------------------------------------------------------- */
@@ -518,35 +558,59 @@ namespace Cube {
         }
 
         /* ----------------------------------------------------------------- */
+        /// NOTE: 2010/09/03 NextPageとPreviousPageはMouseScrollでも利用したいので、本体を分離する
+        /* ----------------------------------------------------------------- */
+        private bool NextPage()
+        {
+            bool ret = false;
+            var canvas = CanvasPolicy.Get(this.PageViewerTabControl.SelectedTab);
+            if (canvas == null) return ret;
+            
+            try
+            {
+                CanvasPolicy.NextPage(canvas);
+                ret = true;
+            }
+            catch (Exception /* err */) { ret = false; }
+            finally
+            {
+                this.Refresh(canvas);
+            }
+            return ret;
+        }
+
+        private bool PreviousPage()
+        {
+            var ret = false;
+            var canvas = CanvasPolicy.Get(this.PageViewerTabControl.SelectedTab);
+            if (canvas == null) return ret;
+
+            try
+            {
+                CanvasPolicy.PreviousPage(canvas);
+                ret = true;
+            }
+            catch (Exception /* err */) { ret = false; }
+            finally
+            {
+                this.Refresh(canvas);
+            }
+            return ret;
+        }
+
+
+        /* ----------------------------------------------------------------- */
         /// NextPageButton_Click
         /* ----------------------------------------------------------------- */
         private void NextPageButton_Click(object sender, EventArgs e) {
-            var canvas = CanvasPolicy.Get(this.PageViewerTabControl.SelectedTab);
-            if (canvas == null) return;
-
-            try {
-                CanvasPolicy.NextPage(canvas);
-            }
-            catch (Exception /* err */) { }
-            finally {
-                this.Refresh(canvas);
-            }
+            NextPage();
         }
 
         /* ----------------------------------------------------------------- */
         /// PreviousPageButton_Click
         /* ----------------------------------------------------------------- */
         private void PreviousPageButton_Click(object sender, EventArgs e) {
-            var canvas = CanvasPolicy.Get(this.PageViewerTabControl.SelectedTab);
-            if (canvas == null) return;
-
-            try {
-                CanvasPolicy.PreviousPage(canvas);
-            }
-            catch (Exception /* err */) { }
-            finally {
-                this.Refresh(canvas);
-            }
+            PreviousPage();
         }
 
         /* ----------------------------------------------------------------- */
