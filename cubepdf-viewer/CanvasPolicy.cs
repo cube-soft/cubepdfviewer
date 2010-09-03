@@ -23,11 +23,10 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using Container = System.Collections.Generic;
 using Canvas = System.Windows.Forms.PictureBox;
 using Thumbnail = System.Windows.Forms.ListView;
 using PDF = PDFLibNet.PDFWrapper;
-using PDFPage = PDFLibNet.PDFPage;
-using RenderNotifyFinishedHandler = PDFLibNet.RenderNotifyFinishedHandler;
 
 namespace Cube {
     /* --------------------------------------------------------------------- */
@@ -365,6 +364,30 @@ namespace Cube {
         }
 
         /* ----------------------------------------------------------------- */
+        /// Search
+        /* ----------------------------------------------------------------- */
+        public static bool Search(Canvas canvas, SearchArgs args) {
+            if (canvas == null || canvas.Tag == null) return false;
+
+            var core = (PDF)canvas.Tag;
+            core.SearchCaseSensitive = !args.IgnoreCase;
+            var order = args.WholeDocument ? PDFLibNet.PDFSearchOrder.PDFSearchFromdBegin : PDFLibNet.PDFSearchOrder.PDFSearchFromCurrent;
+
+            int result = 0;
+            if (args.FromBegin) result = core.FindFirst(args.Text, order, false, args.WholeWord);
+            else if (args.FindNext) result = core.FindNext(args.Text);
+            else result = core.FindPrevious(args.Text);
+            //else result = core.FindText(args.Text, core.CurrentPage, order, !args.IgnoreCase, !args.FindNext, true, args.WholeWord);
+
+            if (result > 0) {
+                core.CurrentPage = core.SearchResults[0].Page;
+                core.RenderPage(IntPtr.Zero);
+            }
+
+            return result > 0;
+        }
+
+        /* ----------------------------------------------------------------- */
         /// Adjust
         /* ----------------------------------------------------------------- */
         public static void Adjust(Canvas canvas) {
@@ -445,7 +468,7 @@ namespace Cube {
         /// </summary>
         /// 
         /* ----------------------------------------------------------------- */
-        public static Thumbnail CreateThumbnail(Canvas src, Control parent, RenderNotifyFinishedHandler finished) {
+        public static Thumbnail CreateThumbnail(Canvas src, Control parent, PDFLibNet.RenderNotifyFinishedHandler finished) {
             thumb_finished_ = finished;
             return CanvasPolicy.CreateThumbnail(src, parent);
         }
@@ -523,7 +546,7 @@ namespace Cube {
                 if (core == null) return;
                 while (core.IsBusy) System.Threading.Thread.Sleep(50);
 
-                PDFPage page;
+                PDFLibNet.PDFPage page;
                 if (!core.Pages.TryGetValue(e.ItemIndex + 1, out page)) return;
 
                 if (thumb_finished_ != null) {

@@ -112,9 +112,62 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         private void Open(TabPage tab, string path) {
             var canvas = CanvasPolicy.Create(tab);
-            CanvasPolicy.Open(canvas, path, fit_);
-            this.CreateThumbnail(canvas);
-            this.Refresh(canvas);
+
+            try {
+                CanvasPolicy.Open(canvas, path, fit_);
+                this.CreateThumbnail(canvas);
+            }
+            catch (Exception /* err */) { }
+            finally {
+                this.Refresh(canvas);
+            }
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// Search
+        /* ----------------------------------------------------------------- */
+        private void Search(TabPage tab, string text, bool next) {
+            var canvas = CanvasPolicy.Get(tab);
+
+            try {
+                var args = new SearchArgs(text);
+                args.FromBegin = begin_;
+                args.IgnoreCase = true;
+                args.WholeDocument = true;
+                args.WholeWord = false;
+                args.FindNext = next;
+
+                var result = CanvasPolicy.Search(canvas, args);
+                begin_ = !result; // 最後まで検索したら始めに戻る
+            }
+            catch (Exception /* err */) { }
+            finally {
+                this.Refresh(canvas);
+            }
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// ResetSearch
+        /// 
+        /// <summary>
+        /// MEMO: ライブラリが，検索結果を描画する状態を解除する方法を
+        /// 持っていないため，空の文字列で検索してリセットする．
+        /// </summary>
+        /// 
+        /* ----------------------------------------------------------------- */
+        private void ResetSearch(TabPage tab) {
+            var canvas = CanvasPolicy.Get(tab);
+
+            try {
+                var dummy = new SearchArgs();
+                CanvasPolicy.Search(canvas, dummy);
+            }
+            catch (Exception /* err */) { }
+            finally {
+                begin_ = true;
+                this.Refresh(canvas);
+            }
         }
 
         /* ----------------------------------------------------------------- */
@@ -122,10 +175,16 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         private void Adjust(TabPage tab) {
             var canvas = CanvasPolicy.Get(tab);
-            if (this.FitToWidthButton.Checked) CanvasPolicy.FitToWidth(canvas);
-            else if (this.FitToHeightButton.Checked) CanvasPolicy.FitToHeight(canvas);
-            else CanvasPolicy.Adjust(canvas);
-            this.Refresh(canvas);
+
+            try {
+                if (this.FitToWidthButton.Checked) CanvasPolicy.FitToWidth(canvas);
+                else if (this.FitToHeightButton.Checked) CanvasPolicy.FitToHeight(canvas);
+                else CanvasPolicy.Adjust(canvas);
+            }
+            catch (Exception /* err */) { }
+            finally {
+                this.Refresh(canvas);
+            }
         }
 
         /* ----------------------------------------------------------------- */
@@ -163,7 +222,7 @@ namespace Cube {
 
         /* ----------------------------------------------------------------- */
         ///
-        /// ContextMenu
+        /// CreateTabContextMenu
         ///
         /// <summary>
         /// コンテキストメニューを設定する．
@@ -238,6 +297,36 @@ namespace Cube {
             this.Focus();
         }
 
+        /* ----------------------------------------------------------------- */
+        ///
+        /// MainForm_KeyDown
+        ///
+        /// <summary>
+        /// キーボード・ショートカット一覧．
+        /// </summary>
+        /// 
+        /* ----------------------------------------------------------------- */
+        private void MainForm_KeyDown(object sender, KeyEventArgs e) {
+            switch (e.KeyCode) {
+            case Keys.Escape: // 検索の解除
+                this.ResetSearch(this.PageViewerTabControl.SelectedTab);
+                break;
+            case Keys.F3: // 検索
+                if (this.SearchTextBox.Text.Length > 0) this.Search(this.PageViewerTabControl.SelectedTab, this.SearchTextBox.Text, !e.Shift);
+                break;
+            case Keys.F:  // 検索ボックスにフォーカス
+                if (e.Control) this.SearchTextBox.Focus();
+                break;
+            case Keys.N:  // 新規タブ
+                if (e.Control) this.CreateTab(this.PageViewerTabControl);
+                break;
+            case Keys.O:  // ファイルを開く
+                if (e.Control) this.OpenButton_Click(this.PageViewerTabControl.SelectedTab, e);
+                break;
+            default:
+                break;
+            }
+        }
         #endregion
 
         /* ----------------------------------------------------------------- */
@@ -474,6 +563,28 @@ namespace Cube {
         }
 
         /* ----------------------------------------------------------------- */
+        /// SearchTextBox_TextChanged
+        /* ----------------------------------------------------------------- */
+        private void SearchTextBox_TextChanged(object sender, EventArgs e) {
+            begin_ = true;
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// SearchTextBox_KeyDown
+        /* ----------------------------------------------------------------- */
+        private void SearchTextBox_KeyDown(object sender, KeyEventArgs e) {
+            if (e.KeyCode == Keys.Enter) this.SearchButton_Click(this.SearchButton, e);
+            this.MainForm_KeyDown(this, e);
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// SearchButton_Click
+        /* ----------------------------------------------------------------- */
+        private void SearchButton_Click(object sender, EventArgs e) {
+            this.Search(this.PageViewerTabControl.SelectedTab, this.SearchTextBox.Text, true);
+        }
+
+        /* ----------------------------------------------------------------- */
         /// MenuModeButton_Click
         /* ----------------------------------------------------------------- */
         private void MenuModeButton_Click(object sender, EventArgs e) {
@@ -584,6 +695,7 @@ namespace Cube {
         //  メンバ変数の定義
         /* ----------------------------------------------------------------- */
         #region Member variables
+        private bool begin_ = true;
         private FitCondition fit_ = FitCondition.Height;
         private Point pos_;
         #endregion

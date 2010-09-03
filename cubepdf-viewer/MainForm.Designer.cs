@@ -367,6 +367,8 @@
             this.SearchTextBox.Margin = new System.Windows.Forms.Padding(2);
             this.SearchTextBox.Name = "SearchTextBox";
             this.SearchTextBox.Size = new System.Drawing.Size(100, 36);
+            this.SearchTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SearchTextBox_KeyDown);
+            this.SearchTextBox.TextChanged += new System.EventHandler(this.SearchTextBox_TextChanged);
             // 
             // SearchButton
             // 
@@ -377,6 +379,7 @@
             this.SearchButton.Name = "SearchButton";
             this.SearchButton.Size = new System.Drawing.Size(36, 36);
             this.SearchButton.Text = "検索する";
+            this.SearchButton.Click += new System.EventHandler(this.SearchButton_Click);
             // 
             // FooterStatusStrip
             // 
@@ -425,10 +428,10 @@
             this.DefaultTabPage.AutoScroll = true;
             this.DefaultTabPage.BackColor = System.Drawing.Color.DimGray;
             this.DefaultTabPage.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.DefaultTabPage.Location = new System.Drawing.Point(4, 21);
+            this.DefaultTabPage.Location = new System.Drawing.Point(4, 22);
             this.DefaultTabPage.Name = "DefaultTabPage";
             this.DefaultTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.DefaultTabPage.Size = new System.Drawing.Size(600, 485);
+            this.DefaultTabPage.Size = new System.Drawing.Size(600, 484);
             this.DefaultTabPage.TabIndex = 0;
             this.DefaultTabPage.Text = "(無題)";
             // 
@@ -521,6 +524,7 @@
             this.Name = "MainForm";
             this.Text = "CubePDF Viewer";
             this.SizeChanged += new System.EventHandler(this.MainForm_SizeChanged);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MainForm_KeyDown);
             this.MenuToolStrip.ResumeLayout(false);
             this.MenuToolStrip.PerformLayout();
             this.NavigationSplitContainer.Panel2.ResumeLayout(false);
