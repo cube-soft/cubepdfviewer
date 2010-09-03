@@ -308,6 +308,8 @@ namespace Cube {
         ///
         /// <summary>
         /// キーボード・ショートカット一覧．
+        /// KeyPreview を有効にして，全てのキーボードイベントを一括で
+        /// 処理している．
         /// </summary>
         /// 
         /* ----------------------------------------------------------------- */
@@ -318,8 +320,19 @@ namespace Cube {
                     this.SearchButton_Click(this.SearchButton, e);
                 }
                 break;
-            case Keys.Escape: // 検索の解除
+            case Keys.Escape:
                 this.ResetSearch(this.PageViewerTabControl.SelectedTab);
+                break;
+            case Keys.Tab:
+                // MEMO: Ctrl+Tab が 2連続で補足されているように見える．
+                // 原因を調査．
+#if NOUSE
+                if (e.Control) {
+                    var index = this.PageViewerTabControl.SelectedIndex + 1;
+                    if (index > this.PageViewerTabControl.TabCount) index = 0;
+                    this.PageViewerTabControl.SelectedIndex = index;
+                }
+#endif
                 break;
             case Keys.F3: // 検索
                 if (this.SearchTextBox.Text.Length > 0) this.Search(this.PageViewerTabControl.SelectedTab, this.SearchTextBox.Text, !e.Shift);
@@ -332,6 +345,9 @@ namespace Cube {
                 break;
             case Keys.O:  // ファイルを開く
                 if (e.Control) this.OpenButton_Click(this.PageViewerTabControl.SelectedTab, e);
+                break;
+            case Keys.W:  // ファイルを閉じる
+                if (e.Control) this.CloseButton_Click(this.PageViewerTabControl.SelectedTab, e);
                 break;
             default:
                 break;
@@ -701,5 +717,6 @@ namespace Cube {
         private FitCondition fit_ = FitCondition.Height;
         private Point pos_;
         #endregion
+
     }
 }
