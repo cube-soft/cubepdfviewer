@@ -323,17 +323,6 @@ namespace Cube {
             case Keys.Escape:
                 this.ResetSearch(this.PageViewerTabControl.SelectedTab);
                 break;
-            case Keys.Tab:
-                // MEMO: Ctrl+Tab が 2連続で補足されているように見える．
-                // 原因を調査．
-#if NOUSE
-                if (e.Control) {
-                    var index = this.PageViewerTabControl.SelectedIndex + 1;
-                    if (index > this.PageViewerTabControl.TabCount) index = 0;
-                    this.PageViewerTabControl.SelectedIndex = index;
-                }
-#endif
-                break;
             case Keys.F3: // 検索
                 if (this.SearchTextBox.Text.Length > 0) this.Search(this.PageViewerTabControl.SelectedTab, this.SearchTextBox.Text, !e.Shift);
                 break;
@@ -390,12 +379,12 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         private void OpenButton_Click(object sender, EventArgs e) {
             var dialog = new OpenFileDialog();
+            dialog.Filter = "PDF ファイル(*.pdf)|*.pdf";
             if (dialog.ShowDialog() == DialogResult.OK) {
                 var tab = this.PageViewerTabControl.SelectedTab;
                 this.Open(tab, dialog.FileName);
             }
         }
-
 
         /* ----------------------------------------------------------------- */
         /// CloseButton_Click
