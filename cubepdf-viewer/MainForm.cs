@@ -262,7 +262,71 @@ namespace Cube {
             thumb.SelectedIndexChanged += new EventHandler(PageChanged);
         }
 
-        /* -----------------------;------------------------------------------ */
+        /* ----------------------------------------------------------------- */
+        //  キーボード・ショートカット一覧
+        /* ----------------------------------------------------------------- */
+        #region Keybord shortcuts
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// MainForm_KeyDown
+        ///
+        /// <summary>
+        /// キーボード・ショートカット一覧．
+        /// KeyPreview を有効にして，全てのキーボードイベントを一括で
+        /// 処理している．
+        /// </summary>
+        /// 
+        /* ----------------------------------------------------------------- */
+        private void MainForm_KeyDown(object sender, KeyEventArgs e) {
+            switch (e.KeyCode) {
+            case Keys.Enter:
+                if (this.SearchTextBox.Focused && this.SearchTextBox.Text.Length > 0) {
+                    this.SearchButton_Click(this.SearchButton, e);
+                }
+                break;
+            case Keys.Escape:
+                this.ResetSearch(this.PageViewerTabControl.SelectedTab);
+                break;
+            case Keys.Right:
+            case Keys.Down:
+                if (e.Control) this.ZoomInButton_Click(this.ZoomInButton, e);
+                else this.NextPageButton_Click(this.NextPageButton, e);
+                break;
+            case Keys.Left:
+            case Keys.Up:
+                if (e.Control) this.ZoomOutButton_Click(this.ZoomOutButton, e);
+                else this.PreviousPageButton_Click(this.PreviousPageButton, e);
+                break;
+            case Keys.F3: // 検索
+                if (this.SearchTextBox.Text.Length > 0) this.Search(this.PageViewerTabControl.SelectedTab, this.SearchTextBox.Text, !e.Shift);
+                break;
+            case Keys.F4: // 閉じる
+                if (e.Control) this.DestroyTab(this.PageViewerTabControl.SelectedTab);
+                break;
+            case Keys.F:  // 検索ボックスにフォーカス
+                if (e.Control) this.SearchTextBox.Focus();
+                break;
+            case Keys.M:  // メニューの表示/非表示
+                if (e.Control) this.MenuModeButton_Click(this.MenuModeButton, e);
+                break;
+            case Keys.N:  // 新規タブ
+                if (e.Control) this.CreateTab(this.PageViewerTabControl);
+                break;
+            case Keys.O:  // ファイルを開く
+                if (e.Control) this.OpenButton_Click(this.PageViewerTabControl.SelectedTab, e);
+                break;
+            case Keys.W:  // ファイルを閉じる
+                if (e.Control) this.CloseButton_Click(this.PageViewerTabControl.SelectedTab, e);
+                break;
+            default:
+                break;
+            }
+        }
+
+        #endregion
+
+        /* ----------------------------------------------------------------- */
         //  メインフォームに関する各種イベント・ハンドラ
         /* ----------------------------------------------------------------- */
         #region MainForm Event handlers
@@ -302,46 +366,6 @@ namespace Cube {
             this.Focus();
         }
 
-        /* ----------------------------------------------------------------- */
-        ///
-        /// MainForm_KeyDown
-        ///
-        /// <summary>
-        /// キーボード・ショートカット一覧．
-        /// KeyPreview を有効にして，全てのキーボードイベントを一括で
-        /// 処理している．
-        /// </summary>
-        /// 
-        /* ----------------------------------------------------------------- */
-        private void MainForm_KeyDown(object sender, KeyEventArgs e) {
-            switch (e.KeyCode) {
-            case Keys.Enter:
-                if (this.SearchTextBox.Focused && this.SearchTextBox.Text.Length > 0) {
-                    this.SearchButton_Click(this.SearchButton, e);
-                }
-                break;
-            case Keys.Escape:
-                this.ResetSearch(this.PageViewerTabControl.SelectedTab);
-                break;
-            case Keys.F3: // 検索
-                if (this.SearchTextBox.Text.Length > 0) this.Search(this.PageViewerTabControl.SelectedTab, this.SearchTextBox.Text, !e.Shift);
-                break;
-            case Keys.F:  // 検索ボックスにフォーカス
-                if (e.Control) this.SearchTextBox.Focus();
-                break;
-            case Keys.N:  // 新規タブ
-                if (e.Control) this.CreateTab(this.PageViewerTabControl);
-                break;
-            case Keys.O:  // ファイルを開く
-                if (e.Control) this.OpenButton_Click(this.PageViewerTabControl.SelectedTab, e);
-                break;
-            case Keys.W:  // ファイルを閉じる
-                if (e.Control) this.CloseButton_Click(this.PageViewerTabControl.SelectedTab, e);
-                break;
-            default:
-                break;
-            }
-        }
         #endregion
 
         /* ----------------------------------------------------------------- */
