@@ -313,6 +313,11 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         private void MainForm_KeyDown(object sender, KeyEventArgs e) {
             switch (e.KeyCode) {
+            case Keys.Enter:
+                if (this.SearchTextBox.Focused && this.SearchTextBox.Text.Length > 0) {
+                    this.SearchButton_Click(this.SearchButton, e);
+                }
+                break;
             case Keys.Escape: // 検索の解除
                 this.ResetSearch(this.PageViewerTabControl.SelectedTab);
                 break;
@@ -572,14 +577,6 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         private void SearchTextBox_TextChanged(object sender, EventArgs e) {
             begin_ = true;
-        }
-
-        /* ----------------------------------------------------------------- */
-        /// SearchTextBox_KeyDown
-        /* ----------------------------------------------------------------- */
-        private void SearchTextBox_KeyDown(object sender, KeyEventArgs e) {
-            if (e.KeyCode == Keys.Enter) this.SearchButton_Click(this.SearchButton, e);
-            this.MainForm_KeyDown(this, e);
         }
 
         /* ----------------------------------------------------------------- */
