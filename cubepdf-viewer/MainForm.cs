@@ -60,8 +60,6 @@ namespace Cube {
             this.NavigationSplitContainer.Panel1Collapsed = true;
             this.MenuSplitContainer.SplitterDistance = this.MenuToolStrip.Height;
             this.SubMenuSplitContainer.SplitterDistance = this.SubMenuToolStrip.Width;
-            this.DefaultTabPage.VerticalScroll.SmallChange = 3;
-            this.DefaultTabPage.HorizontalScroll.SmallChange = 3;
             this.FitToHeightButton.Checked = true;
             CreateTabContextMenu(this.PageViewerTabControl);
 
@@ -90,15 +88,16 @@ namespace Cube {
         /// 
         /* ----------------------------------------------------------------- */
         private void Refresh(PictureBox canvas, string message = "") {
+            this.FooterStatusLabel.Text = message;
             if (canvas == null || canvas.Tag == null) {
-                CurrentPageTextBox.Text = "0";
-                TotalPageLabel.Text = "/ 0";
-                ZoomDropDownButton.Text = "100%";
+                this.CurrentPageTextBox.Text = "0";
+                this.TotalPageLabel.Text = "/ 0";
+                this.ZoomDropDownButton.Text = "100%";
             }
             else {
-                CurrentPageTextBox.Text = CanvasPolicy.CurrentPage(canvas).ToString();
-                TotalPageLabel.Text = "/ " + CanvasPolicy.PageCount(canvas).ToString();
-                ZoomDropDownButton.Text = ((int)CanvasPolicy.Zoom(canvas)).ToString() + "%";
+                this.CurrentPageTextBox.Text = CanvasPolicy.CurrentPage(canvas).ToString();
+                this.TotalPageLabel.Text = "/ " + CanvasPolicy.PageCount(canvas).ToString();
+                this.ZoomDropDownButton.Text = ((int)CanvasPolicy.Zoom(canvas)).ToString() + "%";
 
                 // scrollbarのsmallchangeの更新
                 var control = (ScrollableControl)canvas.Parent;
@@ -121,6 +120,7 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         private void Open(TabPage tab, string path, string password = "") {
             var canvas = CanvasPolicy.Create(tab);
+            var message = "";
 
             try {
                 CanvasPolicy.Open(canvas, path, password, fit_);
@@ -131,9 +131,11 @@ namespace Cube {
                 dialog.ShowDialog();
                 if (dialog.Password.Length > 0) this.Open(tab, path, dialog.Password);
             }
-            catch (Exception /* err */) { }
+            catch (Exception err) {
+                message = err.Message;
+            }
             finally {
-                this.Refresh(canvas);
+                this.Refresh(canvas, message);
             }
         }
 
@@ -144,19 +146,18 @@ namespace Cube {
             var canvas = CanvasPolicy.Get(tab);
             if (canvas == null) return false;
 
-            bool status = true;
+            var status = true;
+            var message = "";
             try {
                 int prev = CanvasPolicy.CurrentPage(canvas);
-                if (CanvasPolicy.NextPage(canvas) != prev) {
-                    tab.VerticalScroll.Value = tab.VerticalScroll.Minimum;
-                }
-                else status = false;
+                if (CanvasPolicy.NextPage(canvas) == prev) status = false;
             }
-            catch (Exception /* err */) {
-                status = false; 
+            catch (Exception err) {
+                status = false;
+                message = err.Message;
             }
             finally {
-                this.Refresh(canvas);
+                this.Refresh(canvas, message);
             }
             return status;
         }
@@ -168,19 +169,18 @@ namespace Cube {
             var canvas = CanvasPolicy.Get(this.PageViewerTabControl.SelectedTab);
             if (canvas == null) return false;
 
-            bool status = true;
+            var status = true;
+            var message = "";
             try {
                 int prev = CanvasPolicy.CurrentPage(canvas);
-                if (CanvasPolicy.PreviousPage(canvas) != prev) {
-                    tab.VerticalScroll.Value = tab.VerticalScroll.Minimum;
-                }
-                else status = false;
+                if (CanvasPolicy.PreviousPage(canvas) == prev) status = false;
             }
-            catch (Exception /* err */) {
+            catch (Exception err) {
                 status = false;
+                message = err.Message;
             }
             finally {
-                this.Refresh(canvas);
+                this.Refresh(canvas, message);
             }
             return status;
         }
@@ -190,6 +190,7 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         private void Search(TabPage tab, string text, bool next) {
             var canvas = CanvasPolicy.Get(tab);
+            var message = "";
 
             try {
                 var args = new SearchArgs(text);
@@ -202,9 +203,11 @@ namespace Cube {
                 var result = CanvasPolicy.Search(canvas, args);
                 begin_ = !result; // 最後まで検索したら始めに戻る
             }
-            catch (Exception /* err */) { }
+            catch (Exception err) {
+                message = err.Message;
+            }
             finally {
-                this.Refresh(canvas);
+                this.Refresh(canvas, message);
             }
         }
 
@@ -237,15 +240,18 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         private void Adjust(TabPage tab) {
             var canvas = CanvasPolicy.Get(tab);
+            var message = "";
 
             try {
                 if (this.FitToWidthButton.Checked) CanvasPolicy.FitToWidth(canvas);
                 else if (this.FitToHeightButton.Checked) CanvasPolicy.FitToHeight(canvas);
                 else CanvasPolicy.Adjust(canvas);
             }
-            catch (Exception /* err */) { }
+            catch (Exception err) {
+                message = err.Message;
+            }
             finally {
-                this.Refresh(canvas);
+                this.Refresh(canvas, message);
             }
         }
 
@@ -257,17 +263,15 @@ namespace Cube {
 
             // TabPage の設定
             tab.AutoScroll = true;
-            tab.VerticalScroll.SmallChange = (tab.VerticalScroll.Maximum - tab.VerticalScroll.Minimum) / 20;
-            tab.HorizontalScroll.SmallChange = (tab.HorizontalScroll.Maximum - tab.HorizontalScroll.Minimum) / 20;
             tab.BackColor = Color.DimGray;
             tab.BorderStyle = BorderStyle.Fixed3D;
             tab.ContextMenuStrip = new ContextMenuStrip();
             tab.Text = "(無題)";
             tab.Scroll += new ScrollEventHandler(VerticalScrolled);
-
             parent.Controls.Add(tab);
             parent.SelectedIndex = parent.TabCount - 1;
 
+            MessageBox.Show(String.Format("size: {0}, client: {1}", tab.Size.ToString(), tab.ClientSize.ToString()));
             return tab;
         }
 
@@ -408,50 +412,42 @@ namespace Cube {
         private int mouseWheelPrevCount = 0;
         private int mouseWheelNextCount = 0;
         private void MainForm_MouseWheel(object sender, MouseEventArgs e) {
+            if (Math.Abs(e.Delta) < 120) return;
+
             var tab = this.PageViewerTabControl.SelectedTab;
             var scroll = tab.VerticalScroll;
             if (!scroll.Visible) {
                 if (e.Delta < 0) this.NextPage(tab);
                 else this.PreviousPage(tab);
-                return;
             }
-            
-            var realMaximum = 1 + scroll.Maximum - scroll.LargeChange; // ユーザのコントロールで取れるscroll.Valueの最大値
-            int delta = -(e.Delta / 120) * scroll.SmallChange;
-            if (scroll.Value == scroll.Minimum && delta < 0)
-            {
-                if (mouseWheelPrevCount > 3) {
-                    if (this.PreviousPage(tab))
-                    {
-                        tab.AutoScrollPosition = new Point(0, 0);
+            else {
+                var realMaximum = 1 + scroll.Maximum - scroll.LargeChange; // ユーザのコントロールで取れるscroll.Valueの最大値
+                int delta = -(e.Delta / 120) * scroll.SmallChange;
+                if (scroll.Value == scroll.Minimum && delta < 0) {
+                    if (mouseWheelPrevCount > 3) {
+                        if (this.PreviousPage(tab)) {
+                            tab.AutoScrollPosition = new Point(0, 0);
+                            tab.VerticalScroll.Value = realMaximum;
+                        }
+                        mouseWheelPrevCount = 0;
                     }
-                    mouseWheelPrevCount = 0;
+                    else mouseWheelPrevCount++;
                 }
-                else mouseWheelPrevCount++;
-            }
-            else if (scroll.Value == realMaximum && delta > 0)
-            {
-                if (mouseWheelNextCount > 3) {
-                    if (this.NextPage(tab))
-                    {
-                        tab.AutoScrollPosition = new Point(0, 0);
+                else if (scroll.Value == realMaximum && delta > 0) {
+                    if (mouseWheelNextCount > 3) {
+                        if (this.NextPage(tab)) {
+                            tab.AutoScrollPosition = new Point(0, 0);
+                        }
+                        mouseWheelNextCount = 0;
                     }
-                    mouseWheelNextCount = 0; 
-                } else mouseWheelNextCount++;
-            } 
-            else  if (scroll.Value >= scroll.Minimum &&
-                scroll.Value <= realMaximum) 
-            {
-                scroll.Value = Between(scroll.Minimum, scroll.Value + delta, realMaximum);
-                mouseWheelNextCount = 0; mouseWheelPrevCount = 0;
+                    else mouseWheelNextCount++;
+                }
+                else if (scroll.Value >= scroll.Minimum && scroll.Value <= realMaximum) {
+                    var canvas = CanvasPolicy.Get(tab);
+                    scroll.Value = Math.Min(Math.Max(scroll.Value + delta, scroll.Minimum), realMaximum);
+                    mouseWheelNextCount = 0; mouseWheelPrevCount = 0;
+                }
             }
-        }
-
-        private int Between(int min, int value, int max)
-        {
-            if (value < min) return min;
-            else if (value > max) return max;
-            else return value;
         }
 
         /* ----------------------------------------------------------------- */
@@ -479,6 +475,7 @@ namespace Cube {
                 return;
             }
 
+            // OpenNewTabMenuItem と OpenExistedTabMenuItem がある．
             if (e.ClickedItem.Name == "OpenNewTabMenuItem") {
                 TabPage selected = null;
                 foreach (TabPage child in this.PageViewerTabControl.TabPages) {
@@ -534,12 +531,15 @@ namespace Cube {
             var canvas = CanvasPolicy.Get(this.PageViewerTabControl.SelectedTab);
             if (canvas == null) return;
 
+            var message = "";
             try {
                 CanvasPolicy.ZoomIn(canvas);
             }
-            catch (Exception /* err */) { }
+            catch (Exception err) {
+                message = err.Message;
+            }
             finally {
-                this.Refresh(canvas);
+                this.Refresh(canvas, message);
             }
         }
 
@@ -551,12 +551,15 @@ namespace Cube {
             var canvas = CanvasPolicy.Get(this.PageViewerTabControl.SelectedTab);
             if (canvas == null) return;
 
+            var message = "";
             try {
                 CanvasPolicy.ZoomOut(canvas);
             }
-            catch (Exception /* err */) { }
+            catch (Exception err) {
+                message = err.Message;
+            }
             finally {
-                this.Refresh(canvas);
+                this.Refresh(canvas, message);
             }
         }
 
@@ -568,13 +571,16 @@ namespace Cube {
             var canvas = CanvasPolicy.Get(this.PageViewerTabControl.SelectedTab);
             if (canvas == null) return;
 
+            var message = "";
             try {
                 var zoom = e.ClickedItem.Text.Replace("%", "");
                 CanvasPolicy.Zoom(canvas, int.Parse(zoom));
             }
-            catch (Exception /* err */) { }
+            catch (Exception err) {
+                message = err.Message;
+            }
             finally {
-                this.Refresh(canvas);
+                this.Refresh(canvas, message);
             }
         }
 
@@ -586,12 +592,15 @@ namespace Cube {
             var canvas = CanvasPolicy.Get(this.PageViewerTabControl.SelectedTab);
             if (canvas == null) return;
 
+            var message = "";
             try {
                 if (this.FitToWidthButton.Checked) CanvasPolicy.FitToWidth(canvas);
             }
-            catch (Exception /* err */) { }
+            catch (Exception err) {
+                message = err.Message;
+            }
             finally {
-                this.Refresh(canvas);
+                this.Refresh(canvas, message);
             }
         }
 
@@ -603,12 +612,15 @@ namespace Cube {
             var canvas = CanvasPolicy.Get(this.PageViewerTabControl.SelectedTab);
             if (canvas == null) return;
 
+            var message = "";
             try {
                 if (this.FitToHeightButton.Checked) CanvasPolicy.FitToHeight(canvas);
             }
-            catch (Exception /* err */) { }
+            catch (Exception err) {
+                message = err.Message;
+            }
             finally {
-                this.Refresh(canvas);
+                this.Refresh(canvas, message);
             }
         }
 
@@ -634,16 +646,15 @@ namespace Cube {
             var canvas = CanvasPolicy.Get(tab);
             if (canvas == null) return;
 
+            var message = "";
             try {
-                int prev = CanvasPolicy.CurrentPage(canvas);
-                int status = CanvasPolicy.FirstPage(canvas);
-                if (status != prev && status == 1) {
-                    tab.VerticalScroll.Value = tab.VerticalScroll.Minimum;
-                }
+                CanvasPolicy.FirstPage(canvas);
             }
-            catch (Exception /* err */) { }
+            catch (Exception err) {
+                message = err.Message;
+            }
             finally {
-                this.Refresh(canvas);
+                this.Refresh(canvas, message);
             }
         }
 
@@ -655,14 +666,13 @@ namespace Cube {
             var canvas = CanvasPolicy.Get(tab);
             if (canvas == null) return;
 
+            var message = "";
             try {
-                int prev = CanvasPolicy.CurrentPage(canvas);
-                int status = CanvasPolicy.LastPage(canvas);
-                if (status != prev && status == CanvasPolicy.PageCount(canvas)) {
-                    tab.VerticalScroll.Value = tab.VerticalScroll.Minimum;
-                }
+                CanvasPolicy.LastPage(canvas);
             }
-            catch (Exception /* err */) { }
+            catch (Exception err) {
+                message = err.Message;
+            }
             finally {
                 this.Refresh(canvas);
             }
@@ -677,18 +687,17 @@ namespace Cube {
             if (canvas == null) return;
 
             if (e.KeyCode == Keys.Enter) {
+                var message = "";
                 try {
                     var control = (ToolStripTextBox)sender;
                     int page = int.Parse(control.Text);
-                    int prev = CanvasPolicy.CurrentPage(canvas);
-                    int status = CanvasPolicy.MovePage(canvas, page);
-                    if (status != prev && status == page) {
-                        tab.VerticalScroll.Value = tab.VerticalScroll.Minimum;
-                    }
+                    CanvasPolicy.MovePage(canvas, page);
                 }
-                catch (Exception /* err */) { }
+                catch (Exception err) {
+                    message = err.Message;
+                }
                 finally {
-                    this.Refresh(canvas);
+                    this.Refresh(canvas, message);
                 }
             }
         }
@@ -780,7 +789,7 @@ namespace Cube {
                     if (this.PreviousPage(control)) scroll.Value = maximum;
                 }
                 else if (scroll.Value == maximum && e.Type == ScrollEventType.SmallIncrement) {
-                    if (this.NextPage(control)) scroll.Value = scroll.Minimum;
+                    this.NextPage(control);
                 }
             }
         }

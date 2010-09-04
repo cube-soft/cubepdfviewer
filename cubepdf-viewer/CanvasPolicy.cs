@@ -129,8 +129,8 @@ namespace Cube {
 
             if (core.LoadPDF(path)) {
                 core.CurrentPage = 1;
-                if (which == FitCondition.Height) core.FitToHeight(canvas.Parent.Handle);
-                else if (which == FitCondition.Width) core.FitToWidth(canvas.Parent.Handle);
+                if (which == FitCondition.Height) CanvasPolicy.FitToHeight(canvas);
+                else if (which == FitCondition.Width) CanvasPolicy.FitToWidth(canvas);
                 else core.Zoom = 100;
                 core.RenderPage(IntPtr.Zero);
                 canvas.Parent.Text = System.IO.Path.GetFileNameWithoutExtension(path);
@@ -223,7 +223,10 @@ namespace Cube {
             var core = (PDF)canvas.Tag;
             int n = Math.Min(Math.Max(page, 1), core.PageCount);
             core.CurrentPage = n;
-            core.RenderPage(IntPtr.Zero);
+            if (core.RenderPage(IntPtr.Zero)) {
+                var control = (ScrollableControl)canvas.Parent;
+                control.VerticalScroll.Value = control.VerticalScroll.Minimum;
+            }
             return core.CurrentPage;
         }
 
@@ -241,7 +244,10 @@ namespace Cube {
 
             var core = (PDF)canvas.Tag;
             core.NextPage();
-            core.RenderPage(IntPtr.Zero);
+            if (core.RenderPage(IntPtr.Zero)) {
+                var control = (ScrollableControl)canvas.Parent;
+                control.VerticalScroll.Value = control.VerticalScroll.Minimum;
+            }
             return core.CurrentPage;
         }
 
@@ -259,7 +265,10 @@ namespace Cube {
 
             var core = (PDF)canvas.Tag;
             core.PreviousPage();
-            core.RenderPage(IntPtr.Zero);
+            if (core.RenderPage(IntPtr.Zero)) {
+                var control = (ScrollableControl)canvas.Parent;
+                control.VerticalScroll.Value = control.VerticalScroll.Minimum;
+            }
             return core.CurrentPage;
         }
 
@@ -277,7 +286,10 @@ namespace Cube {
 
             var core = (PDF)canvas.Tag;
             core.CurrentPage = 1;
-            core.RenderPage(IntPtr.Zero);
+            if (core.RenderPage(IntPtr.Zero)) {
+                var control = (ScrollableControl)canvas.Parent;
+                control.VerticalScroll.Value = control.VerticalScroll.Minimum;
+            }
             return core.CurrentPage;
         }
 
@@ -295,7 +307,10 @@ namespace Cube {
 
             var core = (PDF)canvas.Tag;
             core.CurrentPage = core.PageCount;
-            core.RenderPage(IntPtr.Zero);
+            if (core.RenderPage(IntPtr.Zero)) {
+                var control = (ScrollableControl)canvas.Parent;
+                control.VerticalScroll.Value = control.VerticalScroll.Minimum;
+            }
             return core.CurrentPage;
         }
 
@@ -394,6 +409,7 @@ namespace Cube {
             var core = (PDF)canvas.Tag;
             var prev = new Size(core.PageWidth, core.PageHeight);
             core.FitToWidth(canvas.Parent.Handle);
+            core.Zoom = core.Zoom - 1; // 暫定
             core.RenderPage(IntPtr.Zero);
 
             CanvasPolicy.ResetPosition(canvas, core, prev);
@@ -415,11 +431,11 @@ namespace Cube {
 
             var core = (PDF)canvas.Tag;
             var prev = new Size(core.PageWidth, core.PageHeight);
-            var zoom = core.Zoom;
             core.FitToHeight(canvas.Parent.Handle);
+            core.Zoom = core.Zoom - 1; // 暫定
             core.RenderPage(IntPtr.Zero);
 
-            if (core.Zoom > zoom) CanvasPolicy.ResetPosition(canvas, core, prev);
+            CanvasPolicy.ResetPosition(canvas, core, prev);
             CanvasPolicy.Adjust(canvas);
             return core.Zoom;
         }

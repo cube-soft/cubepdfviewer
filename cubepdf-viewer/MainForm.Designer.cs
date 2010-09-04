@@ -65,7 +65,9 @@
             this.MenuModeButton = new System.Windows.Forms.ToolStripButton();
             this.ThumbButton = new System.Windows.Forms.ToolStripButton();
             this.MenuSplitContainer = new System.Windows.Forms.SplitContainer();
+            this.FooterStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.MenuToolStrip.SuspendLayout();
+            this.FooterStatusStrip.SuspendLayout();
             this.NavigationSplitContainer.Panel2.SuspendLayout();
             this.NavigationSplitContainer.SuspendLayout();
             this.PageViewerTabControl.SuspendLayout();
@@ -382,11 +384,13 @@
             // 
             // FooterStatusStrip
             // 
+            this.FooterStatusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.FooterStatusLabel});
             this.FooterStatusStrip.Location = new System.Drawing.Point(0, 551);
             this.FooterStatusStrip.Name = "FooterStatusStrip";
             this.FooterStatusStrip.Size = new System.Drawing.Size(792, 22);
+            this.FooterStatusStrip.SizingGrip = false;
             this.FooterStatusStrip.TabIndex = 1;
-            this.FooterStatusStrip.Text = "statusStrip1";
             // 
             // NavigationSplitContainer
             // 
@@ -513,6 +517,11 @@
             this.MenuSplitContainer.SplitterWidth = 1;
             this.MenuSplitContainer.TabIndex = 4;
             // 
+            // FooterStatusLabel
+            // 
+            this.FooterStatusLabel.Name = "FooterStatusLabel";
+            this.FooterStatusLabel.Size = new System.Drawing.Size(0, 17);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -528,6 +537,8 @@
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MainForm_KeyDown);
             this.MenuToolStrip.ResumeLayout(false);
             this.MenuToolStrip.PerformLayout();
+            this.FooterStatusStrip.ResumeLayout(false);
+            this.FooterStatusStrip.PerformLayout();
             this.NavigationSplitContainer.Panel2.ResumeLayout(false);
             this.NavigationSplitContainer.ResumeLayout(false);
             this.PageViewerTabControl.ResumeLayout(false);
@@ -588,6 +599,7 @@
         private System.Windows.Forms.ToolStripMenuItem OpenExistedTabMenuItem;
         private System.Windows.Forms.ToolStripSeparator OnlyDisplayFileOpenCategorySeparator;
         private System.Windows.Forms.ToolStripMenuItem CloseMenuItem;
+        private System.Windows.Forms.ToolStripStatusLabel FooterStatusLabel;
     }
 }
 
