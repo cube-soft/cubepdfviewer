@@ -178,6 +178,38 @@ namespace Cube {
 
         /* ----------------------------------------------------------------- */
         ///
+        /// PageCount
+        /// 
+        /// <summary>
+        /// 表示されている PDF のページ数を返す．
+        /// </summary>
+        /// 
+        /* ----------------------------------------------------------------- */
+        public static int PageCount(Canvas canvas) {
+            if (canvas == null || canvas.Tag == null) return 0;
+
+            var core = (PDF)canvas.Tag;
+            return core.PageCount;
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// CurrentPage
+        /// 
+        /// <summary>
+        /// 現在表示されているページ番号を返す．
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        public static int CurrentPage(Canvas canvas) {
+            if (canvas == null || canvas.Tag == null) return 0;
+
+            var core = (PDF)canvas.Tag;
+            return core.CurrentPage;
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
         /// MovePage
         /// 
         /// <summary>
@@ -185,13 +217,14 @@ namespace Cube {
         /// </summary>
         /// 
         /* ----------------------------------------------------------------- */
-        public static void MovePage(Canvas canvas, int page) {
-            if (canvas == null || canvas.Tag == null) return;
+        public static int MovePage(Canvas canvas, int page) {
+            if (canvas == null || canvas.Tag == null) return 0;
 
             var core = (PDF)canvas.Tag;
             int n = Math.Min(Math.Max(page, 1), core.PageCount);
             core.CurrentPage = n;
             core.RenderPage(IntPtr.Zero);
+            return core.CurrentPage;
         }
 
         /* ----------------------------------------------------------------- */
@@ -203,12 +236,13 @@ namespace Cube {
         /// </summary>
         /// 
         /* ----------------------------------------------------------------- */
-        public static void NextPage(Canvas canvas) {
-            if (canvas == null || canvas.Tag == null) return;
+        public static int NextPage(Canvas canvas) {
+            if (canvas == null || canvas.Tag == null) return 0;
 
             var core = (PDF)canvas.Tag;
             core.NextPage();
             core.RenderPage(IntPtr.Zero);
+            return core.CurrentPage;
         }
 
         /* ----------------------------------------------------------------- */
@@ -220,12 +254,13 @@ namespace Cube {
         /// </summary>
         /// 
         /* ----------------------------------------------------------------- */
-        public static void PreviousPage(Canvas canvas) {
-            if (canvas == null || canvas.Tag == null) return;
+        public static int PreviousPage(Canvas canvas) {
+            if (canvas == null || canvas.Tag == null) return 0;
 
             var core = (PDF)canvas.Tag;
             core.PreviousPage();
             core.RenderPage(IntPtr.Zero);
+            return core.CurrentPage;
         }
 
         /* ----------------------------------------------------------------- */
@@ -237,12 +272,13 @@ namespace Cube {
         /// </summary>
         /// 
         /* ----------------------------------------------------------------- */
-        public static void FirstPage(Canvas canvas) {
-            if (canvas == null || canvas.Tag == null) return;
+        public static int FirstPage(Canvas canvas) {
+            if (canvas == null || canvas.Tag == null) return 0;
 
             var core = (PDF)canvas.Tag;
             core.CurrentPage = 1;
             core.RenderPage(IntPtr.Zero);
+            return core.CurrentPage;
         }
 
         /* ----------------------------------------------------------------- */
@@ -254,12 +290,29 @@ namespace Cube {
         /// </summary>
         /// 
         /* ----------------------------------------------------------------- */
-        public static void LastPage(Canvas canvas) {
-            if (canvas == null || canvas.Tag == null) return;
+        public static int LastPage(Canvas canvas) {
+            if (canvas == null || canvas.Tag == null) return 0;
 
             var core = (PDF)canvas.Tag;
             core.CurrentPage = core.PageCount;
             core.RenderPage(IntPtr.Zero);
+            return core.CurrentPage;
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// Zoom
+        /// 
+        /// <summary>
+        /// 現在表示されている画像の表示倍率を返す．
+        /// </summary>
+        /// 
+        /* ----------------------------------------------------------------- */
+        public static double Zoom(Canvas canvas) {
+            if (canvas == null || canvas.Tag == null) return 0.0;
+
+            var core = (PDF)canvas.Tag;
+            return core.Zoom;
         }
 
         /* ----------------------------------------------------------------- */
@@ -271,21 +324,17 @@ namespace Cube {
         /// </summary>
         /// 
         /* ----------------------------------------------------------------- */
-        public static void Zoom(Canvas canvas, int percent) {
-            if (canvas == null || canvas.Tag == null) return;
+        public static double Zoom(Canvas canvas, double percent) {
+            if (canvas == null || canvas.Tag == null) return 0.0;
 
             var core = (PDF)canvas.Tag;
             var prev = new Size(core.PageWidth, core.PageHeight);
-            core.Zoom = (double)percent;
+            core.Zoom = percent;
             core.RenderPage(IntPtr.Zero);
 
-            var view = canvas.Parent.ClientSize;
-            var pos = canvas.Location;
-            if (prev.Width < view.Width && core.PageWidth >= view.Width) pos.X = 0;
-            if (prev.Height < view.Height && core.PageHeight >= view.Height) pos.Y = 0;
-            canvas.Location = pos;
-
+            CanvasPolicy.ResetPosition(canvas, core, prev);
             CanvasPolicy.Adjust(canvas);
+            return core.Zoom;
         }
 
         /* ----------------------------------------------------------------- */
@@ -297,8 +346,8 @@ namespace Cube {
         /// </summary>
         /// 
         /* ----------------------------------------------------------------- */
-        public static void ZoomIn(Canvas canvas) {
-            if (canvas == null || canvas.Tag == null) return;
+        public static double ZoomIn(Canvas canvas) {
+            if (canvas == null || canvas.Tag == null) return 0.0;
 
             var core = (PDF)canvas.Tag;
             var prev = new Size(core.PageWidth, core.PageHeight);
@@ -307,6 +356,7 @@ namespace Cube {
 
             CanvasPolicy.ResetPosition(canvas, core, prev);
             CanvasPolicy.Adjust(canvas);
+            return core.Zoom;
         }
 
         /* ----------------------------------------------------------------- */
@@ -318,14 +368,15 @@ namespace Cube {
         /// </summary>
         /// 
         /* ----------------------------------------------------------------- */
-        public static void ZoomOut(Canvas canvas) {
-            if (canvas == null || canvas.Tag == null) return;
+        public static double ZoomOut(Canvas canvas) {
+            if (canvas == null || canvas.Tag == null) return 0.0;
 
             var core = (PDF)canvas.Tag;
             core.ZoomOut();
             core.RenderPage(IntPtr.Zero);
 
             CanvasPolicy.Adjust(canvas);
+            return core.Zoom;
         }
 
         /* ----------------------------------------------------------------- */
@@ -337,17 +388,17 @@ namespace Cube {
         /// </summary>
         /// 
         /* ----------------------------------------------------------------- */
-        public static void FitToWidth(Canvas canvas) {
-            if (canvas == null || canvas.Tag == null) return;
+        public static double FitToWidth(Canvas canvas) {
+            if (canvas == null || canvas.Tag == null) return 0.0;
 
             var core = (PDF)canvas.Tag;
             var prev = new Size(core.PageWidth, core.PageHeight);
-            var zoom = core.Zoom;
             core.FitToWidth(canvas.Parent.Handle);
             core.RenderPage(IntPtr.Zero);
 
-            if (core.Zoom > zoom) CanvasPolicy.ResetPosition(canvas, core, prev);
+            CanvasPolicy.ResetPosition(canvas, core, prev);
             CanvasPolicy.Adjust(canvas);
+            return core.Zoom;
         }
 
         /* ----------------------------------------------------------------- */
@@ -359,8 +410,8 @@ namespace Cube {
         /// </summary>
         /// 
         /* ----------------------------------------------------------------- */
-        public static void FitToHeight(Canvas canvas) {
-            if (canvas == null || canvas.Tag == null) return;
+        public static double FitToHeight(Canvas canvas) {
+            if (canvas == null || canvas.Tag == null) return 0.0;
 
             var core = (PDF)canvas.Tag;
             var prev = new Size(core.PageWidth, core.PageHeight);
@@ -370,6 +421,7 @@ namespace Cube {
 
             if (core.Zoom > zoom) CanvasPolicy.ResetPosition(canvas, core, prev);
             CanvasPolicy.Adjust(canvas);
+            return core.Zoom;
         }
 
         /* ----------------------------------------------------------------- */
@@ -505,17 +557,13 @@ namespace Cube {
         /// になると不正な挙動を示す．
         /// 
         /// 拡大した結果，余白がなくなった場合に位置情報をリセットする．
-        /// </summary>
+        /// 
         /// NOTE: 2010/09/03 強制的にリセットに変更
+        /// </summary>
+        ///
         /* ----------------------------------------------------------------- */
         private static void ResetPosition(Canvas canvas, PDF core, Size prev) {
-            var view = canvas.Parent.ClientSize;
-            var pos = canvas.Location;
-            pos.X = 0;
-            pos.Y = 0;
-            //if (prev.Width <= view.Width && core.PageWidth > view.Width) pos.X = 0;
-            //if (prev.Height <= view.Height && core.PageHeight > view.Height) pos.Y = 0;
-            canvas.Location = pos;
+            canvas.Location = new Point(0, 0);
         }
 
         /* ----------------------------------------------------------------- */

@@ -96,22 +96,24 @@ namespace Cube {
                 ZoomDropDownButton.Text = "100%";
             }
             else {
-                var core = (PDFLibNet.PDFWrapper)canvas.Tag;
-                CurrentPageTextBox.Text = core.CurrentPage.ToString();
-                TotalPageLabel.Text = "/ " + core.PageCount.ToString();
-                ZoomDropDownButton.Text = ((int)core.Zoom).ToString() + "%";
-                if (this.PageViewerTabControl != null) this.PageViewerTabControl.Refresh();
+                CurrentPageTextBox.Text = CanvasPolicy.CurrentPage(canvas).ToString();
+                TotalPageLabel.Text = "/ " + CanvasPolicy.PageCount(canvas).ToString();
+                ZoomDropDownButton.Text = ((int)CanvasPolicy.Zoom(canvas)).ToString() + "%";
+
+                // scrollbarのsmallchangeの更新
+                var control = (ScrollableControl)canvas.Parent;
+                var vsb = control.VerticalScroll;
+                var hsb = control.HorizontalScroll;
+
+                // Minimumは0と仮定
+                vsb.SmallChange = (vsb.Maximum - vsb.LargeChange) / 20;
+                hsb.SmallChange = (hsb.Maximum - hsb.LargeChange) / 20;
+
+                control.Parent.Refresh();
             }
 
             if (this.MainMenuStrip != null) this.MainMenuStrip.Refresh();
             if (this.FooterStatusStrip != null) this.FooterStatusStrip.Refresh();
-
-            // scrollbarのsmallchangeの更新
-            var vsb = this.PageViewerTabControl.SelectedTab.VerticalScroll;
-            var hsb = this.PageViewerTabControl.SelectedTab.HorizontalScroll;
-            // Minimumは0と仮定
-            vsb.SmallChange = (vsb.Maximum - vsb.LargeChange) / 20;
-            hsb.SmallChange = (hsb.Maximum - hsb.LargeChange) / 20;
         }
 
         /* ----------------------------------------------------------------- */
@@ -133,6 +135,54 @@ namespace Cube {
             finally {
                 this.Refresh(canvas);
             }
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// NextPage
+        /* ----------------------------------------------------------------- */
+        private bool NextPage(TabPage tab) {
+            var canvas = CanvasPolicy.Get(tab);
+            if (canvas == null) return false;
+
+            bool status = true;
+            try {
+                int prev = CanvasPolicy.CurrentPage(canvas);
+                if (CanvasPolicy.NextPage(canvas) != prev) {
+                    tab.VerticalScroll.Value = tab.VerticalScroll.Minimum;
+                }
+                else status = false;
+            }
+            catch (Exception /* err */) {
+                status = false; 
+            }
+            finally {
+                this.Refresh(canvas);
+            }
+            return status;
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// PreviousPage
+        /* ----------------------------------------------------------------- */
+        private bool PreviousPage(TabPage tab) {
+            var canvas = CanvasPolicy.Get(this.PageViewerTabControl.SelectedTab);
+            if (canvas == null) return false;
+
+            bool status = true;
+            try {
+                int prev = CanvasPolicy.CurrentPage(canvas);
+                if (CanvasPolicy.PreviousPage(canvas) != prev) {
+                    tab.VerticalScroll.Value = tab.VerticalScroll.Minimum;
+                }
+                else status = false;
+            }
+            catch (Exception /* err */) {
+                status = false;
+            }
+            finally {
+                this.Refresh(canvas);
+            }
+            return status;
         }
 
         /* ----------------------------------------------------------------- */
@@ -213,6 +263,7 @@ namespace Cube {
             tab.BorderStyle = BorderStyle.Fixed3D;
             tab.ContextMenuStrip = new ContextMenuStrip();
             tab.Text = "(無題)";
+            tab.Scroll += new ScrollEventHandler(VerticalScrolled);
 
             parent.Controls.Add(tab);
             parent.SelectedIndex = parent.TabCount - 1;
@@ -298,12 +349,12 @@ namespace Cube {
             case Keys.Right:
             case Keys.Down:
                 if (e.Control) this.ZoomInButton_Click(this.ZoomInButton, e);
-                else this.NextPageButton_Click(this.NextPageButton, e);
+                //else this.NextPageButton_Click(this.NextPageButton, e);
                 break;
             case Keys.Left:
             case Keys.Up:
                 if (e.Control) this.ZoomOutButton_Click(this.ZoomOutButton, e);
-                else this.PreviousPageButton_Click(this.PreviousPageButton, e);
+                //else this.PreviousPageButton_Click(this.PreviousPageButton, e);
                 break;
             case Keys.F3: // 検索
                 if (this.SearchTextBox.Text.Length > 0) this.Search(this.PageViewerTabControl.SelectedTab, this.SearchTextBox.Text, !e.Shift);
@@ -359,14 +410,18 @@ namespace Cube {
         private void MainForm_MouseWheel(object sender, MouseEventArgs e) {
             var tab = this.PageViewerTabControl.SelectedTab;
             var scroll = tab.VerticalScroll;
-            if (!scroll.Visible) return;
+            if (!scroll.Visible) {
+                if (e.Delta < 0) this.NextPage(tab);
+                else this.PreviousPage(tab);
+                return;
+            }
             
             var realMaximum = 1 + scroll.Maximum - scroll.LargeChange; // ユーザのコントロールで取れるscroll.Valueの最大値
             int delta = -(e.Delta / 120) * scroll.SmallChange;
             if (scroll.Value == scroll.Minimum && delta < 0)
             {
                 if (mouseWheelPrevCount > 3) {
-                    if (PreviousPage())
+                    if (this.PreviousPage(tab))
                     {
                         tab.AutoScrollPosition = new Point(0, 0);
                     }
@@ -377,7 +432,7 @@ namespace Cube {
             else if (scroll.Value == realMaximum && delta > 0)
             {
                 if (mouseWheelNextCount > 3) {
-                    if (NextPage())
+                    if (this.NextPage(tab))
                     {
                         tab.AutoScrollPosition = new Point(0, 0);
                     }
@@ -390,7 +445,6 @@ namespace Cube {
                 scroll.Value = Between(scroll.Minimum, scroll.Value + delta, realMaximum);
                 mouseWheelNextCount = 0; mouseWheelPrevCount = 0;
             }
-            
         }
 
         private int Between(int min, int value, int max)
@@ -399,6 +453,7 @@ namespace Cube {
             else if (value > max) return max;
             else return value;
         }
+
         /* ----------------------------------------------------------------- */
         /// MainForm_MouseEnter
         /* ----------------------------------------------------------------- */
@@ -558,70 +613,33 @@ namespace Cube {
         }
 
         /* ----------------------------------------------------------------- */
-        /// NOTE: 2010/09/03 NextPageとPreviousPageはMouseScrollでも利用したいので、本体を分離する
-        /* ----------------------------------------------------------------- */
-        private bool NextPage()
-        {
-            bool ret = false;
-            var canvas = CanvasPolicy.Get(this.PageViewerTabControl.SelectedTab);
-            if (canvas == null) return ret;
-            
-            try
-            {
-                CanvasPolicy.NextPage(canvas);
-                ret = true;
-            }
-            catch (Exception /* err */) { ret = false; }
-            finally
-            {
-                this.Refresh(canvas);
-            }
-            return ret;
-        }
-
-        private bool PreviousPage()
-        {
-            var ret = false;
-            var canvas = CanvasPolicy.Get(this.PageViewerTabControl.SelectedTab);
-            if (canvas == null) return ret;
-
-            try
-            {
-                CanvasPolicy.PreviousPage(canvas);
-                ret = true;
-            }
-            catch (Exception /* err */) { ret = false; }
-            finally
-            {
-                this.Refresh(canvas);
-            }
-            return ret;
-        }
-
-
-        /* ----------------------------------------------------------------- */
         /// NextPageButton_Click
         /* ----------------------------------------------------------------- */
         private void NextPageButton_Click(object sender, EventArgs e) {
-            NextPage();
+            NextPage(this.PageViewerTabControl.SelectedTab);
         }
 
         /* ----------------------------------------------------------------- */
         /// PreviousPageButton_Click
         /* ----------------------------------------------------------------- */
         private void PreviousPageButton_Click(object sender, EventArgs e) {
-            PreviousPage();
+            PreviousPage(this.PageViewerTabControl.SelectedTab);
         }
 
         /* ----------------------------------------------------------------- */
         /// FirstPageButton_Click
         /* ----------------------------------------------------------------- */
         private void FirstPageButton_Click(object sender, EventArgs e) {
-            var canvas = CanvasPolicy.Get(this.PageViewerTabControl.SelectedTab);
+            var tab = this.PageViewerTabControl.SelectedTab;
+            var canvas = CanvasPolicy.Get(tab);
             if (canvas == null) return;
 
             try {
-                CanvasPolicy.FirstPage(canvas);
+                int prev = CanvasPolicy.CurrentPage(canvas);
+                int status = CanvasPolicy.FirstPage(canvas);
+                if (status != prev && status == 1) {
+                    tab.VerticalScroll.Value = tab.VerticalScroll.Minimum;
+                }
             }
             catch (Exception /* err */) { }
             finally {
@@ -633,11 +651,16 @@ namespace Cube {
         /// LastPageButton_Click
         /* ----------------------------------------------------------------- */
         private void LastPageButton_Click(object sender, EventArgs e) {
-            var canvas = CanvasPolicy.Get(this.PageViewerTabControl.SelectedTab);
+            var tab = this.PageViewerTabControl.SelectedTab;
+            var canvas = CanvasPolicy.Get(tab);
             if (canvas == null) return;
 
             try {
-                CanvasPolicy.LastPage(canvas);
+                int prev = CanvasPolicy.CurrentPage(canvas);
+                int status = CanvasPolicy.LastPage(canvas);
+                if (status != prev && status == CanvasPolicy.PageCount(canvas)) {
+                    tab.VerticalScroll.Value = tab.VerticalScroll.Minimum;
+                }
             }
             catch (Exception /* err */) { }
             finally {
@@ -649,14 +672,19 @@ namespace Cube {
         /// CurrentPageTextBox_KeyDown
         /* ----------------------------------------------------------------- */
         private void CurrentPageTextBox_KeyDown(object sender, KeyEventArgs e) {
-            var canvas = CanvasPolicy.Get(this.PageViewerTabControl.SelectedTab);
+            var tab = this.PageViewerTabControl.SelectedTab;
+            var canvas = CanvasPolicy.Get(tab);
             if (canvas == null) return;
 
             if (e.KeyCode == Keys.Enter) {
                 try {
                     var control = (ToolStripTextBox)sender;
                     int page = int.Parse(control.Text);
-                    CanvasPolicy.MovePage(canvas, page);
+                    int prev = CanvasPolicy.CurrentPage(canvas);
+                    int status = CanvasPolicy.MovePage(canvas, page);
+                    if (status != prev && status == page) {
+                        tab.VerticalScroll.Value = tab.VerticalScroll.Minimum;
+                    }
                 }
                 catch (Exception /* err */) { }
                 finally {
@@ -741,6 +769,23 @@ namespace Cube {
         }
 
         /* ----------------------------------------------------------------- */
+        /// VerticalScrolled
+        /* ----------------------------------------------------------------- */
+        private void VerticalScrolled(object sender, ScrollEventArgs e) {
+            var control = (TabPage)sender;
+            var scroll = control.VerticalScroll;
+            if (e.NewValue == e.OldValue) {
+                var maximum = 1 + scroll.Maximum - scroll.LargeChange;
+                if (scroll.Value == scroll.Minimum && e.Type == ScrollEventType.SmallDecrement) {
+                    if (this.PreviousPage(control)) scroll.Value = maximum;
+                }
+                else if (scroll.Value == maximum && e.Type == ScrollEventType.SmallIncrement) {
+                    if (this.NextPage(control)) scroll.Value = scroll.Minimum;
+                }
+            }
+        }
+
+        /* ----------------------------------------------------------------- */
         /// PageChanged
         /* ----------------------------------------------------------------- */
         private void PageChanged(object sender, EventArgs e) {
@@ -792,6 +837,5 @@ namespace Cube {
         private FitCondition fit_ = FitCondition.Height;
         private Point pos_;
         #endregion
-
     }
 }

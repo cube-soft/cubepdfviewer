@@ -433,6 +433,7 @@
             this.DefaultTabPage.Size = new System.Drawing.Size(600, 484);
             this.DefaultTabPage.TabIndex = 0;
             this.DefaultTabPage.Text = "(無題)";
+            this.DefaultTabPage.Scroll += new System.Windows.Forms.ScrollEventHandler(this.VerticalScrolled);
             // 
             // SubMenuSplitContainer
             // 
