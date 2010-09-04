@@ -25,7 +25,6 @@ using System.Drawing;
 using System.Windows.Forms;
 using Container = System.Collections.Generic;
 using Canvas = System.Windows.Forms.PictureBox;
-using Thumbnail = System.Windows.Forms.ListView;
 using PDF = PDFLibNet.PDFWrapper;
 
 namespace Cube {
@@ -34,6 +33,27 @@ namespace Cube {
     /* --------------------------------------------------------------------- */
     public enum FitCondition {
         None = 0x00, Width = 0x01, Height = 0x02
+    }
+
+    /* --------------------------------------------------------------------- */
+    /// Thumbnail
+    /* --------------------------------------------------------------------- */
+    public class Thumbnail : System.Windows.Forms.ListView {
+        protected override void WndProc(ref Message m) {
+            const int WM_VSCROLL = 0x115;
+
+            switch (m.Msg) {
+            case WM_VSCROLL:
+                var core = (PDF)this.Tag;
+                if (core == null) break;
+                // ここでリセットする．
+                break;
+            default:
+                break;
+            }
+
+            base.WndProc(ref m);
+        }
     }
 
     /* --------------------------------------------------------------------- */
