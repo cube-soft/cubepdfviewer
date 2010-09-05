@@ -245,7 +245,7 @@ namespace Cube {
             try {
                 if (this.FitToWidthButton.Checked) CanvasPolicy.FitToWidth(canvas);
                 else if (this.FitToHeightButton.Checked) CanvasPolicy.FitToHeight(canvas);
-                else CanvasPolicy.Adjust(canvas);
+                else CanvasPolicy.Adjust(canvas, CanvasPolicy.PageSize(canvas));
             }
             catch (Exception err) {
                 message = err.Message;
@@ -409,8 +409,6 @@ namespace Cube {
         /// </summary>
         /// 
         /* ----------------------------------------------------------------- */
-        private int mouseWheelPrevCount = 0;
-        private int mouseWheelNextCount = 0;
         private void MainForm_MouseWheel(object sender, MouseEventArgs e) {
             if (Math.Abs(e.Delta) < 120) return;
 
@@ -421,31 +419,26 @@ namespace Cube {
                 else this.PreviousPage(tab);
             }
             else {
-                var realMaximum = 1 + scroll.Maximum - scroll.LargeChange; // ユーザのコントロールで取れるscroll.Valueの最大値
-                int delta = -(e.Delta / 120) * scroll.SmallChange;
+                var maximum = 1 + scroll.Maximum - scroll.LargeChange; // ユーザのコントロールで取れる scroll.Value の最大値
+                var delta = -(e.Delta / 120) * scroll.SmallChange;
                 if (scroll.Value == scroll.Minimum && delta < 0) {
-                    if (mouseWheelPrevCount > 3) {
-                        if (this.PreviousPage(tab)) {
-                            tab.AutoScrollPosition = new Point(0, 0);
-                            tab.VerticalScroll.Value = realMaximum;
-                        }
-                        mouseWheelPrevCount = 0;
+                    if (wheel_counter_ > 2) {
+                        if (this.PreviousPage(tab)) tab.AutoScrollPosition = new Point(0, maximum);
+                        wheel_counter_ = 0;
                     }
-                    else mouseWheelPrevCount++;
+                    else wheel_counter_++;
                 }
-                else if (scroll.Value == realMaximum && delta > 0) {
-                    if (mouseWheelNextCount > 3) {
-                        if (this.NextPage(tab)) {
-                            tab.AutoScrollPosition = new Point(0, 0);
-                        }
-                        mouseWheelNextCount = 0;
+                else if (scroll.Value == maximum && delta > 0) {
+                    if (wheel_counter_ > 2) {
+                        this.NextPage(tab);
+                        wheel_counter_ = 0;
                     }
-                    else mouseWheelNextCount++;
+                    else wheel_counter_++;
                 }
-                else if (scroll.Value >= scroll.Minimum && scroll.Value <= realMaximum) {
-                    var canvas = CanvasPolicy.Get(tab);
-                    scroll.Value = Math.Min(Math.Max(scroll.Value + delta, scroll.Minimum), realMaximum);
-                    mouseWheelNextCount = 0; mouseWheelPrevCount = 0;
+                else {
+                    var value = Math.Min(Math.Max(scroll.Value + delta, scroll.Minimum), maximum);
+                    tab.AutoScrollPosition = new Point(0, value);
+                    wheel_counter_ = 0;
                 }
             }
         }
@@ -844,6 +837,7 @@ namespace Cube {
         #region Member variables
         private bool begin_ = true;
         private FitCondition fit_ = FitCondition.Height;
+        private int wheel_counter_ = 0;
         private Point pos_;
         #endregion
     }

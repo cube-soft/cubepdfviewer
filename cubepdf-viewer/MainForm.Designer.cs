@@ -57,6 +57,7 @@
             this.SearchTextBox = new System.Windows.Forms.ToolStripTextBox();
             this.SearchButton = new System.Windows.Forms.ToolStripButton();
             this.FooterStatusStrip = new System.Windows.Forms.StatusStrip();
+            this.FooterStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.NavigationSplitContainer = new System.Windows.Forms.SplitContainer();
             this.PageViewerTabControl = new System.Windows.Forms.TabControl();
             this.DefaultTabPage = new System.Windows.Forms.TabPage();
@@ -65,7 +66,6 @@
             this.MenuModeButton = new System.Windows.Forms.ToolStripButton();
             this.ThumbButton = new System.Windows.Forms.ToolStripButton();
             this.MenuSplitContainer = new System.Windows.Forms.SplitContainer();
-            this.FooterStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.MenuToolStrip.SuspendLayout();
             this.FooterStatusStrip.SuspendLayout();
             this.NavigationSplitContainer.Panel2.SuspendLayout();
@@ -392,6 +392,11 @@
             this.FooterStatusStrip.SizingGrip = false;
             this.FooterStatusStrip.TabIndex = 1;
             // 
+            // FooterStatusLabel
+            // 
+            this.FooterStatusLabel.Name = "FooterStatusLabel";
+            this.FooterStatusLabel.Size = new System.Drawing.Size(0, 17);
+            // 
             // NavigationSplitContainer
             // 
             this.NavigationSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -516,11 +521,6 @@
             this.MenuSplitContainer.SplitterDistance = 40;
             this.MenuSplitContainer.SplitterWidth = 1;
             this.MenuSplitContainer.TabIndex = 4;
-            // 
-            // FooterStatusLabel
-            // 
-            this.FooterStatusLabel.Name = "FooterStatusLabel";
-            this.FooterStatusLabel.Size = new System.Drawing.Size(0, 17);
             // 
             // MainForm
             // 

@@ -40,13 +40,15 @@ namespace Cube {
     /* --------------------------------------------------------------------- */
     public class Thumbnail : System.Windows.Forms.ListView {
         protected override void WndProc(ref Message m) {
-            const int WM_VSCROLL = 0x115;
+            const int WM_SIZE    = 0x0005;
+            const int WM_VSCROLL = 0x0115;
 
             switch (m.Msg) {
+            case WM_SIZE:
             case WM_VSCROLL:
                 var core = (PDF)this.Tag;
                 if (core == null) break;
-                // ここでリセットする．
+                core.CancelThumbProcess();
                 break;
             default:
                 break;
@@ -194,6 +196,16 @@ namespace Cube {
             var parent = (ScrollableControl)canvas.Parent;
             parent.Tag = null;
             parent.Text = "(無題)";
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// PageSize
+        /* ----------------------------------------------------------------- */
+        public static Size PageSize(Canvas canvas) {
+            if (canvas == null || canvas.Tag == null) return new Size(0, 0);
+
+            var core = (PDF)canvas.Tag;
+            return new Size(core.PageWidth, core.PageHeight);
         }
 
         /* ----------------------------------------------------------------- */
@@ -363,12 +375,11 @@ namespace Cube {
             if (canvas == null || canvas.Tag == null) return 0.0;
 
             var core = (PDF)canvas.Tag;
-            var prev = new Size(core.PageWidth, core.PageHeight);
+            var prev = canvas.Size;
             core.Zoom = percent;
             core.RenderPage(IntPtr.Zero);
 
-            CanvasPolicy.ResetPosition(canvas, core, prev);
-            CanvasPolicy.Adjust(canvas);
+            CanvasPolicy.Adjust(canvas, prev);
             return core.Zoom;
         }
 
@@ -385,12 +396,11 @@ namespace Cube {
             if (canvas == null || canvas.Tag == null) return 0.0;
 
             var core = (PDF)canvas.Tag;
-            var prev = new Size(core.PageWidth, core.PageHeight);
+            var prev = canvas.Size;
             core.ZoomIN();
             core.RenderPage(IntPtr.Zero);
 
-            CanvasPolicy.ResetPosition(canvas, core, prev);
-            CanvasPolicy.Adjust(canvas);
+            CanvasPolicy.Adjust(canvas, prev);
             return core.Zoom;
         }
 
@@ -407,10 +417,11 @@ namespace Cube {
             if (canvas == null || canvas.Tag == null) return 0.0;
 
             var core = (PDF)canvas.Tag;
+            var prev = canvas.Size;
             core.ZoomOut();
             core.RenderPage(IntPtr.Zero);
 
-            CanvasPolicy.Adjust(canvas);
+            CanvasPolicy.Adjust(canvas, prev);
             return core.Zoom;
         }
 
@@ -427,13 +438,12 @@ namespace Cube {
             if (canvas == null || canvas.Tag == null) return 0.0;
 
             var core = (PDF)canvas.Tag;
-            var prev = new Size(core.PageWidth, core.PageHeight);
+            var prev = canvas.Size;
             core.FitToWidth(canvas.Parent.Handle);
             core.Zoom = core.Zoom - 1; // 暫定
             core.RenderPage(IntPtr.Zero);
 
-            CanvasPolicy.ResetPosition(canvas, core, prev);
-            CanvasPolicy.Adjust(canvas);
+            CanvasPolicy.Adjust(canvas, prev);
             return core.Zoom;
         }
 
@@ -450,13 +460,12 @@ namespace Cube {
             if (canvas == null || canvas.Tag == null) return 0.0;
 
             var core = (PDF)canvas.Tag;
-            var prev = new Size(core.PageWidth, core.PageHeight);
+            var prev = canvas.Size;
             core.FitToHeight(canvas.Parent.Handle);
             core.Zoom = core.Zoom - 1; // 暫定
             core.RenderPage(IntPtr.Zero);
 
-            CanvasPolicy.ResetPosition(canvas, core, prev);
-            CanvasPolicy.Adjust(canvas);
+            CanvasPolicy.Adjust(canvas, prev);
             return core.Zoom;
         }
 
@@ -485,20 +494,57 @@ namespace Cube {
         }
 
         /* ----------------------------------------------------------------- */
+        ///
         /// Adjust
+        /// 
+        /// <summary>
+        /// 画面の位置を調整する．
+        /// 
+        /// MEMO: canvas.Location と canvas.Parent.AutoScrollPosition を
+        /// 一端リセットする．
+        /// </summary>
+        ///
         /* ----------------------------------------------------------------- */
-        public static void Adjust(Canvas canvas) {
+        public static void Adjust(Canvas canvas, Size previous) {
             if (canvas == null || canvas.Tag == null) return;
 
             var core = (PDF)canvas.Tag;
-            var parent = canvas.Parent;
+            var parent = (ScrollableControl)canvas.Parent;
             canvas.Size = new Size(core.PageWidth, core.PageHeight);
             canvas.ClientSize = canvas.Size;
 
-            var pos = canvas.Location;
-            if (parent.ClientSize.Width > canvas.Width) pos.X = (parent.ClientSize.Width - canvas.Width) / 2;
-            if (parent.ClientSize.Height > canvas.Height) pos.Y = (parent.ClientSize.Height - canvas.Height) / 2;
+            var h = parent.HorizontalScroll.Value;
+            var v = parent.VerticalScroll.Value;
+            var pos = new Point(0, 0);
+            var scroll = new Point(0, 0);
+
+            // 位置情報のリセット
+            canvas.Location = new Point(0, 0);
+            parent.AutoScrollPosition = new Point(0, 0);
+
+            if (parent.ClientSize.Width >= canvas.Width) pos.X = (parent.ClientSize.Width - canvas.Width) / 2;
+            else scroll.X = (int)(h * canvas.Width  / (double)previous.Width);
+            if (parent.ClientSize.Height >= canvas.Height) pos.Y = (parent.ClientSize.Height - canvas.Height) / 2;
+            else scroll.Y = (int)(v * canvas.Height / (double)previous.Height);
+
             canvas.Location = pos;
+            parent.AutoScrollPosition = scroll;
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// Adjust
+        /// 
+        /// <summary>
+        /// 画面の位置を調整する．このメソッドは，画面の位置を調整する前と
+        /// canvas のサイズに変更がない場合に使用する．canvas のサイズに
+        /// 変更があった場合は，変更前の canvas のサイズを第2引数に指定
+        /// する．
+        /// </summary>
+        /// 
+        /* ----------------------------------------------------------------- */
+        public static void Adjust(Canvas canvas) {
+            CanvasPolicy.Adjust(canvas, CanvasPolicy.PageSize(canvas));
         }
 
         /* ----------------------------------------------------------------- */
@@ -515,6 +561,9 @@ namespace Cube {
         /// <summary>
         /// src に指定された画面に表示されている PDF ファイルのサムネイルを
         /// dest に指定された画面に表示する．
+        /// 
+        /// MEMO: サイズが変わった際にスクロールバーの表示/非表示が変わると
+        /// 見た目がおかしくなる．
         /// </summary>
         /// 
         /* ----------------------------------------------------------------- */
@@ -539,7 +588,7 @@ namespace Cube {
             // 16 は垂直スクロールバーの幅（TODO: 垂直スクロールバーの幅の取得方法）．
             double ratio = core.Pages[1].Height / (double)core.Pages[1].Width;
             int width = parent.ClientSize.Width;
-            if (width * ratio * core.PageCount > parent.Size.Height) width -= 16;
+            if (width * ratio * core.PageCount > parent.Size.Height) width -= 20;
             width -= 3; // NOTE: 余白を持たせる．手動で微調整したもの
 
             canvas.View = View.Tile;
@@ -581,26 +630,6 @@ namespace Cube {
         }
 
         #region Private methods
-        /* ----------------------------------------------------------------- */
-        ///
-        /// ResetPosition (private)
-        /// 
-        /// <summary>
-        /// 現在，描画しているページ内容の幅/高さがコントロールパネルより
-        /// も小さい（スクロールバーが表示されず余白が存在する）場合，
-        /// センタリングしている．このセンタリングのために位置をずらして
-        /// いる部分が，拡大した際にスクロールバーが表示されるような大きさ
-        /// になると不正な挙動を示す．
-        /// 
-        /// 拡大した結果，余白がなくなった場合に位置情報をリセットする．
-        /// 
-        /// NOTE: 2010/09/03 強制的にリセットに変更
-        /// </summary>
-        ///
-        /* ----------------------------------------------------------------- */
-        private static void ResetPosition(Canvas canvas, PDF core, Size prev) {
-            canvas.Location = new Point(0, 0);
-        }
 
         /* ----------------------------------------------------------------- */
         ///
