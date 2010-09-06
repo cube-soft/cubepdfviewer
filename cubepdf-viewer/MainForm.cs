@@ -430,7 +430,7 @@ namespace Cube {
                 }
                 else if (scroll.Value == maximum && delta > 0) {
                     if (wheel_counter_ > 2) {
-                        this.NextPage(tab);
+                        if (this.NextPage(tab)) tab.AutoScrollPosition = new Point(0, 0);
                         wheel_counter_ = 0;
                     }
                     else wheel_counter_++;

@@ -257,7 +257,7 @@ namespace Cube {
             core.CurrentPage = n;
             if (core.RenderPage(IntPtr.Zero)) {
                 var control = (ScrollableControl)canvas.Parent;
-                control.VerticalScroll.Value = control.VerticalScroll.Minimum;
+                control.AutoScrollPosition = new Point(0, 0);
             }
             return core.CurrentPage;
         }
@@ -278,7 +278,7 @@ namespace Cube {
             core.NextPage();
             if (core.RenderPage(IntPtr.Zero)) {
                 var control = (ScrollableControl)canvas.Parent;
-                control.VerticalScroll.Value = control.VerticalScroll.Minimum;
+                control.AutoScrollPosition = new Point(0, 0);
             }
             return core.CurrentPage;
         }
@@ -299,7 +299,7 @@ namespace Cube {
             core.PreviousPage();
             if (core.RenderPage(IntPtr.Zero)) {
                 var control = (ScrollableControl)canvas.Parent;
-                control.VerticalScroll.Value = control.VerticalScroll.Minimum;
+                control.AutoScrollPosition = new Point(0, 0);
             }
             return core.CurrentPage;
         }
@@ -320,7 +320,7 @@ namespace Cube {
             core.CurrentPage = 1;
             if (core.RenderPage(IntPtr.Zero)) {
                 var control = (ScrollableControl)canvas.Parent;
-                control.VerticalScroll.Value = control.VerticalScroll.Minimum;
+                control.AutoScrollPosition = new Point(0, 0);
             }
             return core.CurrentPage;
         }
@@ -341,7 +341,7 @@ namespace Cube {
             core.CurrentPage = core.PageCount;
             if (core.RenderPage(IntPtr.Zero)) {
                 var control = (ScrollableControl)canvas.Parent;
-                control.VerticalScroll.Value = control.VerticalScroll.Minimum;
+                control.AutoScrollPosition = new Point(0, 0);
             }
             return core.CurrentPage;
         }
