@@ -271,7 +271,6 @@ namespace Cube {
             parent.Controls.Add(tab);
             parent.SelectedIndex = parent.TabCount - 1;
 
-            MessageBox.Show(String.Format("size: {0}, client: {1}", tab.Size.ToString(), tab.ClientSize.ToString()));
             return tab;
         }
 

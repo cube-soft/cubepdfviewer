@@ -154,7 +154,7 @@ namespace Cube {
                 if (which == FitCondition.Height) CanvasPolicy.FitToHeight(canvas);
                 else if (which == FitCondition.Width) CanvasPolicy.FitToWidth(canvas);
                 else core.Zoom = 100;
-                core.RenderPage(IntPtr.Zero);
+                core.RenderPage(IntPtr.Zero, false, false);
                 canvas.Parent.Text = System.IO.Path.GetFileNameWithoutExtension(path);
                 canvas.Parent.Tag = path;
                 CanvasPolicy.Adjust(canvas);
@@ -255,7 +255,7 @@ namespace Cube {
             var core = (PDF)canvas.Tag;
             int n = Math.Min(Math.Max(page, 1), core.PageCount);
             core.CurrentPage = n;
-            if (core.RenderPage(IntPtr.Zero)) {
+            if (core.RenderPage(IntPtr.Zero, false, false)) {
                 var control = (ScrollableControl)canvas.Parent;
                 control.AutoScrollPosition = new Point(0, 0);
             }
@@ -276,7 +276,7 @@ namespace Cube {
 
             var core = (PDF)canvas.Tag;
             core.NextPage();
-            if (core.RenderPage(IntPtr.Zero)) {
+            if (core.RenderPage(IntPtr.Zero, false, false)) {
                 var control = (ScrollableControl)canvas.Parent;
                 control.AutoScrollPosition = new Point(0, 0);
             }
@@ -297,7 +297,7 @@ namespace Cube {
 
             var core = (PDF)canvas.Tag;
             core.PreviousPage();
-            if (core.RenderPage(IntPtr.Zero)) {
+            if (core.RenderPage(IntPtr.Zero, false, false)) {
                 var control = (ScrollableControl)canvas.Parent;
                 control.AutoScrollPosition = new Point(0, 0);
             }
@@ -318,7 +318,7 @@ namespace Cube {
 
             var core = (PDF)canvas.Tag;
             core.CurrentPage = 1;
-            if (core.RenderPage(IntPtr.Zero)) {
+            if (core.RenderPage(IntPtr.Zero, false, false)) {
                 var control = (ScrollableControl)canvas.Parent;
                 control.AutoScrollPosition = new Point(0, 0);
             }
@@ -339,7 +339,7 @@ namespace Cube {
 
             var core = (PDF)canvas.Tag;
             core.CurrentPage = core.PageCount;
-            if (core.RenderPage(IntPtr.Zero)) {
+            if (core.RenderPage(IntPtr.Zero, false, false)) {
                 var control = (ScrollableControl)canvas.Parent;
                 control.AutoScrollPosition = new Point(0, 0);
             }
@@ -377,7 +377,7 @@ namespace Cube {
             var core = (PDF)canvas.Tag;
             var prev = canvas.Size;
             core.Zoom = percent;
-            core.RenderPage(IntPtr.Zero);
+            core.RenderPage(IntPtr.Zero, false, false);
 
             CanvasPolicy.Adjust(canvas, prev);
             return core.Zoom;
@@ -398,7 +398,7 @@ namespace Cube {
             var core = (PDF)canvas.Tag;
             var prev = canvas.Size;
             core.ZoomIN();
-            core.RenderPage(IntPtr.Zero);
+            core.RenderPage(IntPtr.Zero, false, false);
 
             CanvasPolicy.Adjust(canvas, prev);
             return core.Zoom;
@@ -419,7 +419,7 @@ namespace Cube {
             var core = (PDF)canvas.Tag;
             var prev = canvas.Size;
             core.ZoomOut();
-            core.RenderPage(IntPtr.Zero);
+            core.RenderPage(IntPtr.Zero, false, false);
 
             CanvasPolicy.Adjust(canvas, prev);
             return core.Zoom;
@@ -441,7 +441,7 @@ namespace Cube {
             var prev = canvas.Size;
             core.FitToWidth(canvas.Parent.Handle);
             core.Zoom = core.Zoom - 1; // 暫定
-            core.RenderPage(IntPtr.Zero);
+            core.RenderPage(IntPtr.Zero, false, false);
 
             CanvasPolicy.Adjust(canvas, prev);
             return core.Zoom;
@@ -463,7 +463,7 @@ namespace Cube {
             var prev = canvas.Size;
             core.FitToHeight(canvas.Parent.Handle);
             core.Zoom = core.Zoom - 1; // 暫定
-            core.RenderPage(IntPtr.Zero);
+            core.RenderPage(IntPtr.Zero, false, false);
 
             CanvasPolicy.Adjust(canvas, prev);
             return core.Zoom;
@@ -487,7 +487,7 @@ namespace Cube {
 
             if (result > 0) {
                 core.CurrentPage = core.SearchResults[0].Page;
-                core.RenderPage(IntPtr.Zero);
+                core.RenderPage(IntPtr.Zero, false, false);
             }
 
             return result > 0;
