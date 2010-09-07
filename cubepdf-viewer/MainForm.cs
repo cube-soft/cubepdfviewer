@@ -365,6 +365,9 @@ namespace Cube {
             case Keys.F4: // 閉じる
                 if (e.Control) this.DestroyTab(this.PageViewerTabControl.SelectedTab);
                 break;
+            case Keys.F8: // メニューの表示/非表示
+                this.MenuModeButton_Click(this.MenuModeButton, e);
+                break;
             case Keys.F:  // 検索ボックスにフォーカス
                 if (e.Control) this.SearchTextBox.Focus();
                 break;
