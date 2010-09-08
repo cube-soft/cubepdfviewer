@@ -59,7 +59,6 @@ namespace Cube {
             this.Size = new Size(System.Math.Max(x, 800), x);
             this.NavigationSplitContainer.Panel1Collapsed = true;
             this.MenuSplitContainer.SplitterDistance = this.MenuToolStrip.Height;
-            this.SubMenuSplitContainer.SplitterDistance = this.SubMenuToolStrip.Width;
             this.FitToHeightButton.Checked = true;
             CreateTabContextMenu(this.PageViewerTabControl);
 
@@ -716,9 +715,6 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         private void MenuModeButton_Click(object sender, EventArgs e) {
             this.MenuSplitContainer.Panel1Collapsed = !this.MenuSplitContainer.Panel1Collapsed;
-            this.MenuModeButton.Image = this.MenuSplitContainer.Panel1Collapsed ?
-                global::Cube.Properties.Resources.showmenu :
-                global::Cube.Properties.Resources.hidemenu;
             this.Adjust(this.PageViewerTabControl.SelectedTab);
         }
 

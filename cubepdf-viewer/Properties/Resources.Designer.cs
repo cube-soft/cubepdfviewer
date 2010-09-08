@@ -144,13 +144,6 @@ namespace Cube.Properties {
             }
         }
         
-        internal static System.Drawing.Bitmap showmenu {
-            get {
-                object obj = ResourceManager.GetObject("showmenu", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
         internal static System.Drawing.Bitmap thumbnail {
             get {
                 object obj = ResourceManager.GetObject("thumbnail", resourceCulture);

@@ -56,28 +56,23 @@
             this.OnlyDisplayPageCategorySeparator = new System.Windows.Forms.ToolStripSeparator();
             this.SearchTextBox = new System.Windows.Forms.ToolStripTextBox();
             this.SearchButton = new System.Windows.Forms.ToolStripButton();
+            this.OnlyDisplaySearchCategorySeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.ThumbButton = new System.Windows.Forms.ToolStripButton();
+            this.MenuModeButton = new System.Windows.Forms.ToolStripButton();
             this.FooterStatusStrip = new System.Windows.Forms.StatusStrip();
             this.FooterStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.MenuSplitContainer = new System.Windows.Forms.SplitContainer();
             this.NavigationSplitContainer = new System.Windows.Forms.SplitContainer();
             this.PageViewerTabControl = new System.Windows.Forms.TabControl();
             this.DefaultTabPage = new System.Windows.Forms.TabPage();
-            this.SubMenuSplitContainer = new System.Windows.Forms.SplitContainer();
-            this.SubMenuToolStrip = new System.Windows.Forms.ToolStrip();
-            this.MenuModeButton = new System.Windows.Forms.ToolStripButton();
-            this.ThumbButton = new System.Windows.Forms.ToolStripButton();
-            this.MenuSplitContainer = new System.Windows.Forms.SplitContainer();
             this.MenuToolStrip.SuspendLayout();
             this.FooterStatusStrip.SuspendLayout();
-            this.NavigationSplitContainer.Panel2.SuspendLayout();
-            this.NavigationSplitContainer.SuspendLayout();
-            this.PageViewerTabControl.SuspendLayout();
-            this.SubMenuSplitContainer.Panel1.SuspendLayout();
-            this.SubMenuSplitContainer.Panel2.SuspendLayout();
-            this.SubMenuSplitContainer.SuspendLayout();
-            this.SubMenuToolStrip.SuspendLayout();
             this.MenuSplitContainer.Panel1.SuspendLayout();
             this.MenuSplitContainer.Panel2.SuspendLayout();
             this.MenuSplitContainer.SuspendLayout();
+            this.NavigationSplitContainer.Panel2.SuspendLayout();
+            this.NavigationSplitContainer.SuspendLayout();
+            this.PageViewerTabControl.SuspendLayout();
             this.SuspendLayout();
             // 
             // MenuToolStrip
@@ -105,10 +100,13 @@
             this.LastPageButton,
             this.OnlyDisplayPageCategorySeparator,
             this.SearchTextBox,
-            this.SearchButton});
+            this.SearchButton,
+            this.OnlyDisplaySearchCategorySeparator,
+            this.ThumbButton,
+            this.MenuModeButton});
             this.MenuToolStrip.Location = new System.Drawing.Point(0, 0);
             this.MenuToolStrip.Name = "MenuToolStrip";
-            this.MenuToolStrip.Size = new System.Drawing.Size(792, 40);
+            this.MenuToolStrip.Size = new System.Drawing.Size(892, 40);
             this.MenuToolStrip.TabIndex = 0;
             this.MenuToolStrip.Text = "メニュー";
             // 
@@ -382,13 +380,41 @@
             this.SearchButton.Text = "検索する";
             this.SearchButton.Click += new System.EventHandler(this.SearchButton_Click);
             // 
+            // OnlyDisplaySearchCategorySeparator
+            // 
+            this.OnlyDisplaySearchCategorySeparator.Name = "OnlyDisplaySearchCategorySeparator";
+            this.OnlyDisplaySearchCategorySeparator.Size = new System.Drawing.Size(6, 40);
+            // 
+            // ThumbButton
+            // 
+            this.ThumbButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.ThumbButton.Image = global::Cube.Properties.Resources.thumbnail;
+            this.ThumbButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.ThumbButton.Margin = new System.Windows.Forms.Padding(2);
+            this.ThumbButton.Name = "ThumbButton";
+            this.ThumbButton.Size = new System.Drawing.Size(36, 36);
+            this.ThumbButton.Text = "サムネイル表示の切り替え";
+            this.ThumbButton.Click += new System.EventHandler(this.ThumbButton_Click);
+            // 
+            // MenuModeButton
+            // 
+            this.MenuModeButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.MenuModeButton.Image = global::Cube.Properties.Resources.hidemenu;
+            this.MenuModeButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.MenuModeButton.Margin = new System.Windows.Forms.Padding(2);
+            this.MenuModeButton.Name = "MenuModeButton";
+            this.MenuModeButton.Size = new System.Drawing.Size(36, 36);
+            this.MenuModeButton.Text = "メニューの非表示";
+            this.MenuModeButton.ToolTipText = "メニューの非表示。元に戻すには F8 ボタンを押して下さい。";
+            this.MenuModeButton.Click += new System.EventHandler(this.MenuModeButton_Click);
+            // 
             // FooterStatusStrip
             // 
             this.FooterStatusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.FooterStatusLabel});
             this.FooterStatusStrip.Location = new System.Drawing.Point(0, 551);
             this.FooterStatusStrip.Name = "FooterStatusStrip";
-            this.FooterStatusStrip.Size = new System.Drawing.Size(792, 22);
+            this.FooterStatusStrip.Size = new System.Drawing.Size(892, 22);
             this.FooterStatusStrip.SizingGrip = false;
             this.FooterStatusStrip.TabIndex = 1;
             // 
@@ -396,110 +422,6 @@
             // 
             this.FooterStatusLabel.Name = "FooterStatusLabel";
             this.FooterStatusLabel.Size = new System.Drawing.Size(0, 17);
-            // 
-            // NavigationSplitContainer
-            // 
-            this.NavigationSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.NavigationSplitContainer.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.NavigationSplitContainer.IsSplitterFixed = true;
-            this.NavigationSplitContainer.Location = new System.Drawing.Point(0, 0);
-            this.NavigationSplitContainer.Name = "NavigationSplitContainer";
-            // 
-            // NavigationSplitContainer.Panel1
-            // 
-            this.NavigationSplitContainer.Panel1.BackColor = System.Drawing.Color.DimGray;
-            // 
-            // NavigationSplitContainer.Panel2
-            // 
-            this.NavigationSplitContainer.Panel2.Controls.Add(this.PageViewerTabControl);
-            this.NavigationSplitContainer.Size = new System.Drawing.Size(759, 510);
-            this.NavigationSplitContainer.SplitterDistance = 150;
-            this.NavigationSplitContainer.SplitterWidth = 1;
-            this.NavigationSplitContainer.TabIndex = 2;
-            // 
-            // PageViewerTabControl
-            // 
-            this.PageViewerTabControl.AllowDrop = true;
-            this.PageViewerTabControl.Controls.Add(this.DefaultTabPage);
-            this.PageViewerTabControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.PageViewerTabControl.Location = new System.Drawing.Point(0, 0);
-            this.PageViewerTabControl.Name = "PageViewerTabControl";
-            this.PageViewerTabControl.SelectedIndex = 0;
-            this.PageViewerTabControl.Size = new System.Drawing.Size(608, 510);
-            this.PageViewerTabControl.TabIndex = 0;
-            this.PageViewerTabControl.SelectedIndexChanged += new System.EventHandler(this.PageViewerTabControl_SelectedIndexChanged);
-            this.PageViewerTabControl.DragDrop += new System.Windows.Forms.DragEventHandler(this.PageViewerTabControl_DragDrop);
-            this.PageViewerTabControl.DragEnter += new System.Windows.Forms.DragEventHandler(this.PageViewerTabControl_DragEnter);
-            // 
-            // DefaultTabPage
-            // 
-            this.DefaultTabPage.AutoScroll = true;
-            this.DefaultTabPage.BackColor = System.Drawing.Color.DimGray;
-            this.DefaultTabPage.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.DefaultTabPage.Location = new System.Drawing.Point(4, 22);
-            this.DefaultTabPage.Name = "DefaultTabPage";
-            this.DefaultTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.DefaultTabPage.Size = new System.Drawing.Size(600, 484);
-            this.DefaultTabPage.TabIndex = 0;
-            this.DefaultTabPage.Text = "(無題)";
-            this.DefaultTabPage.Scroll += new System.Windows.Forms.ScrollEventHandler(this.VerticalScrolled);
-            // 
-            // SubMenuSplitContainer
-            // 
-            this.SubMenuSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.SubMenuSplitContainer.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.SubMenuSplitContainer.IsSplitterFixed = true;
-            this.SubMenuSplitContainer.Location = new System.Drawing.Point(0, 0);
-            this.SubMenuSplitContainer.Name = "SubMenuSplitContainer";
-            // 
-            // SubMenuSplitContainer.Panel1
-            // 
-            this.SubMenuSplitContainer.Panel1.Controls.Add(this.SubMenuToolStrip);
-            // 
-            // SubMenuSplitContainer.Panel2
-            // 
-            this.SubMenuSplitContainer.Panel2.Controls.Add(this.NavigationSplitContainer);
-            this.SubMenuSplitContainer.Size = new System.Drawing.Size(792, 510);
-            this.SubMenuSplitContainer.SplitterDistance = 32;
-            this.SubMenuSplitContainer.SplitterWidth = 1;
-            this.SubMenuSplitContainer.TabIndex = 3;
-            // 
-            // SubMenuToolStrip
-            // 
-            this.SubMenuToolStrip.BackColor = System.Drawing.SystemColors.Control;
-            this.SubMenuToolStrip.Dock = System.Windows.Forms.DockStyle.Left;
-            this.SubMenuToolStrip.GripMargin = new System.Windows.Forms.Padding(0);
-            this.SubMenuToolStrip.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-            this.SubMenuToolStrip.ImageScalingSize = new System.Drawing.Size(25, 25);
-            this.SubMenuToolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.MenuModeButton,
-            this.ThumbButton});
-            this.SubMenuToolStrip.Location = new System.Drawing.Point(0, 0);
-            this.SubMenuToolStrip.Name = "SubMenuToolStrip";
-            this.SubMenuToolStrip.Size = new System.Drawing.Size(30, 510);
-            this.SubMenuToolStrip.TabIndex = 0;
-            this.SubMenuToolStrip.Text = "toolStrip1";
-            // 
-            // MenuModeButton
-            // 
-            this.MenuModeButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.MenuModeButton.Image = global::Cube.Properties.Resources.hidemenu;
-            this.MenuModeButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.MenuModeButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.MenuModeButton.Name = "MenuModeButton";
-            this.MenuModeButton.Size = new System.Drawing.Size(27, 11);
-            this.MenuModeButton.Text = "メニュー表示の切り替え";
-            this.MenuModeButton.Click += new System.EventHandler(this.MenuModeButton_Click);
-            // 
-            // ThumbButton
-            // 
-            this.ThumbButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.ThumbButton.Image = global::Cube.Properties.Resources.thumbnail;
-            this.ThumbButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.ThumbButton.Name = "ThumbButton";
-            this.ThumbButton.Size = new System.Drawing.Size(27, 29);
-            this.ThumbButton.Text = "サムネイル";
-            this.ThumbButton.Click += new System.EventHandler(this.ThumbButton_Click);
             // 
             // MenuSplitContainer
             // 
@@ -516,17 +438,64 @@
             // 
             // MenuSplitContainer.Panel2
             // 
-            this.MenuSplitContainer.Panel2.Controls.Add(this.SubMenuSplitContainer);
-            this.MenuSplitContainer.Size = new System.Drawing.Size(792, 551);
+            this.MenuSplitContainer.Panel2.Controls.Add(this.NavigationSplitContainer);
+            this.MenuSplitContainer.Size = new System.Drawing.Size(892, 551);
             this.MenuSplitContainer.SplitterDistance = 40;
             this.MenuSplitContainer.SplitterWidth = 1;
             this.MenuSplitContainer.TabIndex = 4;
+            // 
+            // NavigationSplitContainer
+            // 
+            this.NavigationSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.NavigationSplitContainer.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this.NavigationSplitContainer.IsSplitterFixed = true;
+            this.NavigationSplitContainer.Location = new System.Drawing.Point(0, 0);
+            this.NavigationSplitContainer.Name = "NavigationSplitContainer";
+            // 
+            // NavigationSplitContainer.Panel1
+            // 
+            this.NavigationSplitContainer.Panel1.BackColor = System.Drawing.Color.DimGray;
+            // 
+            // NavigationSplitContainer.Panel2
+            // 
+            this.NavigationSplitContainer.Panel2.Controls.Add(this.PageViewerTabControl);
+            this.NavigationSplitContainer.Size = new System.Drawing.Size(892, 510);
+            this.NavigationSplitContainer.SplitterDistance = 150;
+            this.NavigationSplitContainer.SplitterWidth = 1;
+            this.NavigationSplitContainer.TabIndex = 2;
+            // 
+            // PageViewerTabControl
+            // 
+            this.PageViewerTabControl.AllowDrop = true;
+            this.PageViewerTabControl.Controls.Add(this.DefaultTabPage);
+            this.PageViewerTabControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.PageViewerTabControl.Location = new System.Drawing.Point(0, 0);
+            this.PageViewerTabControl.Name = "PageViewerTabControl";
+            this.PageViewerTabControl.SelectedIndex = 0;
+            this.PageViewerTabControl.Size = new System.Drawing.Size(741, 510);
+            this.PageViewerTabControl.TabIndex = 0;
+            this.PageViewerTabControl.SelectedIndexChanged += new System.EventHandler(this.PageViewerTabControl_SelectedIndexChanged);
+            this.PageViewerTabControl.DragDrop += new System.Windows.Forms.DragEventHandler(this.PageViewerTabControl_DragDrop);
+            this.PageViewerTabControl.DragEnter += new System.Windows.Forms.DragEventHandler(this.PageViewerTabControl_DragEnter);
+            // 
+            // DefaultTabPage
+            // 
+            this.DefaultTabPage.AutoScroll = true;
+            this.DefaultTabPage.BackColor = System.Drawing.Color.DimGray;
+            this.DefaultTabPage.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.DefaultTabPage.Location = new System.Drawing.Point(4, 22);
+            this.DefaultTabPage.Name = "DefaultTabPage";
+            this.DefaultTabPage.Padding = new System.Windows.Forms.Padding(3);
+            this.DefaultTabPage.Size = new System.Drawing.Size(733, 484);
+            this.DefaultTabPage.TabIndex = 0;
+            this.DefaultTabPage.Text = "(無題)";
+            this.DefaultTabPage.Scroll += new System.Windows.Forms.ScrollEventHandler(this.VerticalScrolled);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(792, 573);
+            this.ClientSize = new System.Drawing.Size(892, 573);
             this.Controls.Add(this.MenuSplitContainer);
             this.Controls.Add(this.FooterStatusStrip);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -539,18 +508,12 @@
             this.MenuToolStrip.PerformLayout();
             this.FooterStatusStrip.ResumeLayout(false);
             this.FooterStatusStrip.PerformLayout();
-            this.NavigationSplitContainer.Panel2.ResumeLayout(false);
-            this.NavigationSplitContainer.ResumeLayout(false);
-            this.PageViewerTabControl.ResumeLayout(false);
-            this.SubMenuSplitContainer.Panel1.ResumeLayout(false);
-            this.SubMenuSplitContainer.Panel1.PerformLayout();
-            this.SubMenuSplitContainer.Panel2.ResumeLayout(false);
-            this.SubMenuSplitContainer.ResumeLayout(false);
-            this.SubMenuToolStrip.ResumeLayout(false);
-            this.SubMenuToolStrip.PerformLayout();
             this.MenuSplitContainer.Panel1.ResumeLayout(false);
             this.MenuSplitContainer.Panel2.ResumeLayout(false);
             this.MenuSplitContainer.ResumeLayout(false);
+            this.NavigationSplitContainer.Panel2.ResumeLayout(false);
+            this.NavigationSplitContainer.ResumeLayout(false);
+            this.PageViewerTabControl.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -585,21 +548,20 @@
         private System.Windows.Forms.ToolStripTextBox SearchTextBox;
         private System.Windows.Forms.ToolStripButton SearchButton;
         private System.Windows.Forms.StatusStrip FooterStatusStrip;
-        private System.Windows.Forms.SplitContainer NavigationSplitContainer;
-        private System.Windows.Forms.TabControl PageViewerTabControl;
-        private System.Windows.Forms.TabPage DefaultTabPage;
-        private System.Windows.Forms.SplitContainer SubMenuSplitContainer;
-        private System.Windows.Forms.ToolStrip SubMenuToolStrip;
         private System.Windows.Forms.ToolStripButton PrintButton;
-        private System.Windows.Forms.ToolStripButton ThumbButton;
         private System.Windows.Forms.SplitContainer MenuSplitContainer;
-        private System.Windows.Forms.ToolStripButton MenuModeButton;
         private System.Windows.Forms.ToolStripSplitButton FileButton;
         private System.Windows.Forms.ToolStripMenuItem OpenNewTabMenuItem;
         private System.Windows.Forms.ToolStripMenuItem OpenExistedTabMenuItem;
         private System.Windows.Forms.ToolStripSeparator OnlyDisplayFileOpenCategorySeparator;
         private System.Windows.Forms.ToolStripMenuItem CloseMenuItem;
         private System.Windows.Forms.ToolStripStatusLabel FooterStatusLabel;
+        private System.Windows.Forms.ToolStripSeparator OnlyDisplaySearchCategorySeparator;
+        private System.Windows.Forms.ToolStripButton ThumbButton;
+        private System.Windows.Forms.SplitContainer NavigationSplitContainer;
+        private System.Windows.Forms.TabControl PageViewerTabControl;
+        private System.Windows.Forms.TabPage DefaultTabPage;
+        private System.Windows.Forms.ToolStripButton MenuModeButton;
     }
 }
 
