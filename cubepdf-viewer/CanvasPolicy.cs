@@ -633,23 +633,6 @@ namespace Cube {
         }
 
         /* ----------------------------------------------------------------- */
-        ///
-        /// CreateThumbnail
-        /// 
-        /// <summary>
-        /// サムネイル画像の描画が終了した際のイベントハンドラを指定する場合．
-        /// DrawThumbnail では，最初に四角だけを描画して内容は遅延して描画
-        /// されるので，イベントハンドラを指定されない場合，ユーザが何らか
-        /// のアクションを起こして再描画が起こるまで内容が描画されない．
-        /// </summary>
-        /// 
-        /* ----------------------------------------------------------------- */
-        public static Thumbnail CreateThumbnail(Canvas src, Control parent, PDFLibNet.RenderNotifyFinishedHandler finished) {
-            thumb_finished_ = finished;
-            return CanvasPolicy.CreateThumbnail(src, parent);
-        }
-
-        /* ----------------------------------------------------------------- */
         /// DestroyThumbnail
         /* ----------------------------------------------------------------- */
         public static void DestroyThumbnail(Thumbnail canvas) {
@@ -657,7 +640,6 @@ namespace Cube {
             canvas.Items.Clear();
             canvas.Tag = null;
             parent.Controls.Remove(canvas);
-            thumb_finished_ = null;
         }
 
         #region Private methods
@@ -703,11 +685,6 @@ namespace Cube {
                 PDFLibNet.PDFPage page;
                 if (!core.Pages.TryGetValue(e.ItemIndex + 1, out page)) return;
 
-                if (thumb_finished_ != null) {
-                    page.RenderThumbnailFinished -= thumb_finished_;
-                    page.RenderThumbnailFinished += thumb_finished_;
-                }
-
                 Rectangle rect = new Rectangle(e.Bounds.Location, e.Bounds.Size);
                 rect.Inflate(-5, -5);
                 int width = canvas.TileSize.Width - 10;
@@ -738,7 +715,7 @@ namespace Cube {
         private static void MouseMoveHandler(object sender, MouseEventArgs e) {
             var canvas = (Canvas)sender;
 
-            if (is_mouse_down_) {
+            if (is_mouse_down_ && e.Button == MouseButtons.Left) {
                 var control = (ScrollableControl)canvas.Parent;
                 var current = canvas.PointToScreen(e.Location);
                 int x = current.X - origin_.X;
@@ -776,7 +753,6 @@ namespace Cube {
         #region Variables
         private static bool is_mouse_down_ = false;
         private static Point origin_;
-        private static PDFLibNet.RenderNotifyFinishedHandler thumb_finished_ = null;
         private static Color background_ = Color.DimGray;
         #endregion
     }

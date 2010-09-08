@@ -194,43 +194,43 @@
             // OnlyDisplayZoom25
             // 
             this.OnlyDisplayZoom25.Name = "OnlyDisplayZoom25";
-            this.OnlyDisplayZoom25.Size = new System.Drawing.Size(152, 22);
+            this.OnlyDisplayZoom25.Size = new System.Drawing.Size(102, 22);
             this.OnlyDisplayZoom25.Text = "25%";
             // 
             // OnlyDisplayZoom50
             // 
             this.OnlyDisplayZoom50.Name = "OnlyDisplayZoom50";
-            this.OnlyDisplayZoom50.Size = new System.Drawing.Size(152, 22);
+            this.OnlyDisplayZoom50.Size = new System.Drawing.Size(102, 22);
             this.OnlyDisplayZoom50.Text = "50%";
             // 
             // OnlyDisplayZoom75
             // 
             this.OnlyDisplayZoom75.Name = "OnlyDisplayZoom75";
-            this.OnlyDisplayZoom75.Size = new System.Drawing.Size(152, 22);
+            this.OnlyDisplayZoom75.Size = new System.Drawing.Size(102, 22);
             this.OnlyDisplayZoom75.Text = "75%";
             // 
             // OnlyDisplayZoom100
             // 
             this.OnlyDisplayZoom100.Name = "OnlyDisplayZoom100";
-            this.OnlyDisplayZoom100.Size = new System.Drawing.Size(152, 22);
+            this.OnlyDisplayZoom100.Size = new System.Drawing.Size(102, 22);
             this.OnlyDisplayZoom100.Text = "100%";
             // 
             // OnlyDisplayZoom125
             // 
             this.OnlyDisplayZoom125.Name = "OnlyDisplayZoom125";
-            this.OnlyDisplayZoom125.Size = new System.Drawing.Size(152, 22);
+            this.OnlyDisplayZoom125.Size = new System.Drawing.Size(102, 22);
             this.OnlyDisplayZoom125.Text = "125%";
             // 
             // OnlyDisplayZoom150
             // 
             this.OnlyDisplayZoom150.Name = "OnlyDisplayZoom150";
-            this.OnlyDisplayZoom150.Size = new System.Drawing.Size(152, 22);
+            this.OnlyDisplayZoom150.Size = new System.Drawing.Size(102, 22);
             this.OnlyDisplayZoom150.Text = "150%";
             // 
             // OnlyDisplayZoom200
             // 
             this.OnlyDisplayZoom200.Name = "OnlyDisplayZoom200";
-            this.OnlyDisplayZoom200.Size = new System.Drawing.Size(152, 22);
+            this.OnlyDisplayZoom200.Size = new System.Drawing.Size(102, 22);
             this.OnlyDisplayZoom200.Text = "200%";
             // 
             // ZoomOutButton

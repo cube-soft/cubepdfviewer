@@ -318,7 +318,7 @@ namespace Cube {
         private void CreateThumbnail(PictureBox canvas) {
             var old = CanvasPolicy.GetThumbnail(this.NavigationSplitContainer.Panel1);
             if (old != null) CanvasPolicy.DestroyThumbnail(old);
-            ListView thumb = CanvasPolicy.CreateThumbnail(canvas, this.NavigationSplitContainer.Panel1, RenderThumbnailFinished);
+            ListView thumb = CanvasPolicy.CreateThumbnail(canvas, this.NavigationSplitContainer.Panel1);
             thumb.SelectedIndexChanged += new EventHandler(PageChanged);
         }
 
@@ -750,22 +750,6 @@ namespace Cube {
                     this.Open(tab, path);
                 }
             }
-        }
-
-        /* ----------------------------------------------------------------- */
-        /// RenderThumbnailFinished
-        /* ----------------------------------------------------------------- */
-        private void RenderThumbnailFinished(int page, bool successs) {
-            Invoke(new PDFLibNet.RenderNotifyFinishedHandler(RenderThumbnailFinishedInvoke), page, successs);
-        }
-
-        /* ----------------------------------------------------------------- */
-        /// RenderThumbnailFinishedInvoke
-        /* ----------------------------------------------------------------- */
-        private void RenderThumbnailFinishedInvoke(int page, bool successs) {
-            var thumb = CanvasPolicy.GetThumbnail(this.NavigationSplitContainer.Panel1);
-            if (thumb == null) return;
-            if (successs) thumb.Invalidate(thumb.Items[page - 1].Bounds);
         }
 
         /* ----------------------------------------------------------------- */
