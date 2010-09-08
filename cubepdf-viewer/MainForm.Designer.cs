@@ -47,12 +47,10 @@
             this.FitToWidthButton = new System.Windows.Forms.ToolStripButton();
             this.FitToHeightButton = new System.Windows.Forms.ToolStripButton();
             this.OnlyDisplayZoomCategorySeparator = new System.Windows.Forms.ToolStripSeparator();
-            this.FirstPageButton = new System.Windows.Forms.ToolStripButton();
             this.PreviousPageButton = new System.Windows.Forms.ToolStripButton();
             this.CurrentPageTextBox = new System.Windows.Forms.ToolStripTextBox();
             this.TotalPageLabel = new System.Windows.Forms.ToolStripLabel();
             this.NextPageButton = new System.Windows.Forms.ToolStripButton();
-            this.LastPageButton = new System.Windows.Forms.ToolStripButton();
             this.OnlyDisplayPageCategorySeparator = new System.Windows.Forms.ToolStripSeparator();
             this.SearchTextBox = new System.Windows.Forms.ToolStripTextBox();
             this.SearchButton = new System.Windows.Forms.ToolStripButton();
@@ -92,12 +90,10 @@
             this.FitToWidthButton,
             this.FitToHeightButton,
             this.OnlyDisplayZoomCategorySeparator,
-            this.FirstPageButton,
             this.PreviousPageButton,
             this.CurrentPageTextBox,
             this.TotalPageLabel,
             this.NextPageButton,
-            this.LastPageButton,
             this.OnlyDisplayPageCategorySeparator,
             this.SearchTextBox,
             this.SearchButton,
@@ -293,17 +289,6 @@
             this.OnlyDisplayZoomCategorySeparator.Name = "OnlyDisplayZoomCategorySeparator";
             this.OnlyDisplayZoomCategorySeparator.Size = new System.Drawing.Size(6, 40);
             // 
-            // FirstPageButton
-            // 
-            this.FirstPageButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.FirstPageButton.Image = global::Cube.Properties.Resources.arrow_first;
-            this.FirstPageButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.FirstPageButton.Margin = new System.Windows.Forms.Padding(2);
-            this.FirstPageButton.Name = "FirstPageButton";
-            this.FirstPageButton.Size = new System.Drawing.Size(36, 36);
-            this.FirstPageButton.Text = "最初のページ";
-            this.FirstPageButton.Click += new System.EventHandler(this.FirstPageButton_Click);
-            // 
             // PreviousPageButton
             // 
             this.PreviousPageButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -344,17 +329,6 @@
             this.NextPageButton.Size = new System.Drawing.Size(36, 36);
             this.NextPageButton.Text = "次のページ";
             this.NextPageButton.Click += new System.EventHandler(this.NextPageButton_Click);
-            // 
-            // LastPageButton
-            // 
-            this.LastPageButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.LastPageButton.Image = global::Cube.Properties.Resources.arrow_last;
-            this.LastPageButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.LastPageButton.Margin = new System.Windows.Forms.Padding(2);
-            this.LastPageButton.Name = "LastPageButton";
-            this.LastPageButton.Size = new System.Drawing.Size(36, 36);
-            this.LastPageButton.Text = "最後のページ";
-            this.LastPageButton.Click += new System.EventHandler(this.LastPageButton_Click);
             // 
             // OnlyDisplayPageCategorySeparator
             // 
@@ -538,12 +512,10 @@
         private System.Windows.Forms.ToolStripButton FitToWidthButton;
         private System.Windows.Forms.ToolStripButton FitToHeightButton;
         private System.Windows.Forms.ToolStripSeparator OnlyDisplayZoomCategorySeparator;
-        private System.Windows.Forms.ToolStripButton FirstPageButton;
         private System.Windows.Forms.ToolStripButton PreviousPageButton;
         private System.Windows.Forms.ToolStripTextBox CurrentPageTextBox;
         private System.Windows.Forms.ToolStripLabel TotalPageLabel;
         private System.Windows.Forms.ToolStripButton NextPageButton;
-        private System.Windows.Forms.ToolStripButton LastPageButton;
         private System.Windows.Forms.ToolStripSeparator OnlyDisplayPageCategorySeparator;
         private System.Windows.Forms.ToolStripTextBox SearchTextBox;
         private System.Windows.Forms.ToolStripButton SearchButton;
