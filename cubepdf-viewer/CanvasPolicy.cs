@@ -68,13 +68,13 @@ namespace Cube {
                     core.CancelThumbProcess();
                     break;
                 case WM_VSCROLL:
-                    if (is_mouse_down_) core.CancelThumbProcess();
+                    if (valid_) core.CancelThumbProcess();
                     break;
                 case WM_LBUTTONDOWN:
-                    is_mouse_down_ = true;
+                    valid_ = true;
                     break;
                 case WM_LBUTTONUP:
-                    is_mouse_down_ = false;
+                    valid_ = false;
                     break;
                 default:
                     break;
@@ -83,7 +83,7 @@ namespace Cube {
             base.WndProc(ref m);
         }
 
-        private bool is_mouse_down_ = false;
+        private bool valid_ = false;
     }
 
     /* --------------------------------------------------------------------- */
@@ -132,12 +132,14 @@ namespace Cube {
                 //canvas.SizeMode = PictureBoxSizeMode.AutoSize;
 
                 // イベントハンドラの登録
-                canvas.Paint += new PaintEventHandler(PaintHandler);
-                canvas.MouseDown += new MouseEventHandler(MouseDownHandler);
-                canvas.MouseUp += new MouseEventHandler(MouseUpHandler);
-                canvas.MouseMove += new MouseEventHandler(MouseMoveHandler);
+                canvas.Paint += new PaintEventHandler(CanvasPolicy.PaintHandler);
+                canvas.MouseDown += new MouseEventHandler(CanvasPolicy.MouseDownHandler);
+                canvas.MouseUp += new MouseEventHandler(CanvasPolicy.MouseUpHandler);
+                canvas.MouseMove += new MouseEventHandler(CanvasPolicy.MouseMoveHandler);
+                canvas.MouseEnter += new EventHandler(CanvasPolicy.MouseEnterHandler);
 
                 parent.Controls.Add(canvas);
+                parent.MouseEnter += new EventHandler(CanvasPolicy.MouseEnterHandler);
             }
             return canvas;
         }
@@ -611,6 +613,7 @@ namespace Cube {
             canvas.OwnerDraw = true;
             canvas.DrawItem -= new DrawListViewItemEventHandler(CanvasPolicy.DrawItemHandler);
             canvas.DrawItem += new DrawListViewItemEventHandler(CanvasPolicy.DrawItemHandler);
+            canvas.MouseEnter += new EventHandler(CanvasPolicy.MouseEnterHandler);
 
             // 水平スクロールバーが出ないサイズ．
             // 16 は垂直スクロールバーの幅（TODO: 垂直スクロールバーの幅の取得方法）．
@@ -754,11 +757,20 @@ namespace Cube {
         }
 
         /* ----------------------------------------------------------------- */
-        /// MouseDownHandler
+        /// MouseUpHandler
         /* ----------------------------------------------------------------- */
         private static void MouseUpHandler(object sender, MouseEventArgs e) {
             is_mouse_down_ = false;
         }
+
+        /* ----------------------------------------------------------------- */
+        /// MouseEnterHandler
+        /* ----------------------------------------------------------------- */
+        private static void MouseEnterHandler(object sender, EventArgs e) {
+            var control = (Control)sender;
+            control.Focus();
+        }
+
         #endregion
 
         #region Variables
