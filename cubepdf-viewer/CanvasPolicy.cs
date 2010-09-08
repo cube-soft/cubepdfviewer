@@ -39,23 +39,51 @@ namespace Cube {
     /// Thumbnail
     /* --------------------------------------------------------------------- */
     public class Thumbnail : System.Windows.Forms.ListView {
+        /* ----------------------------------------------------------------- */
+        ///
+        /// WndProc
+        /// 
+        /// <summary>
+        /// サムネイル画像を生成するためのキューを特定のイベントが発生した
+        /// 際にキャンセルする．
+        /// 
+        /// NOTE: LargeChange によるスクロールが発生した場合，必要な
+        /// 画像まで生成がキャンセルされている模様．現在は，MouseDown
+        /// イベントが発生した直後の Scroll イベント時にのみキャンセル
+        /// している．キャンセルのタイミングについては，もう少し検討する
+        /// 必要がある．
+        /// </summary>
+        /// 
+        /* ----------------------------------------------------------------- */
         protected override void WndProc(ref Message m) {
-            const int WM_SIZE    = 0x0005;
-            const int WM_VSCROLL = 0x0115;
+            const int WM_SIZE        = 0x0005;
+            const int WM_VSCROLL     = 0x0115;
+            const int WM_LBUTTONDOWN = 0x0201;
+            const int WM_LBUTTONUP   = 0x0202;
 
-            switch (m.Msg) {
-            case WM_SIZE:
-            case WM_VSCROLL:
-                var core = (PDF)this.Tag;
-                if (core == null) break;
-                core.CancelThumbProcess();
-                break;
-            default:
-                break;
+            var core = (PDF)this.Tag;
+            if (core != null) {
+                switch (m.Msg) {
+                case WM_SIZE:
+                    core.CancelThumbProcess();
+                    break;
+                case WM_VSCROLL:
+                    if (is_mouse_down_) core.CancelThumbProcess();
+                    break;
+                case WM_LBUTTONDOWN:
+                    is_mouse_down_ = true;
+                    break;
+                case WM_LBUTTONUP:
+                    is_mouse_down_ = false;
+                    break;
+                default:
+                    break;
+                }
             }
-
             base.WndProc(ref m);
         }
+
+        private bool is_mouse_down_ = false;
     }
 
     /* --------------------------------------------------------------------- */
