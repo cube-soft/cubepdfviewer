@@ -153,6 +153,7 @@
             this.PrintButton.Name = "PrintButton";
             this.PrintButton.Size = new System.Drawing.Size(36, 37);
             this.PrintButton.Text = "印刷する";
+            this.PrintButton.Click += new System.EventHandler(this.PrintButton_Click);
             // 
             // OnlyDisplayCommonCategorySeparator
             // 
@@ -441,10 +442,10 @@
             this.DefaultTabPage.AutoScroll = true;
             this.DefaultTabPage.BackColor = System.Drawing.Color.DimGray;
             this.DefaultTabPage.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.DefaultTabPage.Location = new System.Drawing.Point(4, 22);
+            this.DefaultTabPage.Location = new System.Drawing.Point(4, 21);
             this.DefaultTabPage.Name = "DefaultTabPage";
             this.DefaultTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.DefaultTabPage.Size = new System.Drawing.Size(733, 484);
+            this.DefaultTabPage.Size = new System.Drawing.Size(733, 485);
             this.DefaultTabPage.TabIndex = 0;
             this.DefaultTabPage.Text = "(無題)";
             this.DefaultTabPage.Scroll += new System.Windows.Forms.ScrollEventHandler(this.VerticalScrolled);
