@@ -374,8 +374,8 @@ namespace Cube {
         // NOTE: 次回600dpiで描画してみる　& renderPageThreadを用いてレンダリングが終わるまで待機させたい
         private void pd_PrintPage(object sender, PrintPageEventArgs ev)
         {
-            const float INCH = 2.54f;
-            const int DPI = 72;
+            //const float INCH = 2.54f;
+            //const int DPI = 72;
 
             var control = this.PageViewerTabControl;
             var canvas = CanvasPolicy.Get(this.PageViewerTabControl.SelectedTab);
@@ -860,6 +860,15 @@ namespace Cube {
         }
 
         /* ----------------------------------------------------------------- */
+        /// PageViewerTabControl_TabClosing
+        /* ----------------------------------------------------------------- */
+        private void PageViewerTabControl_TabClosing(object sender, TabControlCancelEventArgs e) {
+            this.DestroyTab(e.TabPage);
+            var control = this.PageViewerTabControl;
+            if (control.TabCount <= 1) e.Cancel = true;
+        }
+
+        /* ----------------------------------------------------------------- */
         /// VerticalScrolled
         /* ----------------------------------------------------------------- */
         private void VerticalScrolled(object sender, ScrollEventArgs e) {
@@ -929,7 +938,5 @@ namespace Cube {
         private int wheel_counter_ = 0;
         private Point pos_;
         #endregion
-
-       
     }
 }

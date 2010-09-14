@@ -58,6 +58,9 @@
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Jacksonsoft.CustomTabControl">
+      <HintPath>.\Jacksonsoft.CustomTabControl.dll</HintPath>
+    </Reference>
     <Reference Include="PDFLibNet">
       <HintPath>.\PDFLibNet.dll</HintPath>
     </Reference>
