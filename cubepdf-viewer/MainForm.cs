@@ -864,7 +864,7 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         private void PageViewerTabControl_TabClosing(object sender, TabControlCancelEventArgs e) {
             this.DestroyTab(e.TabPage);
-            var control = this.PageViewerTabControl;
+            var control = (CustomTabControl)sender;
             if (control.TabCount <= 1) e.Cancel = true;
         }
 
