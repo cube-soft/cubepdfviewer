@@ -474,7 +474,7 @@
             // 
             // MenuSplitContainer
             // 
-            this.MenuSplitContainer.BackColor = System.Drawing.Color.Transparent;
+            this.MenuSplitContainer.BackColor = System.Drawing.Color.Black;
             this.MenuSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.MenuSplitContainer.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.MenuSplitContainer.IsSplitterFixed = true;
@@ -497,7 +497,7 @@
             // 
             // NavigationSplitContainer
             // 
-            this.NavigationSplitContainer.BackColor = System.Drawing.SystemColors.Control;
+            this.NavigationSplitContainer.BackColor = System.Drawing.Color.Transparent;
             this.NavigationSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.NavigationSplitContainer.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.NavigationSplitContainer.IsSplitterFixed = true;
@@ -510,7 +510,7 @@
             // 
             // NavigationSplitContainer.Panel2
             // 
-            this.NavigationSplitContainer.Panel2.BackColor = System.Drawing.Color.Transparent;
+            this.NavigationSplitContainer.Panel2.BackColor = System.Drawing.Color.Black;
             this.NavigationSplitContainer.Panel2.Controls.Add(this.PageViewerTabControl);
             this.NavigationSplitContainer.Size = new System.Drawing.Size(892, 510);
             this.NavigationSplitContainer.SplitterDistance = 150;
