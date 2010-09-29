@@ -92,12 +92,12 @@ namespace Cube {
             this.FooterStatusLabel.Text = message;
             if (canvas == null || canvas.Tag == null) {
                 this.CurrentPageTextBox.Text = "0";
-                this.TotalPageLabel.Text = "/ 0";
+                this.TotalPageLabel.Text = "0";
                 this.ZoomDropDownButton.Text = "100%";
             }
             else {
                 this.CurrentPageTextBox.Text = CanvasPolicy.CurrentPage(canvas).ToString();
-                this.TotalPageLabel.Text = "/ " + CanvasPolicy.PageCount(canvas).ToString();
+                this.TotalPageLabel.Text = CanvasPolicy.PageCount(canvas).ToString();
                 this.ZoomDropDownButton.Text = ((int)CanvasPolicy.Zoom(canvas)).ToString() + "%";
 
                 // scrollbarのsmallchangeの更新
@@ -481,7 +481,7 @@ namespace Cube {
                 if (e.Control) this.MenuModeButton_Click(this.MenuModeButton, e);
                 break;
             case Keys.N:  // 新規タブ
-                if (e.Control) this.CreateTab(this.PageViewerTabControl);
+                if (e.Control) this.NewTabButton_Click(this.PageViewerTabControl, e);
                 break;
             case Keys.O:  // ファイルを開く
                 if (e.Control) this.OpenButton_Click(this.PageViewerTabControl.SelectedTab, e);
@@ -566,29 +566,10 @@ namespace Cube {
         #region Other controls event handlers
 
         /* ----------------------------------------------------------------- */
-        /// FileButton_DropDownItemClicked
+        /// NewTabButton_Click
         /* ----------------------------------------------------------------- */
-        private void FileButton_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e) {
-            var control = (ToolStripSplitButton)sender;
-            control.HideDropDown();
-            if (e.ClickedItem.Name == "CloseMenuItem") {
-                CloseButton_Click(sender, e);
-                return;
-            }
-
-            // OpenNewTabMenuItem と OpenExistedTabMenuItem がある．
-            if (e.ClickedItem.Name == "OpenNewTabMenuItem") {
-                TabPage selected = null;
-                foreach (TabPage child in this.PageViewerTabControl.TabPages) {
-                    if (child.Controls["Canvas"] == null) { // 未使用タブ
-                        selected = child;
-                        child.Select();
-                        break;
-                    }
-                }
-                if (selected == null) CreateTab(this.PageViewerTabControl);
-            }
-            this.OpenButton_Click(sender, e);
+        private void NewTabButton_Click(object sender, EventArgs e) {
+            this.CreateTab(this.PageViewerTabControl);
         }
 
         /* ----------------------------------------------------------------- */

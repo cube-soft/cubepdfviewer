@@ -67,13 +67,6 @@ namespace Cube.Properties {
             }
         }
         
-        internal static System.Drawing.Bitmap arrow_last {
-            get {
-                object obj = ResourceManager.GetObject("arrow_last", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
         internal static System.Drawing.Bitmap arrow_next {
             get {
                 object obj = ResourceManager.GetObject("arrow_next", resourceCulture);
@@ -84,6 +77,13 @@ namespace Cube.Properties {
         internal static System.Drawing.Bitmap arrow_prev {
             get {
                 object obj = ResourceManager.GetObject("arrow_prev", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap background {
+            get {
+                object obj = ResourceManager.GetObject("background", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -116,6 +116,13 @@ namespace Cube.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap logo {
+            get {
+                object obj = ResourceManager.GetObject("logo", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap newtab {
             get {
                 object obj = ResourceManager.GetObject("newtab", resourceCulture);
@@ -140,6 +147,13 @@ namespace Cube.Properties {
         internal static System.Drawing.Bitmap search {
             get {
                 object obj = ResourceManager.GetObject("search", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap split {
+            get {
+                object obj = ResourceManager.GetObject("split", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
