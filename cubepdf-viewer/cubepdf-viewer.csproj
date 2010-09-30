@@ -132,6 +132,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="cube-soft.ico" />
+    <None Include="Resources\background_tab.png" />
     <None Include="Resources\split.png" />
     <None Include="Resources\logo.png" />
     <None Include="Resources\background.png" />

@@ -59,6 +59,7 @@ namespace Cube {
 
             int x = Screen.PrimaryScreen.Bounds.Height - 100;
             this.Size = new Size(System.Math.Max(x, 800), x);
+
             this.MenuToolStrip.Renderer = new CustomToolStripRenderer();
             this.NavigationSplitContainer.Panel1Collapsed = true;
             this.MenuSplitContainer.SplitterDistance = this.MenuToolStrip.Height;
@@ -86,11 +87,12 @@ namespace Cube {
         /// システムの Refresh() を呼ぶ前に，必要な情報を全て更新する．
         /// MEMO: サムネイル画面を更新するとちらつきがひどいので，
         /// 最小限の更新になるようにしている．
+        /// ステータスバーを除去した．現状は，message はどこにも表示させて
+        /// いない (2010/09/30)．
         /// </summary>
         /// 
         /* ----------------------------------------------------------------- */
         private void Refresh(PictureBox canvas, string message = "") {
-            this.FooterStatusLabel.Text = message;
             if (canvas == null || canvas.Tag == null) {
                 this.CurrentPageTextBox.Text = "0";
                 this.TotalPageLabel.Text = "0";
@@ -114,7 +116,6 @@ namespace Cube {
             }
 
             if (this.MainMenuStrip != null) this.MainMenuStrip.Refresh();
-            if (this.FooterStatusStrip != null) this.FooterStatusStrip.Refresh();
         }
 
         /* ----------------------------------------------------------------- */

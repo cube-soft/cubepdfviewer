@@ -88,6 +88,13 @@ namespace Cube.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap background_tab {
+            get {
+                object obj = ResourceManager.GetObject("background_tab", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Icon cube_soft {
             get {
                 object obj = ResourceManager.GetObject("cube_soft", resourceCulture);

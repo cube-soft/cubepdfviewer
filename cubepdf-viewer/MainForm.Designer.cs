@@ -56,14 +56,11 @@
             this.FitToHeightButton = new System.Windows.Forms.ToolStripButton();
             this.OnlyDisplayLogoLabel = new System.Windows.Forms.ToolStripLabel();
             this.OnlyDisplayCategoryZoomLabel = new System.Windows.Forms.ToolStripLabel();
-            this.FooterStatusStrip = new System.Windows.Forms.StatusStrip();
-            this.FooterStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.MenuSplitContainer = new System.Windows.Forms.SplitContainer();
             this.NavigationSplitContainer = new System.Windows.Forms.SplitContainer();
             this.PageViewerTabControl = new System.Windows.Forms.CustomTabControl();
             this.DefaultTabPage = new System.Windows.Forms.TabPage();
             this.MenuToolStrip.SuspendLayout();
-            this.FooterStatusStrip.SuspendLayout();
             this.MenuSplitContainer.Panel1.SuspendLayout();
             this.MenuSplitContainer.Panel2.SuspendLayout();
             this.MenuSplitContainer.SuspendLayout();
@@ -444,7 +441,7 @@
             this.OnlyDisplayLogoLabel.Enabled = false;
             this.OnlyDisplayLogoLabel.Margin = new System.Windows.Forms.Padding(0);
             this.OnlyDisplayLogoLabel.Name = "OnlyDisplayLogoLabel";
-            this.OnlyDisplayLogoLabel.Size = new System.Drawing.Size(122, 39);
+            this.OnlyDisplayLogoLabel.Size = new System.Drawing.Size(121, 39);
             // 
             // OnlyDisplayCategoryZoomLabel
             // 
@@ -456,21 +453,6 @@
             this.OnlyDisplayCategoryZoomLabel.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.OnlyDisplayCategoryZoomLabel.Name = "OnlyDisplayCategoryZoomLabel";
             this.OnlyDisplayCategoryZoomLabel.Size = new System.Drawing.Size(2, 40);
-            // 
-            // FooterStatusStrip
-            // 
-            this.FooterStatusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.FooterStatusLabel});
-            this.FooterStatusStrip.Location = new System.Drawing.Point(0, 551);
-            this.FooterStatusStrip.Name = "FooterStatusStrip";
-            this.FooterStatusStrip.Size = new System.Drawing.Size(892, 22);
-            this.FooterStatusStrip.SizingGrip = false;
-            this.FooterStatusStrip.TabIndex = 1;
-            // 
-            // FooterStatusLabel
-            // 
-            this.FooterStatusLabel.Name = "FooterStatusLabel";
-            this.FooterStatusLabel.Size = new System.Drawing.Size(0, 17);
             // 
             // MenuSplitContainer
             // 
@@ -490,7 +472,7 @@
             // MenuSplitContainer.Panel2
             // 
             this.MenuSplitContainer.Panel2.Controls.Add(this.NavigationSplitContainer);
-            this.MenuSplitContainer.Size = new System.Drawing.Size(892, 551);
+            this.MenuSplitContainer.Size = new System.Drawing.Size(892, 573);
             this.MenuSplitContainer.SplitterDistance = 40;
             this.MenuSplitContainer.SplitterWidth = 1;
             this.MenuSplitContainer.TabIndex = 4;
@@ -510,9 +492,10 @@
             // 
             // NavigationSplitContainer.Panel2
             // 
-            this.NavigationSplitContainer.Panel2.BackColor = System.Drawing.Color.Black;
+            this.NavigationSplitContainer.Panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
+            this.NavigationSplitContainer.Panel2.BackgroundImage = global::Cube.Properties.Resources.background_tab;
             this.NavigationSplitContainer.Panel2.Controls.Add(this.PageViewerTabControl);
-            this.NavigationSplitContainer.Size = new System.Drawing.Size(892, 510);
+            this.NavigationSplitContainer.Size = new System.Drawing.Size(892, 532);
             this.NavigationSplitContainer.SplitterDistance = 150;
             this.NavigationSplitContainer.SplitterWidth = 1;
             this.NavigationSplitContainer.TabIndex = 2;
@@ -521,30 +504,31 @@
             // 
             this.PageViewerTabControl.AllowDrop = true;
             this.PageViewerTabControl.Controls.Add(this.DefaultTabPage);
+            this.PageViewerTabControl.DisplayStyle = System.Windows.Forms.TabStyle.VS2010;
             // 
             // 
             // 
-            this.PageViewerTabControl.DisplayStyleProvider.BorderColor = System.Drawing.SystemColors.ControlDark;
-            this.PageViewerTabControl.DisplayStyleProvider.BorderColorHot = System.Drawing.SystemColors.ControlDark;
-            this.PageViewerTabControl.DisplayStyleProvider.BorderColorSelected = System.Drawing.Color.FromArgb(((int)(((byte)(132)))), ((int)(((byte)(130)))), ((int)(((byte)(132)))));
-            this.PageViewerTabControl.DisplayStyleProvider.CloserColor = System.Drawing.Color.DarkGray;
-            this.PageViewerTabControl.DisplayStyleProvider.FocusTrack = true;
+            this.PageViewerTabControl.DisplayStyleProvider.BorderColor = System.Drawing.Color.Transparent;
+            this.PageViewerTabControl.DisplayStyleProvider.BorderColorHot = System.Drawing.Color.FromArgb(((int)(((byte)(155)))), ((int)(((byte)(167)))), ((int)(((byte)(183)))));
+            this.PageViewerTabControl.DisplayStyleProvider.BorderColorSelected = System.Drawing.Color.FromArgb(((int)(((byte)(127)))), ((int)(((byte)(157)))), ((int)(((byte)(185)))));
+            this.PageViewerTabControl.DisplayStyleProvider.CloserColor = System.Drawing.Color.FromArgb(((int)(((byte)(117)))), ((int)(((byte)(99)))), ((int)(((byte)(61)))));
+            this.PageViewerTabControl.DisplayStyleProvider.FocusTrack = false;
             this.PageViewerTabControl.DisplayStyleProvider.HotTrack = true;
             this.PageViewerTabControl.DisplayStyleProvider.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.PageViewerTabControl.DisplayStyleProvider.Opacity = 1F;
             this.PageViewerTabControl.DisplayStyleProvider.Overlap = 0;
-            this.PageViewerTabControl.DisplayStyleProvider.Padding = new System.Drawing.Point(6, 3);
-            this.PageViewerTabControl.DisplayStyleProvider.Radius = 2;
+            this.PageViewerTabControl.DisplayStyleProvider.Padding = new System.Drawing.Point(6, 5);
+            this.PageViewerTabControl.DisplayStyleProvider.Radius = 3;
             this.PageViewerTabControl.DisplayStyleProvider.ShowTabCloser = true;
-            this.PageViewerTabControl.DisplayStyleProvider.TextColor = System.Drawing.SystemColors.ControlText;
-            this.PageViewerTabControl.DisplayStyleProvider.TextColorDisabled = System.Drawing.SystemColors.ControlDark;
+            this.PageViewerTabControl.DisplayStyleProvider.TextColor = System.Drawing.Color.White;
+            this.PageViewerTabControl.DisplayStyleProvider.TextColorDisabled = System.Drawing.Color.WhiteSmoke;
             this.PageViewerTabControl.DisplayStyleProvider.TextColorSelected = System.Drawing.SystemColors.ControlText;
             this.PageViewerTabControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.PageViewerTabControl.HotTrack = true;
             this.PageViewerTabControl.Location = new System.Drawing.Point(0, 0);
             this.PageViewerTabControl.Name = "PageViewerTabControl";
             this.PageViewerTabControl.SelectedIndex = 0;
-            this.PageViewerTabControl.Size = new System.Drawing.Size(741, 510);
+            this.PageViewerTabControl.Size = new System.Drawing.Size(741, 532);
             this.PageViewerTabControl.TabIndex = 0;
             this.PageViewerTabControl.TabClosing += new System.EventHandler<System.Windows.Forms.TabControlCancelEventArgs>(this.PageViewerTabControl_TabClosing);
             this.PageViewerTabControl.SelectedIndexChanged += new System.EventHandler(this.PageViewerTabControl_SelectedIndexChanged);
@@ -557,9 +541,9 @@
             this.DefaultTabPage.BackColor = System.Drawing.Color.DimGray;
             this.DefaultTabPage.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.DefaultTabPage.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.DefaultTabPage.Location = new System.Drawing.Point(4, 23);
+            this.DefaultTabPage.Location = new System.Drawing.Point(4, 27);
             this.DefaultTabPage.Name = "DefaultTabPage";
-            this.DefaultTabPage.Size = new System.Drawing.Size(733, 483);
+            this.DefaultTabPage.Size = new System.Drawing.Size(733, 501);
             this.DefaultTabPage.TabIndex = 0;
             this.DefaultTabPage.Text = "(無題)";
             this.DefaultTabPage.Scroll += new System.Windows.Forms.ScrollEventHandler(this.VerticalScrolled);
@@ -571,7 +555,6 @@
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(892, 573);
             this.Controls.Add(this.MenuSplitContainer);
-            this.Controls.Add(this.FooterStatusStrip);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
             this.Name = "MainForm";
@@ -580,8 +563,6 @@
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MainForm_KeyDown);
             this.MenuToolStrip.ResumeLayout(false);
             this.MenuToolStrip.PerformLayout();
-            this.FooterStatusStrip.ResumeLayout(false);
-            this.FooterStatusStrip.PerformLayout();
             this.MenuSplitContainer.Panel1.ResumeLayout(false);
             this.MenuSplitContainer.Panel2.ResumeLayout(false);
             this.MenuSplitContainer.ResumeLayout(false);
@@ -589,7 +570,6 @@
             this.NavigationSplitContainer.ResumeLayout(false);
             this.PageViewerTabControl.ResumeLayout(false);
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -614,10 +594,8 @@
         private System.Windows.Forms.ToolStripButton NextPageButton;
         private System.Windows.Forms.ToolStripTextBox SearchTextBox;
         private System.Windows.Forms.ToolStripButton SearchButton;
-        private System.Windows.Forms.StatusStrip FooterStatusStrip;
         private System.Windows.Forms.ToolStripButton PrintButton;
         private System.Windows.Forms.SplitContainer MenuSplitContainer;
-        private System.Windows.Forms.ToolStripStatusLabel FooterStatusLabel;
         private System.Windows.Forms.ToolStripButton ThumbButton;
         private System.Windows.Forms.SplitContainer NavigationSplitContainer;
         private System.Windows.Forms.CustomTabControl PageViewerTabControl;
