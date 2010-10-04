@@ -67,9 +67,23 @@ namespace Cube.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap arrow_first_over {
+            get {
+                object obj = ResourceManager.GetObject("arrow_first_over", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap arrow_last {
             get {
                 object obj = ResourceManager.GetObject("arrow_last", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap arrow_last_over {
+            get {
+                object obj = ResourceManager.GetObject("arrow_last_over", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -81,9 +95,23 @@ namespace Cube.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap arrow_next_over {
+            get {
+                object obj = ResourceManager.GetObject("arrow_next_over", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap arrow_prev {
             get {
                 object obj = ResourceManager.GetObject("arrow_prev", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap arrow_prev_over {
+            get {
+                object obj = ResourceManager.GetObject("arrow_prev_over", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -116,6 +144,13 @@ namespace Cube.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap fit2height_over {
+            get {
+                object obj = ResourceManager.GetObject("fit2height_over", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap fit2width {
             get {
                 object obj = ResourceManager.GetObject("fit2width", resourceCulture);
@@ -123,9 +158,23 @@ namespace Cube.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap fit2width_over {
+            get {
+                object obj = ResourceManager.GetObject("fit2width_over", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap hidemenu {
             get {
                 object obj = ResourceManager.GetObject("hidemenu", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap hidemenu_over {
+            get {
+                object obj = ResourceManager.GetObject("hidemenu_over", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -151,6 +200,13 @@ namespace Cube.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap open_over {
+            get {
+                object obj = ResourceManager.GetObject("open_over", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap print {
             get {
                 object obj = ResourceManager.GetObject("print", resourceCulture);
@@ -158,9 +214,23 @@ namespace Cube.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap print_over {
+            get {
+                object obj = ResourceManager.GetObject("print_over", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap search {
             get {
                 object obj = ResourceManager.GetObject("search", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap search_over {
+            get {
+                object obj = ResourceManager.GetObject("search_over", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -179,6 +249,13 @@ namespace Cube.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap thumbnail_over {
+            get {
+                object obj = ResourceManager.GetObject("thumbnail_over", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap zoomin {
             get {
                 object obj = ResourceManager.GetObject("zoomin", resourceCulture);
@@ -186,9 +263,23 @@ namespace Cube.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap zoomin_over {
+            get {
+                object obj = ResourceManager.GetObject("zoomin_over", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap zoomout {
             get {
                 object obj = ResourceManager.GetObject("zoomout", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap zoomout_over {
+            get {
+                object obj = ResourceManager.GetObject("zoomout_over", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

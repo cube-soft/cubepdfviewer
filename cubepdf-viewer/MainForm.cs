@@ -841,6 +841,13 @@ namespace Cube {
         }
 
         /* ----------------------------------------------------------------- */
+        /// LogoButton_Click
+        /* ----------------------------------------------------------------- */
+        private void LogoButton_Click(object sender, EventArgs e) {
+            System.Diagnostics.Process.Start("http://www.cube-soft.jp/");
+        }
+
+        /* ----------------------------------------------------------------- */
         /// TabPage_DragEnter
         /* ----------------------------------------------------------------- */
         private void TabPage_DragEnter(object sender, DragEventArgs e) {
@@ -933,6 +940,221 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         private void ContextMenu_MouseDown(object sender, MouseEventArgs e) {
             pos_ = e.Location;
+        }
+
+        #endregion
+
+        /* ----------------------------------------------------------------- */
+        //  メニューボタンの外観の調整
+        /* ----------------------------------------------------------------- */
+        #region Icon settings for MenuToolStrip
+
+        /* ----------------------------------------------------------------- */
+        /// OpenButton_MouseEnter
+        /* ----------------------------------------------------------------- */
+        private void OpenButton_MouseEnter(object sender, EventArgs e) {
+            var control = (ToolStripButton)sender;
+            control.Image = Properties.Resources.open_over;
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// OpenButton_MouseLeave
+        /* ----------------------------------------------------------------- */
+        private void OpenButton_MouseLeave(object sender, EventArgs e) {
+            var control = (ToolStripButton)sender;
+            control.Image = Properties.Resources.open;
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// PrintButton_MouseEnter
+        /* ----------------------------------------------------------------- */
+        private void PrintButton_MouseEnter(object sender, EventArgs e) {
+            var control = (ToolStripButton)sender;
+            control.Image = Properties.Resources.print_over;
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// PrintButton_MouseLeave
+        /* ----------------------------------------------------------------- */
+        private void PrintButton_MouseLeave(object sender, EventArgs e) {
+            var control = (ToolStripButton)sender;
+            control.Image = Properties.Resources.print;
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// FirstPageButton_MouseEnter
+        /* ----------------------------------------------------------------- */
+        private void FirstPageButton_MouseEnter(object sender, EventArgs e) {
+            var control = (ToolStripButton)sender;
+            control.Image = Properties.Resources.arrow_first_over;
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// FirstPageButton_MouseLeave
+        /* ----------------------------------------------------------------- */
+        private void FirstPageButton_MouseLeave(object sender, EventArgs e) {
+            var control = (ToolStripButton)sender;
+            control.Image = Properties.Resources.arrow_first;
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// PreviousPageButton_MouseEnter
+        /* ----------------------------------------------------------------- */
+        private void PreviousPageButton_MouseEnter(object sender, EventArgs e) {
+            var control = (ToolStripButton)sender;
+            control.Image = Properties.Resources.arrow_prev_over;
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// PreviousPageButton_MouseLeave
+        /* ----------------------------------------------------------------- */
+        private void PreviousPageButton_MouseLeave(object sender, EventArgs e) {
+            var control = (ToolStripButton)sender;
+            control.Image = Properties.Resources.arrow_prev;
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// NextPageButton_MouseEnter
+        /* ----------------------------------------------------------------- */
+        private void NextPageButton_MouseEnter(object sender, EventArgs e) {
+            var control = (ToolStripButton)sender;
+            control.Image = Properties.Resources.arrow_next_over;
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// NextPageButton_MouseLeave
+        /* ----------------------------------------------------------------- */
+        private void NextPageButton_MouseLeave(object sender, EventArgs e) {
+            var control = (ToolStripButton)sender;
+            control.Image = Properties.Resources.arrow_next;
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// LastPageButton_MouseEnter
+        /* ----------------------------------------------------------------- */
+        private void LastPageButton_MouseEnter(object sender, EventArgs e) {
+            var control = (ToolStripButton)sender;
+            control.Image = Properties.Resources.arrow_last_over;
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// LastPageButton_MouseLeave
+        /* ----------------------------------------------------------------- */
+        private void LastPageButton_MouseLeave(object sender, EventArgs e) {
+            var control = (ToolStripButton)sender;
+            control.Image = Properties.Resources.arrow_last;
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// SearchButton_MouseEnter
+        /* ----------------------------------------------------------------- */
+        private void SearchButton_MouseEnter(object sender, EventArgs e) {
+            var control = (ToolStripButton)sender;
+            control.Image = Properties.Resources.search_over;
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// SearchButton_MouseLeave
+        /* ----------------------------------------------------------------- */
+        private void SearchButton_MouseLeave(object sender, EventArgs e) {
+            var control = (ToolStripButton)sender;
+            control.Image = Properties.Resources.search;
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// ZoomInButton_MouseEnter
+        /* ----------------------------------------------------------------- */
+        private void ZoomInButton_MouseEnter(object sender, EventArgs e) {
+            var control = (ToolStripButton)sender;
+            control.Image = Properties.Resources.zoomin_over;
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// ZoomInButton_MouseLeave
+        /* ----------------------------------------------------------------- */
+        private void ZoomInButton_MouseLeave(object sender, EventArgs e) {
+            var control = (ToolStripButton)sender;
+            control.Image = Properties.Resources.zoomin;
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// ZoomOutButton_MouseEnter
+        /* ----------------------------------------------------------------- */
+        private void ZoomOutButton_MouseEnter(object sender, EventArgs e) {
+            var control = (ToolStripButton)sender;
+            control.Image = Properties.Resources.zoomout_over;
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// ZoomOutButton_MouseLeave
+        /* ----------------------------------------------------------------- */
+        private void ZoomOutButton_MouseLeave(object sender, EventArgs e) {
+            var control = (ToolStripButton)sender;
+            control.Image = Properties.Resources.zoomout;
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// FitToWidthButton_MouseEnter
+        /* ----------------------------------------------------------------- */
+        private void FitToWidthButton_MouseEnter(object sender, EventArgs e) {
+            var control = (ToolStripButton)sender;
+            control.Image = Properties.Resources.fit2width_over;
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// FitToWidthButton_MouseLeave
+        /* ----------------------------------------------------------------- */
+        private void FitToWidthButton_MouseLeave(object sender, EventArgs e) {
+            var control = (ToolStripButton)sender;
+            control.Image = Properties.Resources.fit2width;
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// FitToHeightButton_MouseEnter
+        /* ----------------------------------------------------------------- */
+        private void FitToHeightButton_MouseEnter(object sender, EventArgs e) {
+            var control = (ToolStripButton)sender;
+            control.Image = Properties.Resources.fit2height_over;
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// FitToHeightButton_MouseLeave
+        /* ----------------------------------------------------------------- */
+        private void FitToHeightButton_MouseLeave(object sender, EventArgs e) {
+            var control = (ToolStripButton)sender;
+            control.Image = Properties.Resources.fit2height;
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// MenuModeButton_MouseEnter
+        /* ----------------------------------------------------------------- */
+        private void MenuModeButton_MouseEnter(object sender, EventArgs e) {
+            var control = (ToolStripButton)sender;
+            control.BackgroundImage = Properties.Resources.hidemenu_over;
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// MenuModeButton_MouseLeave
+        /* ----------------------------------------------------------------- */
+        private void MenuModeButton_MouseLeave(object sender, EventArgs e) {
+            var control = (ToolStripButton)sender;
+            control.BackgroundImage = Properties.Resources.hidemenu;
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// ThumbButton_MouseEnter
+        /* ----------------------------------------------------------------- */
+        private void ThumbButton_MouseEnter(object sender, EventArgs e) {
+            var control = (ToolStripButton)sender;
+            control.BackgroundImage = Properties.Resources.thumbnail_over;
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// ThumbButton_MouseLeave
+        /* ----------------------------------------------------------------- */
+        private void ThumbButton_MouseLeave(object sender, EventArgs e) {
+            var control = (ToolStripButton)sender;
+            control.BackgroundImage = Properties.Resources.thumbnail;
         }
 
         #endregion

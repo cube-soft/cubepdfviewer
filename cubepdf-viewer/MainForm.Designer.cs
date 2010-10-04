@@ -53,8 +53,8 @@
             this.ZoomOutButton = new System.Windows.Forms.ToolStripButton();
             this.FitToWidthButton = new System.Windows.Forms.ToolStripButton();
             this.FitToHeightButton = new System.Windows.Forms.ToolStripButton();
-            this.OnlyDisplayLogoLabel = new System.Windows.Forms.ToolStripLabel();
             this.OnlyDisplayCategoryZoomLabel = new System.Windows.Forms.ToolStripLabel();
+            this.LogoButton = new System.Windows.Forms.ToolStripButton();
             this.MenuSplitContainer = new System.Windows.Forms.SplitContainer();
             this.NavigationSplitContainer = new System.Windows.Forms.SplitContainer();
             this.PageViewerTabControl = new System.Windows.Forms.CustomTabControl();
@@ -98,8 +98,8 @@
             this.ZoomOutButton,
             this.FitToWidthButton,
             this.FitToHeightButton,
-            this.OnlyDisplayLogoLabel,
-            this.OnlyDisplayCategoryZoomLabel});
+            this.OnlyDisplayCategoryZoomLabel,
+            this.LogoButton});
             this.MenuToolStrip.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             this.MenuToolStrip.Location = new System.Drawing.Point(0, 0);
             this.MenuToolStrip.Name = "MenuToolStrip";
@@ -124,6 +124,8 @@
             this.MenuModeButton.Text = "メニューの非表示";
             this.MenuModeButton.ToolTipText = "メニューの非表示。元に戻すには F8 ボタンを押して下さい。";
             this.MenuModeButton.Click += new System.EventHandler(this.MenuModeButton_Click);
+            this.MenuModeButton.MouseEnter += new System.EventHandler(this.MenuModeButton_MouseEnter);
+            this.MenuModeButton.MouseLeave += new System.EventHandler(this.MenuModeButton_MouseLeave);
             // 
             // ThumbButton
             // 
@@ -140,9 +142,12 @@
             this.ThumbButton.Size = new System.Drawing.Size(28, 40);
             this.ThumbButton.Text = "サムネイル表示の切り替え";
             this.ThumbButton.Click += new System.EventHandler(this.ThumbButton_Click);
+            this.ThumbButton.MouseEnter += new System.EventHandler(this.ThumbButton_MouseEnter);
+            this.ThumbButton.MouseLeave += new System.EventHandler(this.ThumbButton_MouseLeave);
             // 
             // OpenButton
             // 
+            this.OpenButton.AutoSize = false;
             this.OpenButton.BackColor = System.Drawing.Color.Transparent;
             this.OpenButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.OpenButton.Image = global::Cube.Properties.Resources.open;
@@ -153,9 +158,12 @@
             this.OpenButton.Size = new System.Drawing.Size(36, 40);
             this.OpenButton.Text = "開く";
             this.OpenButton.Click += new System.EventHandler(this.OpenButton_Click);
+            this.OpenButton.MouseEnter += new System.EventHandler(this.OpenButton_MouseEnter);
+            this.OpenButton.MouseLeave += new System.EventHandler(this.OpenButton_MouseLeave);
             // 
             // PrintButton
             // 
+            this.PrintButton.AutoSize = false;
             this.PrintButton.BackColor = System.Drawing.Color.Transparent;
             this.PrintButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.PrintButton.Image = global::Cube.Properties.Resources.print;
@@ -166,6 +174,8 @@
             this.PrintButton.Size = new System.Drawing.Size(36, 40);
             this.PrintButton.Text = "印刷する";
             this.PrintButton.Click += new System.EventHandler(this.PrintButton_Click);
+            this.PrintButton.MouseEnter += new System.EventHandler(this.PrintButton_MouseEnter);
+            this.PrintButton.MouseLeave += new System.EventHandler(this.PrintButton_MouseLeave);
             // 
             // OnlyDisplayCategoryPrintLabel
             // 
@@ -209,6 +219,7 @@
             // 
             // FirstPageButton
             // 
+            this.FirstPageButton.AutoSize = false;
             this.FirstPageButton.BackColor = System.Drawing.Color.Transparent;
             this.FirstPageButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.FirstPageButton.Image = global::Cube.Properties.Resources.arrow_first;
@@ -218,9 +229,12 @@
             this.FirstPageButton.Name = "FirstPageButton";
             this.FirstPageButton.Size = new System.Drawing.Size(35, 40);
             this.FirstPageButton.Text = "toolStripButton1";
+            this.FirstPageButton.MouseEnter += new System.EventHandler(this.FirstPageButton_MouseEnter);
+            this.FirstPageButton.MouseLeave += new System.EventHandler(this.FirstPageButton_MouseLeave);
             // 
             // PreviousPageButton
             // 
+            this.PreviousPageButton.AutoSize = false;
             this.PreviousPageButton.BackColor = System.Drawing.Color.Transparent;
             this.PreviousPageButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.PreviousPageButton.Image = global::Cube.Properties.Resources.arrow_prev;
@@ -231,9 +245,12 @@
             this.PreviousPageButton.Size = new System.Drawing.Size(35, 40);
             this.PreviousPageButton.Text = "前のページ";
             this.PreviousPageButton.Click += new System.EventHandler(this.PreviousPageButton_Click);
+            this.PreviousPageButton.MouseEnter += new System.EventHandler(this.PreviousPageButton_MouseEnter);
+            this.PreviousPageButton.MouseLeave += new System.EventHandler(this.PreviousPageButton_MouseLeave);
             // 
             // NextPageButton
             // 
+            this.NextPageButton.AutoSize = false;
             this.NextPageButton.BackColor = System.Drawing.Color.Transparent;
             this.NextPageButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.NextPageButton.Image = global::Cube.Properties.Resources.arrow_next;
@@ -244,9 +261,12 @@
             this.NextPageButton.Size = new System.Drawing.Size(35, 40);
             this.NextPageButton.Text = "次のページ";
             this.NextPageButton.Click += new System.EventHandler(this.NextPageButton_Click);
+            this.NextPageButton.MouseEnter += new System.EventHandler(this.NextPageButton_MouseEnter);
+            this.NextPageButton.MouseLeave += new System.EventHandler(this.NextPageButton_MouseLeave);
             // 
             // LastPageButton
             // 
+            this.LastPageButton.AutoSize = false;
             this.LastPageButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.LastPageButton.Image = global::Cube.Properties.Resources.arrow_last;
             this.LastPageButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
@@ -255,6 +275,8 @@
             this.LastPageButton.Name = "LastPageButton";
             this.LastPageButton.Size = new System.Drawing.Size(35, 40);
             this.LastPageButton.Text = "toolStripButton1";
+            this.LastPageButton.MouseEnter += new System.EventHandler(this.LastPageButton_MouseEnter);
+            this.LastPageButton.MouseLeave += new System.EventHandler(this.LastPageButton_MouseLeave);
             // 
             // OnlyDisplayCategoryPageLabel
             // 
@@ -278,6 +300,7 @@
             // 
             // SearchButton
             // 
+            this.SearchButton.AutoSize = false;
             this.SearchButton.BackColor = System.Drawing.Color.Transparent;
             this.SearchButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.SearchButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -289,6 +312,8 @@
             this.SearchButton.Size = new System.Drawing.Size(25, 40);
             this.SearchButton.Text = "検索する";
             this.SearchButton.Click += new System.EventHandler(this.SearchButton_Click);
+            this.SearchButton.MouseEnter += new System.EventHandler(this.SearchButton_MouseEnter);
+            this.SearchButton.MouseLeave += new System.EventHandler(this.SearchButton_MouseLeave);
             // 
             // OnlyDisplayCategorySearchLabel
             // 
@@ -367,6 +392,7 @@
             // 
             // ZoomInButton
             // 
+            this.ZoomInButton.AutoSize = false;
             this.ZoomInButton.BackColor = System.Drawing.Color.Transparent;
             this.ZoomInButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.ZoomInButton.Image = global::Cube.Properties.Resources.zoomin;
@@ -377,9 +403,12 @@
             this.ZoomInButton.Size = new System.Drawing.Size(37, 40);
             this.ZoomInButton.Text = "拡大する";
             this.ZoomInButton.Click += new System.EventHandler(this.ZoomInButton_Click);
+            this.ZoomInButton.MouseEnter += new System.EventHandler(this.ZoomInButton_MouseEnter);
+            this.ZoomInButton.MouseLeave += new System.EventHandler(this.ZoomInButton_MouseLeave);
             // 
             // ZoomOutButton
             // 
+            this.ZoomOutButton.AutoSize = false;
             this.ZoomOutButton.BackColor = System.Drawing.Color.Transparent;
             this.ZoomOutButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.ZoomOutButton.Image = global::Cube.Properties.Resources.zoomout;
@@ -390,9 +419,12 @@
             this.ZoomOutButton.Size = new System.Drawing.Size(37, 40);
             this.ZoomOutButton.Text = "縮小する";
             this.ZoomOutButton.Click += new System.EventHandler(this.ZoomOutButton_Click);
+            this.ZoomOutButton.MouseEnter += new System.EventHandler(this.ZoomOutButton_MouseEnter);
+            this.ZoomOutButton.MouseLeave += new System.EventHandler(this.ZoomOutButton_MouseLeave);
             // 
             // FitToWidthButton
             // 
+            this.FitToWidthButton.AutoSize = false;
             this.FitToWidthButton.BackColor = System.Drawing.Color.Transparent;
             this.FitToWidthButton.CheckOnClick = true;
             this.FitToWidthButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -404,9 +436,12 @@
             this.FitToWidthButton.Size = new System.Drawing.Size(37, 40);
             this.FitToWidthButton.Text = "ウィンドウの幅に合わせる";
             this.FitToWidthButton.Click += new System.EventHandler(this.FitToWidthButton_Click);
+            this.FitToWidthButton.MouseEnter += new System.EventHandler(this.FitToWidthButton_MouseEnter);
+            this.FitToWidthButton.MouseLeave += new System.EventHandler(this.FitToWidthButton_MouseLeave);
             // 
             // FitToHeightButton
             // 
+            this.FitToHeightButton.AutoSize = false;
             this.FitToHeightButton.BackColor = System.Drawing.Color.Transparent;
             this.FitToHeightButton.CheckOnClick = true;
             this.FitToHeightButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -418,17 +453,8 @@
             this.FitToHeightButton.Size = new System.Drawing.Size(37, 40);
             this.FitToHeightButton.Text = "ウィンドウの高さに合わせる";
             this.FitToHeightButton.Click += new System.EventHandler(this.FitToHeightButton_Click);
-            // 
-            // OnlyDisplayLogoLabel
-            // 
-            this.OnlyDisplayLogoLabel.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.OnlyDisplayLogoLabel.AutoSize = false;
-            this.OnlyDisplayLogoLabel.BackColor = System.Drawing.Color.Transparent;
-            this.OnlyDisplayLogoLabel.BackgroundImage = global::Cube.Properties.Resources.logo;
-            this.OnlyDisplayLogoLabel.Enabled = false;
-            this.OnlyDisplayLogoLabel.Margin = new System.Windows.Forms.Padding(0);
-            this.OnlyDisplayLogoLabel.Name = "OnlyDisplayLogoLabel";
-            this.OnlyDisplayLogoLabel.Size = new System.Drawing.Size(121, 39);
+            this.FitToHeightButton.MouseEnter += new System.EventHandler(this.FitToHeightButton_MouseEnter);
+            this.FitToHeightButton.MouseLeave += new System.EventHandler(this.FitToHeightButton_MouseLeave);
             // 
             // OnlyDisplayCategoryZoomLabel
             // 
@@ -440,6 +466,19 @@
             this.OnlyDisplayCategoryZoomLabel.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.OnlyDisplayCategoryZoomLabel.Name = "OnlyDisplayCategoryZoomLabel";
             this.OnlyDisplayCategoryZoomLabel.Size = new System.Drawing.Size(2, 40);
+            // 
+            // LogoButton
+            // 
+            this.LogoButton.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.LogoButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.LogoButton.Image = global::Cube.Properties.Resources.logo;
+            this.LogoButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.LogoButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.LogoButton.Margin = new System.Windows.Forms.Padding(0);
+            this.LogoButton.Name = "LogoButton";
+            this.LogoButton.Size = new System.Drawing.Size(119, 40);
+            this.LogoButton.Text = "CubeSoft の Web ページへ移動する";
+            this.LogoButton.Click += new System.EventHandler(this.LogoButton_Click);
             // 
             // MenuSplitContainer
             // 
@@ -590,7 +629,6 @@
         private System.Windows.Forms.CustomTabControl PageViewerTabControl;
         private System.Windows.Forms.TabPage DefaultTabPage;
         private System.Windows.Forms.ToolStripButton MenuModeButton;
-        private System.Windows.Forms.ToolStripLabel OnlyDisplayLogoLabel;
         private System.Windows.Forms.ToolStripButton OpenButton;
         private System.Windows.Forms.ToolStripButton FirstPageButton;
         private System.Windows.Forms.ToolStripLabel OnlyDisplayCategoryTotalPageLabel;
@@ -599,6 +637,7 @@
         private System.Windows.Forms.ToolStripLabel OnlyDisplayCategorySearchLabel;
         private System.Windows.Forms.ToolStripLabel OnlyDisplayCategoryZoomLabel;
         private System.Windows.Forms.ToolStripButton LastPageButton;
+        private System.Windows.Forms.ToolStripButton LogoButton;
     }
 }
 

@@ -134,6 +134,19 @@
   <ItemGroup>
     <Content Include="cube-soft.ico" />
     <Content Include="cubepdf-viewer.ico" />
+    <None Include="Resources\thumbnail_over.png" />
+    <None Include="Resources\zoomout_over.png" />
+    <None Include="Resources\zoomin_over.png" />
+    <None Include="Resources\search_over.png" />
+    <None Include="Resources\print_over.png" />
+    <None Include="Resources\open_over.png" />
+    <None Include="Resources\hidemenu_over.png" />
+    <None Include="Resources\fit2width_over.png" />
+    <None Include="Resources\fit2height_over.png" />
+    <None Include="Resources\arrow_prev_over.png" />
+    <None Include="Resources\arrow_next_over.png" />
+    <None Include="Resources\arrow_last_over.png" />
+    <None Include="Resources\arrow_first_over.png" />
     <None Include="Resources\cubepdf-viewer.ico" />
     <None Include="Resources\arrow_last.png" />
     <None Include="Resources\background_tab.png" />
