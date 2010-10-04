@@ -235,6 +235,20 @@ namespace Cube.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap logo_over {
+            get {
+                object obj = ResourceManager.GetObject("logo_over", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap logo_press {
+            get {
+                object obj = ResourceManager.GetObject("logo_press", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap newtab {
             get {
                 object obj = ResourceManager.GetObject("newtab", resourceCulture);

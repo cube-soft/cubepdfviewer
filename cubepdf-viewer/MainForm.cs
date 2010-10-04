@@ -1326,6 +1326,38 @@ namespace Cube {
         }
 
         /* ----------------------------------------------------------------- */
+        /// LogoButton_MouseEnter
+        /* ----------------------------------------------------------------- */
+        private void LogoButton_MouseEnter(object sender, EventArgs e) {
+            var control = (ToolStripButton)sender;
+            control.Image = Properties.Resources.logo_over;
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// LogoButton_MouseLeave
+        /* ----------------------------------------------------------------- */
+        private void LogoButton_MouseLeave(object sender, EventArgs e) {
+            var control = (ToolStripButton)sender;
+            control.Image = Properties.Resources.logo;
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// LogoButton_MouseDown
+        /* ----------------------------------------------------------------- */
+        private void LogoButton_MouseDown(object sender, MouseEventArgs e) {
+            var control = (ToolStripButton)sender;
+            control.Image = Properties.Resources.logo_press;
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// LogoButton_MouseUp
+        /* ----------------------------------------------------------------- */
+        private void LogoButton_MouseUp(object sender, MouseEventArgs e) {
+            var control = (ToolStripButton)sender;
+            control.Image = Properties.Resources.logo;
+        }
+
+        /* ----------------------------------------------------------------- */
         /// MenuModeButton_MouseEnter
         /* ----------------------------------------------------------------- */
         private void MenuModeButton_MouseEnter(object sender, EventArgs e) {

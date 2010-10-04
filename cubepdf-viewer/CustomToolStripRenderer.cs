@@ -29,10 +29,17 @@ namespace Cube {
     /// CustomToolStripRenderer
     /* --------------------------------------------------------------------- */
     class CustomToolStripRenderer : ToolStripProfessionalRenderer {
+
+        /* --------------------------------------------------------------------- */
+        /// OnRenderToolStripBorder
+        /* --------------------------------------------------------------------- */
         protected override void OnRenderToolStripBorder(ToolStripRenderEventArgs e) {
             // base.OnRenderToolStripBorder(e);
         }
 
+        /* --------------------------------------------------------------------- */
+        /// OnRenderButtonBackground
+        /* --------------------------------------------------------------------- */
         protected override void OnRenderButtonBackground(ToolStripItemRenderEventArgs e) {
             //base.OnRenderButtonBackground(e);
 
@@ -41,6 +48,23 @@ namespace Cube {
                 if (button.BackgroundImage != null) {
                     e.Graphics.DrawImage(button.BackgroundImage, new Point(0, 0));
                 }
+            }
+        }
+
+        /* --------------------------------------------------------------------- */
+        /// OnRenderDropDownButtonBackground
+        /* --------------------------------------------------------------------- */
+        protected override void OnRenderDropDownButtonBackground(ToolStripItemRenderEventArgs e) {
+            base.OnRenderDropDownButtonBackground(e);
+        }
+
+        protected override void OnRenderSeparator(ToolStripSeparatorRenderEventArgs e) {
+            //base.OnRenderSeparator(e);
+
+            var separator = e.Item as ToolStripSeparator;
+            if (separator != null) {
+                var pen = new Pen(Color.Black);
+                e.Graphics.DrawRectangle(pen, new Rectangle(0, 0, 1, separator.Height));
             }
         }
     }

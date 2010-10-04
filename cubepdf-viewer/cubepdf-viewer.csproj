@@ -133,6 +133,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="cubepdf-viewer.ico" />
+    <None Include="Resources\logo_press.png" />
+    <None Include="Resources\logo_over.png" />
     <None Include="Resources\zoomout_press.png" />
     <None Include="Resources\zoomin_press.png" />
     <None Include="Resources\thumbnail_press.png" />

@@ -29,7 +29,6 @@
             this.ThumbButton = new System.Windows.Forms.ToolStripButton();
             this.OpenButton = new System.Windows.Forms.ToolStripButton();
             this.PrintButton = new System.Windows.Forms.ToolStripButton();
-            this.OnlyDisplayCategoryPrintLabel = new System.Windows.Forms.ToolStripLabel();
             this.CurrentPageTextBox = new System.Windows.Forms.ToolStripTextBox();
             this.OnlyDisplayCategoryTotalPageLabel = new System.Windows.Forms.ToolStripLabel();
             this.TotalPageLabel = new System.Windows.Forms.ToolStripLabel();
@@ -37,10 +36,8 @@
             this.PreviousPageButton = new System.Windows.Forms.ToolStripButton();
             this.NextPageButton = new System.Windows.Forms.ToolStripButton();
             this.LastPageButton = new System.Windows.Forms.ToolStripButton();
-            this.OnlyDisplayCategoryPageLabel = new System.Windows.Forms.ToolStripLabel();
             this.SearchTextBox = new System.Windows.Forms.ToolStripTextBox();
             this.SearchButton = new System.Windows.Forms.ToolStripButton();
-            this.OnlyDisplayCategorySearchLabel = new System.Windows.Forms.ToolStripLabel();
             this.ZoomDropDownButton = new System.Windows.Forms.ToolStripDropDownButton();
             this.OnlyDisplayZoom25 = new System.Windows.Forms.ToolStripMenuItem();
             this.OnlyDisplayZoom50 = new System.Windows.Forms.ToolStripMenuItem();
@@ -53,12 +50,15 @@
             this.ZoomOutButton = new System.Windows.Forms.ToolStripButton();
             this.FitToWidthButton = new System.Windows.Forms.ToolStripButton();
             this.FitToHeightButton = new System.Windows.Forms.ToolStripButton();
-            this.OnlyDisplayCategoryZoomLabel = new System.Windows.Forms.ToolStripLabel();
             this.LogoButton = new System.Windows.Forms.ToolStripButton();
             this.MenuSplitContainer = new System.Windows.Forms.SplitContainer();
             this.NavigationSplitContainer = new System.Windows.Forms.SplitContainer();
             this.PageViewerTabControl = new System.Windows.Forms.CustomTabControl();
             this.DefaultTabPage = new System.Windows.Forms.TabPage();
+            this.OnlyDisplayCategoryFileSeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.OnlyDisplayCategoryPageSeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.OnlyDisplayCategorySearchSeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.OnlyDisplayCategoryZoomSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.MenuToolStrip.SuspendLayout();
             this.MenuSplitContainer.Panel1.SuspendLayout();
             this.MenuSplitContainer.Panel2.SuspendLayout();
@@ -81,7 +81,7 @@
             this.ThumbButton,
             this.OpenButton,
             this.PrintButton,
-            this.OnlyDisplayCategoryPrintLabel,
+            this.OnlyDisplayCategoryFileSeparator,
             this.CurrentPageTextBox,
             this.OnlyDisplayCategoryTotalPageLabel,
             this.TotalPageLabel,
@@ -89,17 +89,17 @@
             this.PreviousPageButton,
             this.NextPageButton,
             this.LastPageButton,
-            this.OnlyDisplayCategoryPageLabel,
+            this.OnlyDisplayCategoryPageSeparator,
             this.SearchTextBox,
             this.SearchButton,
-            this.OnlyDisplayCategorySearchLabel,
+            this.OnlyDisplayCategorySearchSeparator,
             this.ZoomDropDownButton,
             this.ZoomInButton,
             this.ZoomOutButton,
             this.FitToWidthButton,
             this.FitToHeightButton,
-            this.OnlyDisplayCategoryZoomLabel,
-            this.LogoButton});
+            this.LogoButton,
+            this.OnlyDisplayCategoryZoomSeparator});
             this.MenuToolStrip.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             this.MenuToolStrip.Location = new System.Drawing.Point(0, 0);
             this.MenuToolStrip.Name = "MenuToolStrip";
@@ -182,17 +182,6 @@
             this.PrintButton.MouseEnter += new System.EventHandler(this.PrintButton_MouseEnter);
             this.PrintButton.MouseLeave += new System.EventHandler(this.PrintButton_MouseLeave);
             this.PrintButton.MouseUp += new System.Windows.Forms.MouseEventHandler(this.PrintButton_MouseUp);
-            // 
-            // OnlyDisplayCategoryPrintLabel
-            // 
-            this.OnlyDisplayCategoryPrintLabel.AutoSize = false;
-            this.OnlyDisplayCategoryPrintLabel.BackColor = System.Drawing.Color.Transparent;
-            this.OnlyDisplayCategoryPrintLabel.BackgroundImage = global::Cube.Properties.Resources.split;
-            this.OnlyDisplayCategoryPrintLabel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.OnlyDisplayCategoryPrintLabel.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.None;
-            this.OnlyDisplayCategoryPrintLabel.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
-            this.OnlyDisplayCategoryPrintLabel.Name = "OnlyDisplayCategoryPrintLabel";
-            this.OnlyDisplayCategoryPrintLabel.Size = new System.Drawing.Size(2, 40);
             // 
             // CurrentPageTextBox
             // 
@@ -294,17 +283,6 @@
             this.LastPageButton.MouseLeave += new System.EventHandler(this.LastPageButton_MouseLeave);
             this.LastPageButton.MouseUp += new System.Windows.Forms.MouseEventHandler(this.LastPageButton_MouseUp);
             // 
-            // OnlyDisplayCategoryPageLabel
-            // 
-            this.OnlyDisplayCategoryPageLabel.AutoSize = false;
-            this.OnlyDisplayCategoryPageLabel.BackColor = System.Drawing.Color.Transparent;
-            this.OnlyDisplayCategoryPageLabel.BackgroundImage = global::Cube.Properties.Resources.split;
-            this.OnlyDisplayCategoryPageLabel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.OnlyDisplayCategoryPageLabel.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.None;
-            this.OnlyDisplayCategoryPageLabel.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
-            this.OnlyDisplayCategoryPageLabel.Name = "OnlyDisplayCategoryPageLabel";
-            this.OnlyDisplayCategoryPageLabel.Size = new System.Drawing.Size(2, 40);
-            // 
             // SearchTextBox
             // 
             this.SearchTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
@@ -333,17 +311,6 @@
             this.SearchButton.MouseLeave += new System.EventHandler(this.SearchButton_MouseLeave);
             this.SearchButton.MouseUp += new System.Windows.Forms.MouseEventHandler(this.SearchButton_MouseUp);
             // 
-            // OnlyDisplayCategorySearchLabel
-            // 
-            this.OnlyDisplayCategorySearchLabel.AutoSize = false;
-            this.OnlyDisplayCategorySearchLabel.BackColor = System.Drawing.Color.Transparent;
-            this.OnlyDisplayCategorySearchLabel.BackgroundImage = global::Cube.Properties.Resources.split;
-            this.OnlyDisplayCategorySearchLabel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.OnlyDisplayCategorySearchLabel.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.None;
-            this.OnlyDisplayCategorySearchLabel.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
-            this.OnlyDisplayCategorySearchLabel.Name = "OnlyDisplayCategorySearchLabel";
-            this.OnlyDisplayCategorySearchLabel.Size = new System.Drawing.Size(2, 40);
-            // 
             // ZoomDropDownButton
             // 
             this.ZoomDropDownButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
@@ -369,43 +336,43 @@
             // OnlyDisplayZoom25
             // 
             this.OnlyDisplayZoom25.Name = "OnlyDisplayZoom25";
-            this.OnlyDisplayZoom25.Size = new System.Drawing.Size(102, 22);
+            this.OnlyDisplayZoom25.Size = new System.Drawing.Size(152, 22);
             this.OnlyDisplayZoom25.Text = "25%";
             // 
             // OnlyDisplayZoom50
             // 
             this.OnlyDisplayZoom50.Name = "OnlyDisplayZoom50";
-            this.OnlyDisplayZoom50.Size = new System.Drawing.Size(102, 22);
+            this.OnlyDisplayZoom50.Size = new System.Drawing.Size(152, 22);
             this.OnlyDisplayZoom50.Text = "50%";
             // 
             // OnlyDisplayZoom75
             // 
             this.OnlyDisplayZoom75.Name = "OnlyDisplayZoom75";
-            this.OnlyDisplayZoom75.Size = new System.Drawing.Size(102, 22);
+            this.OnlyDisplayZoom75.Size = new System.Drawing.Size(152, 22);
             this.OnlyDisplayZoom75.Text = "75%";
             // 
             // OnlyDisplayZoom100
             // 
             this.OnlyDisplayZoom100.Name = "OnlyDisplayZoom100";
-            this.OnlyDisplayZoom100.Size = new System.Drawing.Size(102, 22);
+            this.OnlyDisplayZoom100.Size = new System.Drawing.Size(152, 22);
             this.OnlyDisplayZoom100.Text = "100%";
             // 
             // OnlyDisplayZoom125
             // 
             this.OnlyDisplayZoom125.Name = "OnlyDisplayZoom125";
-            this.OnlyDisplayZoom125.Size = new System.Drawing.Size(102, 22);
+            this.OnlyDisplayZoom125.Size = new System.Drawing.Size(152, 22);
             this.OnlyDisplayZoom125.Text = "125%";
             // 
             // OnlyDisplayZoom150
             // 
             this.OnlyDisplayZoom150.Name = "OnlyDisplayZoom150";
-            this.OnlyDisplayZoom150.Size = new System.Drawing.Size(102, 22);
+            this.OnlyDisplayZoom150.Size = new System.Drawing.Size(152, 22);
             this.OnlyDisplayZoom150.Text = "150%";
             // 
             // OnlyDisplayZoom200
             // 
             this.OnlyDisplayZoom200.Name = "OnlyDisplayZoom200";
-            this.OnlyDisplayZoom200.Size = new System.Drawing.Size(102, 22);
+            this.OnlyDisplayZoom200.Size = new System.Drawing.Size(152, 22);
             this.OnlyDisplayZoom200.Text = "200%";
             // 
             // ZoomInButton
@@ -484,20 +451,10 @@
             this.FitToHeightButton.MouseLeave += new System.EventHandler(this.FitToHeightButton_MouseLeave);
             this.FitToHeightButton.MouseUp += new System.Windows.Forms.MouseEventHandler(this.FitToHeightButton_MouseUp);
             // 
-            // OnlyDisplayCategoryZoomLabel
-            // 
-            this.OnlyDisplayCategoryZoomLabel.AutoSize = false;
-            this.OnlyDisplayCategoryZoomLabel.BackColor = System.Drawing.Color.Transparent;
-            this.OnlyDisplayCategoryZoomLabel.BackgroundImage = global::Cube.Properties.Resources.split;
-            this.OnlyDisplayCategoryZoomLabel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.OnlyDisplayCategoryZoomLabel.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.None;
-            this.OnlyDisplayCategoryZoomLabel.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
-            this.OnlyDisplayCategoryZoomLabel.Name = "OnlyDisplayCategoryZoomLabel";
-            this.OnlyDisplayCategoryZoomLabel.Size = new System.Drawing.Size(2, 40);
-            // 
             // LogoButton
             // 
             this.LogoButton.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.LogoButton.AutoSize = false;
             this.LogoButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.LogoButton.Image = global::Cube.Properties.Resources.logo;
             this.LogoButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
@@ -507,6 +464,10 @@
             this.LogoButton.Size = new System.Drawing.Size(119, 40);
             this.LogoButton.Text = "CubeSoft の Web ページへ移動する";
             this.LogoButton.Click += new System.EventHandler(this.LogoButton_Click);
+            this.LogoButton.MouseDown += new System.Windows.Forms.MouseEventHandler(this.LogoButton_MouseDown);
+            this.LogoButton.MouseEnter += new System.EventHandler(this.LogoButton_MouseEnter);
+            this.LogoButton.MouseLeave += new System.EventHandler(this.LogoButton_MouseLeave);
+            this.LogoButton.MouseUp += new System.Windows.Forms.MouseEventHandler(this.LogoButton_MouseUp);
             // 
             // MenuSplitContainer
             // 
@@ -546,7 +507,7 @@
             // 
             // NavigationSplitContainer.Panel2
             // 
-            this.NavigationSplitContainer.Panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
+            this.NavigationSplitContainer.Panel2.BackColor = System.Drawing.Color.LightGray;
             this.NavigationSplitContainer.Panel2.BackgroundImage = global::Cube.Properties.Resources.background_tab;
             this.NavigationSplitContainer.Panel2.Controls.Add(this.PageViewerTabControl);
             this.NavigationSplitContainer.Size = new System.Drawing.Size(892, 532);
@@ -601,6 +562,30 @@
             this.DefaultTabPage.Scroll += new System.Windows.Forms.ScrollEventHandler(this.VerticalScrolled);
             this.DefaultTabPage.DragDrop += new System.Windows.Forms.DragEventHandler(this.TabPage_DragDrop);
             this.DefaultTabPage.DragEnter += new System.Windows.Forms.DragEventHandler(this.TabPage_DragEnter);
+            // 
+            // OnlyDisplayCategoryFileSeparator
+            // 
+            this.OnlyDisplayCategoryFileSeparator.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
+            this.OnlyDisplayCategoryFileSeparator.Name = "OnlyDisplayCategoryFileSeparator";
+            this.OnlyDisplayCategoryFileSeparator.Size = new System.Drawing.Size(6, 40);
+            // 
+            // OnlyDisplayCategoryPageSeparator
+            // 
+            this.OnlyDisplayCategoryPageSeparator.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
+            this.OnlyDisplayCategoryPageSeparator.Name = "OnlyDisplayCategoryPageSeparator";
+            this.OnlyDisplayCategoryPageSeparator.Size = new System.Drawing.Size(6, 40);
+            // 
+            // OnlyDisplayCategorySearchSeparator
+            // 
+            this.OnlyDisplayCategorySearchSeparator.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
+            this.OnlyDisplayCategorySearchSeparator.Name = "OnlyDisplayCategorySearchSeparator";
+            this.OnlyDisplayCategorySearchSeparator.Size = new System.Drawing.Size(6, 40);
+            // 
+            // OnlyDisplayCategoryZoomSeparator
+            // 
+            this.OnlyDisplayCategoryZoomSeparator.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
+            this.OnlyDisplayCategoryZoomSeparator.Name = "OnlyDisplayCategoryZoomSeparator";
+            this.OnlyDisplayCategoryZoomSeparator.Size = new System.Drawing.Size(6, 40);
             // 
             // MainForm
             // 
@@ -659,12 +644,12 @@
         private System.Windows.Forms.ToolStripButton OpenButton;
         private System.Windows.Forms.ToolStripButton FirstPageButton;
         private System.Windows.Forms.ToolStripLabel OnlyDisplayCategoryTotalPageLabel;
-        private System.Windows.Forms.ToolStripLabel OnlyDisplayCategoryPrintLabel;
-        private System.Windows.Forms.ToolStripLabel OnlyDisplayCategoryPageLabel;
-        private System.Windows.Forms.ToolStripLabel OnlyDisplayCategorySearchLabel;
-        private System.Windows.Forms.ToolStripLabel OnlyDisplayCategoryZoomLabel;
         private System.Windows.Forms.ToolStripButton LastPageButton;
         private System.Windows.Forms.ToolStripButton LogoButton;
+        private System.Windows.Forms.ToolStripSeparator OnlyDisplayCategoryFileSeparator;
+        private System.Windows.Forms.ToolStripSeparator OnlyDisplayCategoryPageSeparator;
+        private System.Windows.Forms.ToolStripSeparator OnlyDisplayCategorySearchSeparator;
+        private System.Windows.Forms.ToolStripSeparator OnlyDisplayCategoryZoomSeparator;
     }
 }
 
