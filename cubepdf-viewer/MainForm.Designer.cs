@@ -229,6 +229,7 @@
             this.FirstPageButton.Name = "FirstPageButton";
             this.FirstPageButton.Size = new System.Drawing.Size(35, 40);
             this.FirstPageButton.Text = "toolStripButton1";
+            this.FirstPageButton.Click += new System.EventHandler(this.FirstPageButton_Click);
             this.FirstPageButton.MouseEnter += new System.EventHandler(this.FirstPageButton_MouseEnter);
             this.FirstPageButton.MouseLeave += new System.EventHandler(this.FirstPageButton_MouseLeave);
             // 
@@ -275,6 +276,7 @@
             this.LastPageButton.Name = "LastPageButton";
             this.LastPageButton.Size = new System.Drawing.Size(35, 40);
             this.LastPageButton.Text = "toolStripButton1";
+            this.LastPageButton.Click += new System.EventHandler(this.LastPageButton_Click);
             this.LastPageButton.MouseEnter += new System.EventHandler(this.LastPageButton_MouseEnter);
             this.LastPageButton.MouseLeave += new System.EventHandler(this.LastPageButton_MouseLeave);
             // 
