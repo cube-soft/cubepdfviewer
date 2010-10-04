@@ -437,6 +437,7 @@
             this.FitToWidthButton.Name = "FitToWidthButton";
             this.FitToWidthButton.Size = new System.Drawing.Size(37, 40);
             this.FitToWidthButton.Text = "ウィンドウの幅に合わせる";
+            this.FitToWidthButton.CheckedChanged += new System.EventHandler(this.FitToWidthButton_CheckedChanged);
             this.FitToWidthButton.Click += new System.EventHandler(this.FitToWidthButton_Click);
             this.FitToWidthButton.MouseEnter += new System.EventHandler(this.FitToWidthButton_MouseEnter);
             this.FitToWidthButton.MouseLeave += new System.EventHandler(this.FitToWidthButton_MouseLeave);
@@ -454,6 +455,7 @@
             this.FitToHeightButton.Name = "FitToHeightButton";
             this.FitToHeightButton.Size = new System.Drawing.Size(37, 40);
             this.FitToHeightButton.Text = "ウィンドウの高さに合わせる";
+            this.FitToHeightButton.CheckedChanged += new System.EventHandler(this.FitToHeightButton_CheckedChanged);
             this.FitToHeightButton.Click += new System.EventHandler(this.FitToHeightButton_Click);
             this.FitToHeightButton.MouseEnter += new System.EventHandler(this.FitToHeightButton_MouseEnter);
             this.FitToHeightButton.MouseLeave += new System.EventHandler(this.FitToHeightButton_MouseLeave);

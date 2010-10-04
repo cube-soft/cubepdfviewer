@@ -22,6 +22,7 @@
 /* ------------------------------------------------------------------------- */
 using System;
 using System.Windows.Forms;
+using System.Drawing;
 
 namespace Cube {
     /* --------------------------------------------------------------------- */
@@ -30,6 +31,17 @@ namespace Cube {
     class CustomToolStripRenderer : ToolStripProfessionalRenderer {
         protected override void OnRenderToolStripBorder(ToolStripRenderEventArgs e) {
             // base.OnRenderToolStripBorder(e);
+        }
+
+        protected override void OnRenderButtonBackground(ToolStripItemRenderEventArgs e) {
+            //base.OnRenderButtonBackground(e);
+
+            var button = e.Item as ToolStripButton;
+            if (button != null) {
+                if (button.BackgroundImage != null) {
+                    e.Graphics.DrawImage(button.BackgroundImage, new Point(0, 0));
+                }
+            }
         }
     }
 }

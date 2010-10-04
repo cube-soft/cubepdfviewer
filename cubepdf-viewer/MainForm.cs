@@ -1105,7 +1105,16 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         private void FitToWidthButton_MouseLeave(object sender, EventArgs e) {
             var control = (ToolStripButton)sender;
-            control.Image = Properties.Resources.fit2width;
+            if (!control.Checked) control.Image = Properties.Resources.fit2width;
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// FitToWidthButton_CheckedChanged
+        /* ----------------------------------------------------------------- */
+        private void FitToWidthButton_CheckedChanged(object sender, EventArgs e) {
+            var control = (ToolStripButton)sender;
+            if (control.Checked) control.Image = Properties.Resources.fit2width_over;
+            else control.Image = Properties.Resources.fit2width;
         }
 
         /* ----------------------------------------------------------------- */
@@ -1121,7 +1130,16 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         private void FitToHeightButton_MouseLeave(object sender, EventArgs e) {
             var control = (ToolStripButton)sender;
-            control.Image = Properties.Resources.fit2height;
+            if (!control.Checked) control.Image = Properties.Resources.fit2height;
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// FitToHeightButton_CheckedChanged
+        /* ----------------------------------------------------------------- */
+        private void FitToHeightButton_CheckedChanged(object sender, EventArgs e) {
+            var control = (ToolStripButton)sender;
+            if (control.Checked) control.Image = Properties.Resources.fit2height_over;
+            else control.Image = Properties.Resources.fit2height;
         }
 
         /* ----------------------------------------------------------------- */
@@ -1167,6 +1185,5 @@ namespace Cube {
         private int wheel_counter_ = 0;
         private Point pos_;
         #endregion
-
     }
 }

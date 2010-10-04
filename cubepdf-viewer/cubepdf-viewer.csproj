@@ -132,7 +132,6 @@
     <None Include="Resources\zoomout.png" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="cube-soft.ico" />
     <Content Include="cubepdf-viewer.ico" />
     <None Include="Resources\thumbnail_over.png" />
     <None Include="Resources\zoomout_over.png" />
