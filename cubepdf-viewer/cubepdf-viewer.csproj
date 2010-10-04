@@ -35,7 +35,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>cube-soft.ico</ApplicationIcon>
+    <ApplicationIcon>cubepdf-viewer.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
@@ -109,7 +109,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <None Include="app.config" />
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -122,7 +124,6 @@
     <None Include="Resources\arrow_first.png" />
     <None Include="Resources\arrow_next.png" />
     <None Include="Resources\arrow_prev.png" />
-    <None Include="Resources\cube-soft.ico" />
     <None Include="Resources\fit2height.png" />
     <None Include="Resources\fit2width.png" />
     <None Include="Resources\open.png" />
@@ -132,6 +133,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="cube-soft.ico" />
+    <Content Include="cubepdf-viewer.ico" />
+    <None Include="Resources\cubepdf-viewer.ico" />
     <None Include="Resources\arrow_last.png" />
     <None Include="Resources\background_tab.png" />
     <None Include="Resources\split.png" />

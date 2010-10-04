@@ -102,9 +102,9 @@ namespace Cube.Properties {
             }
         }
         
-        internal static System.Drawing.Icon cube_soft {
+        internal static System.Drawing.Icon cubepdf_viewer {
             get {
-                object obj = ResourceManager.GetObject("cube_soft", resourceCulture);
+                object obj = ResourceManager.GetObject("cubepdf_viewer", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
             }
         }
