@@ -27,9 +27,7 @@
             this.MenuToolStrip = new System.Windows.Forms.ToolStrip();
             this.MenuModeButton = new System.Windows.Forms.ToolStripButton();
             this.ThumbButton = new System.Windows.Forms.ToolStripButton();
-            this.NewTabButton = new System.Windows.Forms.ToolStripButton();
             this.OpenButton = new System.Windows.Forms.ToolStripButton();
-            this.OnlyDisplayCategoryFileLabel = new System.Windows.Forms.ToolStripLabel();
             this.PrintButton = new System.Windows.Forms.ToolStripButton();
             this.OnlyDisplayCategoryPrintLabel = new System.Windows.Forms.ToolStripLabel();
             this.CurrentPageTextBox = new System.Windows.Forms.ToolStripTextBox();
@@ -38,6 +36,7 @@
             this.FirstPageButton = new System.Windows.Forms.ToolStripButton();
             this.PreviousPageButton = new System.Windows.Forms.ToolStripButton();
             this.NextPageButton = new System.Windows.Forms.ToolStripButton();
+            this.LastPageButton = new System.Windows.Forms.ToolStripButton();
             this.OnlyDisplayCategoryPageLabel = new System.Windows.Forms.ToolStripLabel();
             this.SearchTextBox = new System.Windows.Forms.ToolStripTextBox();
             this.SearchButton = new System.Windows.Forms.ToolStripButton();
@@ -80,9 +79,7 @@
             this.MenuToolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.MenuModeButton,
             this.ThumbButton,
-            this.NewTabButton,
             this.OpenButton,
-            this.OnlyDisplayCategoryFileLabel,
             this.PrintButton,
             this.OnlyDisplayCategoryPrintLabel,
             this.CurrentPageTextBox,
@@ -91,6 +88,7 @@
             this.FirstPageButton,
             this.PreviousPageButton,
             this.NextPageButton,
+            this.LastPageButton,
             this.OnlyDisplayCategoryPageLabel,
             this.SearchTextBox,
             this.SearchButton,
@@ -143,19 +141,6 @@
             this.ThumbButton.Text = "サムネイル表示の切り替え";
             this.ThumbButton.Click += new System.EventHandler(this.ThumbButton_Click);
             // 
-            // NewTabButton
-            // 
-            this.NewTabButton.BackColor = System.Drawing.Color.Transparent;
-            this.NewTabButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.NewTabButton.Image = global::Cube.Properties.Resources.newtab;
-            this.NewTabButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.NewTabButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.NewTabButton.Margin = new System.Windows.Forms.Padding(10, 0, -2, 0);
-            this.NewTabButton.Name = "NewTabButton";
-            this.NewTabButton.Size = new System.Drawing.Size(37, 40);
-            this.NewTabButton.Text = "新しいタブ";
-            this.NewTabButton.Click += new System.EventHandler(this.NewTabButton_Click);
-            // 
             // OpenButton
             // 
             this.OpenButton.BackColor = System.Drawing.Color.Transparent;
@@ -163,22 +148,11 @@
             this.OpenButton.Image = global::Cube.Properties.Resources.open;
             this.OpenButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.OpenButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.OpenButton.Margin = new System.Windows.Forms.Padding(-2, 0, 0, 0);
+            this.OpenButton.Margin = new System.Windows.Forms.Padding(5, 0, 0, 0);
             this.OpenButton.Name = "OpenButton";
-            this.OpenButton.Size = new System.Drawing.Size(37, 40);
+            this.OpenButton.Size = new System.Drawing.Size(36, 40);
             this.OpenButton.Text = "開く";
             this.OpenButton.Click += new System.EventHandler(this.OpenButton_Click);
-            // 
-            // OnlyDisplayCategoryFileLabel
-            // 
-            this.OnlyDisplayCategoryFileLabel.AutoSize = false;
-            this.OnlyDisplayCategoryFileLabel.BackColor = System.Drawing.Color.Black;
-            this.OnlyDisplayCategoryFileLabel.BackgroundImage = global::Cube.Properties.Resources.split;
-            this.OnlyDisplayCategoryFileLabel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.OnlyDisplayCategoryFileLabel.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.None;
-            this.OnlyDisplayCategoryFileLabel.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
-            this.OnlyDisplayCategoryFileLabel.Name = "OnlyDisplayCategoryFileLabel";
-            this.OnlyDisplayCategoryFileLabel.Size = new System.Drawing.Size(2, 40);
             // 
             // PrintButton
             // 
@@ -189,7 +163,7 @@
             this.PrintButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.PrintButton.Margin = new System.Windows.Forms.Padding(0);
             this.PrintButton.Name = "PrintButton";
-            this.PrintButton.Size = new System.Drawing.Size(35, 40);
+            this.PrintButton.Size = new System.Drawing.Size(36, 40);
             this.PrintButton.Text = "印刷する";
             this.PrintButton.Click += new System.EventHandler(this.PrintButton_Click);
             // 
@@ -240,9 +214,9 @@
             this.FirstPageButton.Image = global::Cube.Properties.Resources.arrow_first;
             this.FirstPageButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.FirstPageButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.FirstPageButton.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.FirstPageButton.Margin = new System.Windows.Forms.Padding(2, 0, -2, 0);
             this.FirstPageButton.Name = "FirstPageButton";
-            this.FirstPageButton.Size = new System.Drawing.Size(34, 40);
+            this.FirstPageButton.Size = new System.Drawing.Size(35, 40);
             this.FirstPageButton.Text = "toolStripButton1";
             // 
             // PreviousPageButton
@@ -252,9 +226,9 @@
             this.PreviousPageButton.Image = global::Cube.Properties.Resources.arrow_prev;
             this.PreviousPageButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.PreviousPageButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.PreviousPageButton.Margin = new System.Windows.Forms.Padding(0, 0, -2, 0);
+            this.PreviousPageButton.Margin = new System.Windows.Forms.Padding(-2, 0, -2, 0);
             this.PreviousPageButton.Name = "PreviousPageButton";
-            this.PreviousPageButton.Size = new System.Drawing.Size(36, 40);
+            this.PreviousPageButton.Size = new System.Drawing.Size(35, 40);
             this.PreviousPageButton.Text = "前のページ";
             this.PreviousPageButton.Click += new System.EventHandler(this.PreviousPageButton_Click);
             // 
@@ -265,11 +239,22 @@
             this.NextPageButton.Image = global::Cube.Properties.Resources.arrow_next;
             this.NextPageButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.NextPageButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.NextPageButton.Margin = new System.Windows.Forms.Padding(-2, 0, 5, 0);
+            this.NextPageButton.Margin = new System.Windows.Forms.Padding(-2, 0, -2, 0);
             this.NextPageButton.Name = "NextPageButton";
-            this.NextPageButton.Size = new System.Drawing.Size(36, 40);
+            this.NextPageButton.Size = new System.Drawing.Size(35, 40);
             this.NextPageButton.Text = "次のページ";
             this.NextPageButton.Click += new System.EventHandler(this.NextPageButton_Click);
+            // 
+            // LastPageButton
+            // 
+            this.LastPageButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.LastPageButton.Image = global::Cube.Properties.Resources.arrow_last;
+            this.LastPageButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.LastPageButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.LastPageButton.Margin = new System.Windows.Forms.Padding(-2, 0, 0, 0);
+            this.LastPageButton.Name = "LastPageButton";
+            this.LastPageButton.Size = new System.Drawing.Size(35, 40);
+            this.LastPageButton.Text = "toolStripButton1";
             // 
             // OnlyDisplayCategoryPageLabel
             // 
@@ -285,7 +270,8 @@
             // SearchTextBox
             // 
             this.SearchTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.SearchTextBox.Margin = new System.Windows.Forms.Padding(5, 0, -1, 0);
+            this.SearchTextBox.Font = new System.Drawing.Font("MS UI Gothic", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.SearchTextBox.Margin = new System.Windows.Forms.Padding(0, 0, -1, 0);
             this.SearchTextBox.Name = "SearchTextBox";
             this.SearchTextBox.Size = new System.Drawing.Size(100, 40);
             this.SearchTextBox.TextChanged += new System.EventHandler(this.SearchTextBox_TextChanged);
@@ -387,7 +373,7 @@
             this.ZoomInButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.ZoomInButton.Margin = new System.Windows.Forms.Padding(0, 0, -2, 0);
             this.ZoomInButton.Name = "ZoomInButton";
-            this.ZoomInButton.Size = new System.Drawing.Size(36, 40);
+            this.ZoomInButton.Size = new System.Drawing.Size(37, 40);
             this.ZoomInButton.Text = "拡大する";
             this.ZoomInButton.Click += new System.EventHandler(this.ZoomInButton_Click);
             // 
@@ -400,7 +386,7 @@
             this.ZoomOutButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.ZoomOutButton.Margin = new System.Windows.Forms.Padding(-2, 0, 0, 0);
             this.ZoomOutButton.Name = "ZoomOutButton";
-            this.ZoomOutButton.Size = new System.Drawing.Size(36, 40);
+            this.ZoomOutButton.Size = new System.Drawing.Size(37, 40);
             this.ZoomOutButton.Text = "縮小する";
             this.ZoomOutButton.Click += new System.EventHandler(this.ZoomOutButton_Click);
             // 
@@ -414,7 +400,7 @@
             this.FitToWidthButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.FitToWidthButton.Margin = new System.Windows.Forms.Padding(0, 0, -2, 0);
             this.FitToWidthButton.Name = "FitToWidthButton";
-            this.FitToWidthButton.Size = new System.Drawing.Size(36, 40);
+            this.FitToWidthButton.Size = new System.Drawing.Size(37, 40);
             this.FitToWidthButton.Text = "ウィンドウの幅に合わせる";
             this.FitToWidthButton.Click += new System.EventHandler(this.FitToWidthButton_Click);
             // 
@@ -428,7 +414,7 @@
             this.FitToHeightButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.FitToHeightButton.Margin = new System.Windows.Forms.Padding(-2, 0, 0, 0);
             this.FitToHeightButton.Name = "FitToHeightButton";
-            this.FitToHeightButton.Size = new System.Drawing.Size(36, 40);
+            this.FitToHeightButton.Size = new System.Drawing.Size(37, 40);
             this.FitToHeightButton.Text = "ウィンドウの高さに合わせる";
             this.FitToHeightButton.Click += new System.EventHandler(this.FitToHeightButton_Click);
             // 
@@ -532,11 +518,10 @@
             this.PageViewerTabControl.TabIndex = 0;
             this.PageViewerTabControl.TabClosing += new System.EventHandler<System.Windows.Forms.TabControlCancelEventArgs>(this.PageViewerTabControl_TabClosing);
             this.PageViewerTabControl.SelectedIndexChanged += new System.EventHandler(this.PageViewerTabControl_SelectedIndexChanged);
-            this.PageViewerTabControl.DragDrop += new System.Windows.Forms.DragEventHandler(this.PageViewerTabControl_DragDrop);
-            this.PageViewerTabControl.DragEnter += new System.Windows.Forms.DragEventHandler(this.PageViewerTabControl_DragEnter);
             // 
             // DefaultTabPage
             // 
+            this.DefaultTabPage.AllowDrop = true;
             this.DefaultTabPage.AutoScroll = true;
             this.DefaultTabPage.BackColor = System.Drawing.Color.DimGray;
             this.DefaultTabPage.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
@@ -547,6 +532,8 @@
             this.DefaultTabPage.TabIndex = 0;
             this.DefaultTabPage.Text = "(無題)";
             this.DefaultTabPage.Scroll += new System.Windows.Forms.ScrollEventHandler(this.VerticalScrolled);
+            this.DefaultTabPage.DragDrop += new System.Windows.Forms.DragEventHandler(this.TabPage_DragDrop);
+            this.DefaultTabPage.DragEnter += new System.Windows.Forms.DragEventHandler(this.TabPage_DragEnter);
             // 
             // MainForm
             // 
@@ -603,14 +590,13 @@
         private System.Windows.Forms.ToolStripButton MenuModeButton;
         private System.Windows.Forms.ToolStripLabel OnlyDisplayLogoLabel;
         private System.Windows.Forms.ToolStripButton OpenButton;
-        private System.Windows.Forms.ToolStripButton NewTabButton;
         private System.Windows.Forms.ToolStripButton FirstPageButton;
         private System.Windows.Forms.ToolStripLabel OnlyDisplayCategoryTotalPageLabel;
-        private System.Windows.Forms.ToolStripLabel OnlyDisplayCategoryFileLabel;
         private System.Windows.Forms.ToolStripLabel OnlyDisplayCategoryPrintLabel;
         private System.Windows.Forms.ToolStripLabel OnlyDisplayCategoryPageLabel;
         private System.Windows.Forms.ToolStripLabel OnlyDisplayCategorySearchLabel;
         private System.Windows.Forms.ToolStripLabel OnlyDisplayCategoryZoomLabel;
+        private System.Windows.Forms.ToolStripButton LastPageButton;
     }
 }
 

@@ -271,6 +271,8 @@ namespace Cube {
             tab.ContextMenuStrip = new ContextMenuStrip();
             tab.Text = "(無題)";
             tab.Scroll += new ScrollEventHandler(VerticalScrolled);
+            tab.DragEnter += new DragEventHandler(TabPage_DragEnter);
+            tab.DragDrop += new DragEventHandler(TabPage_DragDrop);
             parent.Controls.Add(tab);
             parent.SelectedIndex = parent.TabCount - 1;
 
@@ -817,25 +819,26 @@ namespace Cube {
         }
 
         /* ----------------------------------------------------------------- */
-        /// PageViewerTabControl_DragEnter
+        /// TabPage_DragEnter
         /* ----------------------------------------------------------------- */
-        private void PageViewerTabControl_DragEnter(object sender, DragEventArgs e) {
+        private void TabPage_DragEnter(object sender, DragEventArgs e) {
             if (e.Data.GetDataPresent(DataFormats.FileDrop)) e.Effect = DragDropEffects.All;
             else e.Effect = DragDropEffects.None;
         }
 
         /* ----------------------------------------------------------------- */
-        /// PageViewerTabControl_DragDrop
+        /// TabPage_DragDrop
         /* ----------------------------------------------------------------- */
-        private void PageViewerTabControl_DragDrop(object sender, DragEventArgs e) {
-            var control = (TabControl)sender;
+        private void TabPage_DragDrop(object sender, DragEventArgs e) {
+            var tab = (TabPage)sender;
+            var control = (TabControl)tab.Parent;
 
             bool current = true;
             if (e.Data.GetDataPresent(DataFormats.FileDrop)) {
                 var files = (string[])e.Data.GetData(DataFormats.FileDrop);
                 foreach (var path in files) {
                     if (System.IO.Path.GetExtension(path).ToLower() != ".pdf") continue;
-                    var tab = current ? control.SelectedTab : this.CreateTab(control);
+                    tab = current ? control.SelectedTab : this.CreateTab(control);
                     current = false;
                     this.Open(tab, path);
                 }
