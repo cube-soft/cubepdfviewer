@@ -142,8 +142,10 @@
             this.ThumbButton.Size = new System.Drawing.Size(28, 40);
             this.ThumbButton.Text = "サムネイル表示の切り替え";
             this.ThumbButton.Click += new System.EventHandler(this.ThumbButton_Click);
+            this.ThumbButton.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ThumbButton_MouseDown);
             this.ThumbButton.MouseEnter += new System.EventHandler(this.ThumbButton_MouseEnter);
             this.ThumbButton.MouseLeave += new System.EventHandler(this.ThumbButton_MouseLeave);
+            this.ThumbButton.MouseUp += new System.Windows.Forms.MouseEventHandler(this.ThumbButton_MouseUp);
             // 
             // OpenButton
             // 
@@ -158,8 +160,10 @@
             this.OpenButton.Size = new System.Drawing.Size(36, 40);
             this.OpenButton.Text = "開く";
             this.OpenButton.Click += new System.EventHandler(this.OpenButton_Click);
+            this.OpenButton.MouseDown += new System.Windows.Forms.MouseEventHandler(this.OpenButton_MouseDown);
             this.OpenButton.MouseEnter += new System.EventHandler(this.OpenButton_MouseEnter);
             this.OpenButton.MouseLeave += new System.EventHandler(this.OpenButton_MouseLeave);
+            this.OpenButton.MouseUp += new System.Windows.Forms.MouseEventHandler(this.OpenButton_MouseUp);
             // 
             // PrintButton
             // 
@@ -174,8 +178,10 @@
             this.PrintButton.Size = new System.Drawing.Size(36, 40);
             this.PrintButton.Text = "印刷する";
             this.PrintButton.Click += new System.EventHandler(this.PrintButton_Click);
+            this.PrintButton.MouseDown += new System.Windows.Forms.MouseEventHandler(this.PrintButton_MouseDown);
             this.PrintButton.MouseEnter += new System.EventHandler(this.PrintButton_MouseEnter);
             this.PrintButton.MouseLeave += new System.EventHandler(this.PrintButton_MouseLeave);
+            this.PrintButton.MouseUp += new System.Windows.Forms.MouseEventHandler(this.PrintButton_MouseUp);
             // 
             // OnlyDisplayCategoryPrintLabel
             // 
@@ -230,8 +236,10 @@
             this.FirstPageButton.Size = new System.Drawing.Size(35, 40);
             this.FirstPageButton.Text = "toolStripButton1";
             this.FirstPageButton.Click += new System.EventHandler(this.FirstPageButton_Click);
+            this.FirstPageButton.MouseDown += new System.Windows.Forms.MouseEventHandler(this.FirstPageButton_MouseDown);
             this.FirstPageButton.MouseEnter += new System.EventHandler(this.FirstPageButton_MouseEnter);
             this.FirstPageButton.MouseLeave += new System.EventHandler(this.FirstPageButton_MouseLeave);
+            this.FirstPageButton.MouseUp += new System.Windows.Forms.MouseEventHandler(this.FirstPageButton_MouseUp);
             // 
             // PreviousPageButton
             // 
@@ -246,8 +254,10 @@
             this.PreviousPageButton.Size = new System.Drawing.Size(35, 40);
             this.PreviousPageButton.Text = "前のページ";
             this.PreviousPageButton.Click += new System.EventHandler(this.PreviousPageButton_Click);
+            this.PreviousPageButton.MouseDown += new System.Windows.Forms.MouseEventHandler(this.PreviousPageButton_MouseDown);
             this.PreviousPageButton.MouseEnter += new System.EventHandler(this.PreviousPageButton_MouseEnter);
             this.PreviousPageButton.MouseLeave += new System.EventHandler(this.PreviousPageButton_MouseLeave);
+            this.PreviousPageButton.MouseUp += new System.Windows.Forms.MouseEventHandler(this.PreviousPageButton_MouseUp);
             // 
             // NextPageButton
             // 
@@ -262,8 +272,10 @@
             this.NextPageButton.Size = new System.Drawing.Size(35, 40);
             this.NextPageButton.Text = "次のページ";
             this.NextPageButton.Click += new System.EventHandler(this.NextPageButton_Click);
+            this.NextPageButton.MouseDown += new System.Windows.Forms.MouseEventHandler(this.NextPageButton_MouseDown);
             this.NextPageButton.MouseEnter += new System.EventHandler(this.NextPageButton_MouseEnter);
             this.NextPageButton.MouseLeave += new System.EventHandler(this.NextPageButton_MouseLeave);
+            this.NextPageButton.MouseUp += new System.Windows.Forms.MouseEventHandler(this.NextPageButton_MouseUp);
             // 
             // LastPageButton
             // 
@@ -277,8 +289,10 @@
             this.LastPageButton.Size = new System.Drawing.Size(35, 40);
             this.LastPageButton.Text = "toolStripButton1";
             this.LastPageButton.Click += new System.EventHandler(this.LastPageButton_Click);
+            this.LastPageButton.MouseDown += new System.Windows.Forms.MouseEventHandler(this.LastPageButton_MouseDown);
             this.LastPageButton.MouseEnter += new System.EventHandler(this.LastPageButton_MouseEnter);
             this.LastPageButton.MouseLeave += new System.EventHandler(this.LastPageButton_MouseLeave);
+            this.LastPageButton.MouseUp += new System.Windows.Forms.MouseEventHandler(this.LastPageButton_MouseUp);
             // 
             // OnlyDisplayCategoryPageLabel
             // 
@@ -314,8 +328,10 @@
             this.SearchButton.Size = new System.Drawing.Size(25, 40);
             this.SearchButton.Text = "検索する";
             this.SearchButton.Click += new System.EventHandler(this.SearchButton_Click);
+            this.SearchButton.MouseDown += new System.Windows.Forms.MouseEventHandler(this.SearchButton_MouseDown);
             this.SearchButton.MouseEnter += new System.EventHandler(this.SearchButton_MouseEnter);
             this.SearchButton.MouseLeave += new System.EventHandler(this.SearchButton_MouseLeave);
+            this.SearchButton.MouseUp += new System.Windows.Forms.MouseEventHandler(this.SearchButton_MouseUp);
             // 
             // OnlyDisplayCategorySearchLabel
             // 
@@ -405,8 +421,10 @@
             this.ZoomInButton.Size = new System.Drawing.Size(37, 40);
             this.ZoomInButton.Text = "拡大する";
             this.ZoomInButton.Click += new System.EventHandler(this.ZoomInButton_Click);
+            this.ZoomInButton.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ZoomInButton_MouseDown);
             this.ZoomInButton.MouseEnter += new System.EventHandler(this.ZoomInButton_MouseEnter);
             this.ZoomInButton.MouseLeave += new System.EventHandler(this.ZoomInButton_MouseLeave);
+            this.ZoomInButton.MouseUp += new System.Windows.Forms.MouseEventHandler(this.ZoomInButton_MouseUp);
             // 
             // ZoomOutButton
             // 
@@ -421,8 +439,10 @@
             this.ZoomOutButton.Size = new System.Drawing.Size(37, 40);
             this.ZoomOutButton.Text = "縮小する";
             this.ZoomOutButton.Click += new System.EventHandler(this.ZoomOutButton_Click);
+            this.ZoomOutButton.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ZoomOutButton_MouseDown);
             this.ZoomOutButton.MouseEnter += new System.EventHandler(this.ZoomOutButton_MouseEnter);
             this.ZoomOutButton.MouseLeave += new System.EventHandler(this.ZoomOutButton_MouseLeave);
+            this.ZoomOutButton.MouseUp += new System.Windows.Forms.MouseEventHandler(this.ZoomOutButton_MouseUp);
             // 
             // FitToWidthButton
             // 
@@ -439,8 +459,10 @@
             this.FitToWidthButton.Text = "ウィンドウの幅に合わせる";
             this.FitToWidthButton.CheckedChanged += new System.EventHandler(this.FitToWidthButton_CheckedChanged);
             this.FitToWidthButton.Click += new System.EventHandler(this.FitToWidthButton_Click);
+            this.FitToWidthButton.MouseDown += new System.Windows.Forms.MouseEventHandler(this.FitToWidthButton_MouseDown);
             this.FitToWidthButton.MouseEnter += new System.EventHandler(this.FitToWidthButton_MouseEnter);
             this.FitToWidthButton.MouseLeave += new System.EventHandler(this.FitToWidthButton_MouseLeave);
+            this.FitToWidthButton.MouseUp += new System.Windows.Forms.MouseEventHandler(this.FitToWidthButton_MouseUp);
             // 
             // FitToHeightButton
             // 
@@ -457,8 +479,10 @@
             this.FitToHeightButton.Text = "ウィンドウの高さに合わせる";
             this.FitToHeightButton.CheckedChanged += new System.EventHandler(this.FitToHeightButton_CheckedChanged);
             this.FitToHeightButton.Click += new System.EventHandler(this.FitToHeightButton_Click);
+            this.FitToHeightButton.MouseDown += new System.Windows.Forms.MouseEventHandler(this.FitToHeightButton_MouseDown);
             this.FitToHeightButton.MouseEnter += new System.EventHandler(this.FitToHeightButton_MouseEnter);
             this.FitToHeightButton.MouseLeave += new System.EventHandler(this.FitToHeightButton_MouseLeave);
+            this.FitToHeightButton.MouseUp += new System.Windows.Forms.MouseEventHandler(this.FitToHeightButton_MouseUp);
             // 
             // OnlyDisplayCategoryZoomLabel
             // 

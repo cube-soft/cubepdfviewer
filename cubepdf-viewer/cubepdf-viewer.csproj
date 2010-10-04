@@ -133,6 +133,19 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="cubepdf-viewer.ico" />
+    <None Include="Resources\zoomout_press.png" />
+    <None Include="Resources\zoomin_press.png" />
+    <None Include="Resources\thumbnail_press.png" />
+    <None Include="Resources\search_press.png" />
+    <None Include="Resources\print_press.png" />
+    <None Include="Resources\hidemenu_press.png" />
+    <None Include="Resources\fit2width_press.png" />
+    <None Include="Resources\fit2height_press.png" />
+    <None Include="Resources\arrow_prev_press.png" />
+    <None Include="Resources\arrow_next_press.png" />
+    <None Include="Resources\arrow_last_press.png" />
+    <None Include="Resources\arrow_first_press.png" />
+    <None Include="Resources\open_press.png" />
     <None Include="Resources\thumbnail_over.png" />
     <None Include="Resources\zoomout_over.png" />
     <None Include="Resources\zoomin_over.png" />

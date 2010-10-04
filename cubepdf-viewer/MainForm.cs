@@ -965,6 +965,31 @@ namespace Cube {
         }
 
         /* ----------------------------------------------------------------- */
+        /// OpenButton_MouseDown
+        /* ----------------------------------------------------------------- */
+        private void OpenButton_MouseDown(object sender, MouseEventArgs e) {
+            var control = (ToolStripButton)sender;
+            control.Image = Properties.Resources.open_press;
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// OpenButton_MouseUp
+        /// 
+        /// <summary>
+        /// MEMO: 開くのようにボタンを押すことで何らかのダイアログが
+        /// 出るタイプのものは，ボタンの状態が戻らない事がある．
+        /// そのため，マウスオーバー状態のものではなく，デフォルトの
+        /// ボタンに戻す．
+        /// </summary>
+        /// 
+        /* ----------------------------------------------------------------- */
+        private void OpenButton_MouseUp(object sender, MouseEventArgs e) {
+            var control = (ToolStripButton)sender;
+            control.Image = Properties.Resources.open;
+        }
+
+        /* ----------------------------------------------------------------- */
         /// PrintButton_MouseEnter
         /* ----------------------------------------------------------------- */
         private void PrintButton_MouseEnter(object sender, EventArgs e) {
@@ -978,6 +1003,22 @@ namespace Cube {
         private void PrintButton_MouseLeave(object sender, EventArgs e) {
             var control = (ToolStripButton)sender;
             control.Image = Properties.Resources.print;
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// PrintButton_MouseDown
+        /* ----------------------------------------------------------------- */
+        private void PrintButton_MouseDown(object sender, MouseEventArgs e) {
+            var control = (ToolStripButton)sender;
+            control.Image = Properties.Resources.print_press;
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// PrintButton_MouseUp
+        /* ----------------------------------------------------------------- */
+        private void PrintButton_MouseUp(object sender, MouseEventArgs e) {
+            var control = (ToolStripButton)sender;
+            control.Image = Properties.Resources.print_over;
         }
 
         /* ----------------------------------------------------------------- */
@@ -997,6 +1038,22 @@ namespace Cube {
         }
 
         /* ----------------------------------------------------------------- */
+        /// FirstPageButton_MouseDown
+        /* ----------------------------------------------------------------- */
+        private void FirstPageButton_MouseDown(object sender, MouseEventArgs e) {
+            var control = (ToolStripButton)sender;
+            control.Image = Properties.Resources.arrow_first_press;
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// FirstPageButton_MouseUp
+        /* ----------------------------------------------------------------- */
+        private void FirstPageButton_MouseUp(object sender, MouseEventArgs e) {
+            var control = (ToolStripButton)sender;
+            control.Image = Properties.Resources.arrow_first_over;
+        }
+
+        /* ----------------------------------------------------------------- */
         /// PreviousPageButton_MouseEnter
         /* ----------------------------------------------------------------- */
         private void PreviousPageButton_MouseEnter(object sender, EventArgs e) {
@@ -1010,6 +1067,22 @@ namespace Cube {
         private void PreviousPageButton_MouseLeave(object sender, EventArgs e) {
             var control = (ToolStripButton)sender;
             control.Image = Properties.Resources.arrow_prev;
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// PreviousPageButton_MouseDown
+        /* ----------------------------------------------------------------- */
+        private void PreviousPageButton_MouseDown(object sender, MouseEventArgs e) {
+            var control = (ToolStripButton)sender;
+            control.Image = Properties.Resources.arrow_prev_press;
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// PreviousPageButton_MouseUp
+        /* ----------------------------------------------------------------- */
+        private void PreviousPageButton_MouseUp(object sender, MouseEventArgs e) {
+            var control = (ToolStripButton)sender;
+            control.Image = Properties.Resources.arrow_prev_over;
         }
 
         /* ----------------------------------------------------------------- */
@@ -1029,6 +1102,22 @@ namespace Cube {
         }
 
         /* ----------------------------------------------------------------- */
+        /// NextPageButton_MouseDown
+        /* ----------------------------------------------------------------- */
+        private void NextPageButton_MouseDown(object sender, MouseEventArgs e) {
+            var control = (ToolStripButton)sender;
+            control.Image = Properties.Resources.arrow_next_press;
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// NextPageButton_MouseUp
+        /* ----------------------------------------------------------------- */
+        private void NextPageButton_MouseUp(object sender, MouseEventArgs e) {
+            var control = (ToolStripButton)sender;
+            control.Image = Properties.Resources.arrow_next_over;
+        }
+
+        /* ----------------------------------------------------------------- */
         /// LastPageButton_MouseEnter
         /* ----------------------------------------------------------------- */
         private void LastPageButton_MouseEnter(object sender, EventArgs e) {
@@ -1042,6 +1131,22 @@ namespace Cube {
         private void LastPageButton_MouseLeave(object sender, EventArgs e) {
             var control = (ToolStripButton)sender;
             control.Image = Properties.Resources.arrow_last;
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// LastPageButton_MouseDown
+        /* ----------------------------------------------------------------- */
+        private void LastPageButton_MouseDown(object sender, MouseEventArgs e) {
+            var control = (ToolStripButton)sender;
+            control.Image = Properties.Resources.arrow_last_press;
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// LastPageButton_MouseUp
+        /* ----------------------------------------------------------------- */
+        private void LastPageButton_MouseUp(object sender, MouseEventArgs e) {
+            var control = (ToolStripButton)sender;
+            control.Image = Properties.Resources.arrow_last_over;
         }
 
         /* ----------------------------------------------------------------- */
@@ -1061,6 +1166,22 @@ namespace Cube {
         }
 
         /* ----------------------------------------------------------------- */
+        /// SearchButton_MouseDown
+        /* ----------------------------------------------------------------- */
+        private void SearchButton_MouseDown(object sender, MouseEventArgs e) {
+            var control = (ToolStripButton)sender;
+            control.Image = Properties.Resources.search_press;
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// SearchButton_MouseUp
+        /* ----------------------------------------------------------------- */
+        private void SearchButton_MouseUp(object sender, MouseEventArgs e) {
+            var control = (ToolStripButton)sender;
+            control.Image = Properties.Resources.search_over;
+        }
+
+        /* ----------------------------------------------------------------- */
         /// ZoomInButton_MouseEnter
         /* ----------------------------------------------------------------- */
         private void ZoomInButton_MouseEnter(object sender, EventArgs e) {
@@ -1074,6 +1195,22 @@ namespace Cube {
         private void ZoomInButton_MouseLeave(object sender, EventArgs e) {
             var control = (ToolStripButton)sender;
             control.Image = Properties.Resources.zoomin;
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// ZoomInButton_MouseDown
+        /* ----------------------------------------------------------------- */
+        private void ZoomInButton_MouseDown(object sender, MouseEventArgs e) {
+            var control = (ToolStripButton)sender;
+            control.Image = Properties.Resources.zoomin_press;
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// ZoomInButton_MouseUp
+        /* ----------------------------------------------------------------- */
+        private void ZoomInButton_MouseUp(object sender, MouseEventArgs e) {
+            var control = (ToolStripButton)sender;
+            control.Image = Properties.Resources.zoomin_over;
         }
 
         /* ----------------------------------------------------------------- */
@@ -1093,6 +1230,22 @@ namespace Cube {
         }
 
         /* ----------------------------------------------------------------- */
+        /// ZoomOutButton_MouseDown
+        /* ----------------------------------------------------------------- */
+        private void ZoomOutButton_MouseDown(object sender, MouseEventArgs e) {
+            var control = (ToolStripButton)sender;
+            control.Image = Properties.Resources.zoomout_press;
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// ZoomOutButton_MouseUp
+        /* ----------------------------------------------------------------- */
+        private void ZoomOutButton_MouseUp(object sender, MouseEventArgs e) {
+            var control = (ToolStripButton)sender;
+            control.Image = Properties.Resources.zoomout_over;
+        }
+
+        /* ----------------------------------------------------------------- */
         /// FitToWidthButton_MouseEnter
         /* ----------------------------------------------------------------- */
         private void FitToWidthButton_MouseEnter(object sender, EventArgs e) {
@@ -1105,7 +1258,23 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         private void FitToWidthButton_MouseLeave(object sender, EventArgs e) {
             var control = (ToolStripButton)sender;
-            if (!control.Checked) control.Image = Properties.Resources.fit2width;
+            control.Image = control.Checked ? Properties.Resources.fit2width_over : Properties.Resources.fit2width;
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// FitToWidthButton_MouseDown
+        /* ----------------------------------------------------------------- */
+        private void FitToWidthButton_MouseDown(object sender, MouseEventArgs e) {
+            var control = (ToolStripButton)sender;
+            control.Image = Properties.Resources.fit2width_press;
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// FitToWidthButton_MouseUp
+        /* ----------------------------------------------------------------- */
+        private void FitToWidthButton_MouseUp(object sender, MouseEventArgs e) {
+            var control = (ToolStripButton)sender;
+            control.Image = Properties.Resources.fit2width_over;
         }
 
         /* ----------------------------------------------------------------- */
@@ -1113,8 +1282,7 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         private void FitToWidthButton_CheckedChanged(object sender, EventArgs e) {
             var control = (ToolStripButton)sender;
-            if (control.Checked) control.Image = Properties.Resources.fit2width_over;
-            else control.Image = Properties.Resources.fit2width;
+            control.Image = control.Checked ? Properties.Resources.fit2width_over : Properties.Resources.fit2width;
         }
 
         /* ----------------------------------------------------------------- */
@@ -1130,7 +1298,23 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         private void FitToHeightButton_MouseLeave(object sender, EventArgs e) {
             var control = (ToolStripButton)sender;
-            if (!control.Checked) control.Image = Properties.Resources.fit2height;
+            control.Image = control.Checked ? Properties.Resources.fit2height_over : Properties.Resources.fit2height;
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// FitToHeightButton_MouseDown
+        /* ----------------------------------------------------------------- */
+        private void FitToHeightButton_MouseDown(object sender, MouseEventArgs e) {
+            var control = (ToolStripButton)sender;
+            control.Image = Properties.Resources.fit2height_press;
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// FitToHeightButton_MouseUp
+        /* ----------------------------------------------------------------- */
+        private void FitToHeightButton_MouseUp(object sender, MouseEventArgs e) {
+            var control = (ToolStripButton)sender;
+            control.Image = Properties.Resources.fit2height_over;
         }
 
         /* ----------------------------------------------------------------- */
@@ -1138,8 +1322,7 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         private void FitToHeightButton_CheckedChanged(object sender, EventArgs e) {
             var control = (ToolStripButton)sender;
-            if (control.Checked) control.Image = Properties.Resources.fit2height_over;
-            else control.Image = Properties.Resources.fit2height;
+            control.Image = control.Checked ? Properties.Resources.fit2height_over : Properties.Resources.fit2height;
         }
 
         /* ----------------------------------------------------------------- */
@@ -1172,6 +1355,22 @@ namespace Cube {
         private void ThumbButton_MouseLeave(object sender, EventArgs e) {
             var control = (ToolStripButton)sender;
             control.BackgroundImage = Properties.Resources.thumbnail;
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// ThumbButton_MouseDown
+        /* ----------------------------------------------------------------- */
+        private void ThumbButton_MouseDown(object sender, MouseEventArgs e) {
+            var control = (ToolStripButton)sender;
+            control.BackgroundImage = Properties.Resources.thumbnail_press;
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// ThumbButton_MouseUp
+        /* ----------------------------------------------------------------- */
+        private void ThumbButton_MouseUp(object sender, MouseEventArgs e) {
+            var control = (ToolStripButton)sender;
+            control.BackgroundImage = Properties.Resources.thumbnail_over;
         }
 
         #endregion
