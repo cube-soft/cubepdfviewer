@@ -55,6 +55,21 @@ namespace Cube {
         /// Constructor
         /* ----------------------------------------------------------------- */
         public MainForm() {
+            this.Initialize();
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// Constructor
+        /* ----------------------------------------------------------------- */
+        public MainForm(string path) {
+            var tab = this.PageViewerTabControl.SelectedTab;
+            this.Open(tab, path);
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// Initialize
+        /* ----------------------------------------------------------------- */
+        private void Initialize() {
             InitializeComponent();
 
             int x = Screen.PrimaryScreen.Bounds.Height - 100;

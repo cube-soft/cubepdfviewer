@@ -8,10 +8,11 @@ namespace Cube {
         /// アプリケーションのメイン エントリ ポイントです。
         /// </summary>
         [STAThread]
-        static void Main() {
+        static void Main(string[] args) {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainForm());
+            if (args.Length > 0) Application.Run(new MainForm(args[0]));
+            else Application.Run(new MainForm());
         }
     }
 }
