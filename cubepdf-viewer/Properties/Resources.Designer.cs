@@ -249,13 +249,6 @@ namespace Cube.Properties {
             }
         }
         
-        internal static System.Drawing.Bitmap newtab {
-            get {
-                object obj = ResourceManager.GetObject("newtab", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
         internal static System.Drawing.Bitmap open {
             get {
                 object obj = ResourceManager.GetObject("open", resourceCulture);
@@ -315,13 +308,6 @@ namespace Cube.Properties {
         internal static System.Drawing.Bitmap search_press {
             get {
                 object obj = ResourceManager.GetObject("search_press", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        internal static System.Drawing.Bitmap split {
-            get {
-                object obj = ResourceManager.GetObject("split", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

@@ -164,13 +164,11 @@
     <None Include="Resources\cubepdf-viewer.ico" />
     <None Include="Resources\arrow_last.png" />
     <None Include="Resources\background_tab.png" />
-    <None Include="Resources\split.png" />
     <None Include="Resources\logo.png" />
     <None Include="Resources\background.png" />
     <None Include="Resources\hidemenu.png" />
     <None Include="Resources\thumbnail.png" />
     <None Include="Resources\print.png" />
-    <None Include="Resources\newtab.png" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
