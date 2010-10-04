@@ -62,8 +62,8 @@ namespace Cube {
         /// Constructor
         /* ----------------------------------------------------------------- */
         public MainForm(string path) {
-            var tab = this.PageViewerTabControl.SelectedTab;
-            this.Open(tab, path);
+            this.Initialize();
+            this.Tag = path;
         }
 
         /* ----------------------------------------------------------------- */
@@ -343,111 +343,6 @@ namespace Cube {
             thumb.SelectedIndexChanged += new EventHandler(PageChanged);
         }
 
-
-        /* ----------------------------------------------------------------- */
-        /// PrintButton_Click
-        /* ----------------------------------------------------------------- */
-        private void PrintButton_Click(object sender, EventArgs e)
-        {
-            var canvas = CanvasPolicy.Get(this.PageViewerTabControl.SelectedTab);
-            if (canvas == null) return;
-            var core = (PDF)canvas.Tag;
-            if (core == null) return;
-            
-            // 一旦PrintするためにはPDFWrapperの値を変える必要がある
-            // TODO: paintEventHandlerの解除と各種レンダリングに必要なプロパティを保存
-            // 印刷終了後元に戻す
-            var saveSettings = new { page = core.CurrentPage, zoom = core.Zoom  };
-            
-            using (var prd = new PrintDialog())
-            using (var document = new System.Drawing.Printing.PrintDocument())
-            {
-                prd.AllowCurrentPage = true;
-                prd.AllowSelection = false; // 選択した部分の設定だが、ページを選択する方法を提供しないのでfalse
-                prd.AllowSomePages = true;
-                prd.PrinterSettings.MinimumPage = 1;
-                prd.PrinterSettings.MaximumPage = core.PageCount;
-                prd.PrinterSettings.FromPage = core.CurrentPage;
-                prd.PrinterSettings.ToPage = core.PageCount;
-                
-                if (prd.ShowDialog() == DialogResult.OK)
-                {
-                    document.PrintPage += new PrintPageEventHandler(pd_PrintPage);
-                    document.PrinterSettings = prd.PrinterSettings;
-                   
-                    core.CurrentPage = prd.PrinterSettings.FromPage;
-                    document.Print();
-                    core.CurrentPage = saveSettings.page;
-                    core.Zoom = saveSettings.zoom;
-                    core.RenderPage(IntPtr.Zero, false, false);
-                    Adjust(this.PageViewerTabControl.SelectedTab);
-                }
-            }
-        }
-
-       
-
-        // The PrintPage event is raised for each page to be printed.
-        // TODO: レンダリングのDpiを変更しなければならない？
-        // 　　　また、ページ全体の印刷やページ指定での印刷ができなければならない
-        // NOTE: 次回600dpiで描画してみる　& renderPageThreadを用いてレンダリングが終わるまで待機させたい
-        private void pd_PrintPage(object sender, PrintPageEventArgs ev)
-        {
-            //const float INCH = 2.54f;
-            //const int DPI = 72;
-
-            var control = this.PageViewerTabControl;
-            var canvas = CanvasPolicy.Get(this.PageViewerTabControl.SelectedTab);
-            var core = (PDF)canvas.Tag;
-            
-            
-            using (var bitmap = new Bitmap(ev.PageSettings.PaperSize.Width, ev.PageSettings.PaperSize.Height))
-            {
-                // NOTE: ページのサイズに合わせて拡大縮小するにはどうすればよいのか？
-                var g = Graphics.FromImage(bitmap);
-                core.ClientBounds = new Rectangle(new Point(0, 0), bitmap.Size);
-                core.Zoom = 100;
-                core.RenderPage(IntPtr.Zero, false, false);
-                core.DrawPageHDC(g.GetHdc());
-                g.ReleaseHdc();
-                g.Save();
-               
-               
-                ev.Graphics.DrawImage(bitmap, 0, 0);
-            }
-           
-
-            // If more lines exist, print another page.
-            if (ev.PageSettings.PrinterSettings.PrintRange == PrintRange.AllPages)
-            {
-                if (core.CurrentPage < core.PageCount)
-                {
-                    core.NextPage();
-                    ev.HasMorePages = true;
-                }
-                else
-                {
-                    ev.HasMorePages = false;
-                }
-                
-            }
-            else if (ev.PageSettings.PrinterSettings.PrintRange == PrintRange.SomePages)
-            {
-                if (core.CurrentPage < ev.PageSettings.PrinterSettings.ToPage)
-                {
-                    core.NextPage();
-                    ev.HasMorePages = true;
-                }
-                else
-                {
-                    ev.HasMorePages = false;
-                }
-            }
-            else
-            {
-                ev.HasMorePages = false;
-            }
-        }
         /* ----------------------------------------------------------------- */
         //  キーボード・ショートカット一覧
         /* ----------------------------------------------------------------- */
@@ -519,6 +414,18 @@ namespace Cube {
         //  メインフォームに関する各種イベント・ハンドラ
         /* ----------------------------------------------------------------- */
         #region MainForm Event handlers
+
+        /* ----------------------------------------------------------------- */
+        /// MainForm_Shown
+        /* ----------------------------------------------------------------- */
+        private void MainForm_Shown(object sender, EventArgs e) {
+            if (this.Tag != null) {
+                var path = (string)this.Tag;
+                var tab = this.PageViewerTabControl.SelectedTab;
+                this.Open(tab, path);
+                this.Tag = null;
+            }
+        }
 
         /* ----------------------------------------------------------------- */
         /// MainForm_SizeChanged
@@ -609,6 +516,106 @@ namespace Cube {
         private void CloseButton_Click(object sender, EventArgs e) {
             var tab = this.PageViewerTabControl.SelectedTab;
             this.DestroyTab(tab);
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// PrintButton_Click
+        /* ----------------------------------------------------------------- */
+        private void PrintButton_Click(object sender, EventArgs e) {
+            var canvas = CanvasPolicy.Get(this.PageViewerTabControl.SelectedTab);
+            if (canvas == null) return;
+            var core = (PDF)canvas.Tag;
+            if (core == null) return;
+
+            // 一旦PrintするためにはPDFWrapperの値を変える必要がある
+            // TODO: paintEventHandlerの解除と各種レンダリングに必要なプロパティを保存
+            // 印刷終了後元に戻す
+            var saveSettings = new { page = core.CurrentPage, zoom = core.Zoom };
+
+            using (var prd = new PrintDialog())
+            using (var document = new System.Drawing.Printing.PrintDocument()) {
+                prd.AllowCurrentPage = true;
+                prd.AllowSelection = false; // 選択した部分の設定だが、ページを選択する方法を提供しないのでfalse
+                prd.AllowSomePages = true;
+                prd.PrinterSettings.MinimumPage = 1;
+                prd.PrinterSettings.MaximumPage = core.PageCount;
+                prd.PrinterSettings.FromPage = core.CurrentPage;
+                prd.PrinterSettings.ToPage = core.PageCount;
+
+                if (prd.ShowDialog() == DialogResult.OK) {
+                    document.PrintPage += new PrintPageEventHandler(PrintDocument_PrintPage);
+                    document.PrinterSettings = prd.PrinterSettings;
+
+                    core.CurrentPage = prd.PrinterSettings.FromPage;
+                    document.Print();
+                    core.CurrentPage = saveSettings.page;
+                    core.Zoom = saveSettings.zoom;
+                    core.RenderPage(IntPtr.Zero, false, false);
+                    Adjust(this.PageViewerTabControl.SelectedTab);
+                }
+            }
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// PrintDocument_PrintPage
+        ///
+        /// <summary>
+        /// The PrintPage event is raised for each page to be printed.
+        /// TODO: レンダリングのDpiを変更しなければならない？
+        /// また、ページ全体の印刷やページ指定での印刷ができなければならない
+        /// NOTE: 次回600dpiで描画してみる & renderPageThread を用いて
+        /// レンダリングが終わるまで待機させたい
+        /// </summary>
+        /// 
+        /* ----------------------------------------------------------------- */
+        private void PrintDocument_PrintPage(object sender, PrintPageEventArgs ev) {
+            //const float INCH = 2.54f;
+            //const int DPI = 72;
+
+            var control = this.PageViewerTabControl;
+            var canvas = CanvasPolicy.Get(this.PageViewerTabControl.SelectedTab);
+            var core = (PDF)canvas.Tag;
+
+
+            using (var bitmap = new Bitmap(ev.PageSettings.PaperSize.Width, ev.PageSettings.PaperSize.Height)) {
+                // NOTE: ページのサイズに合わせて拡大縮小するにはどうすればよいのか？
+                var g = Graphics.FromImage(bitmap);
+                core.ClientBounds = new Rectangle(new Point(0, 0), bitmap.Size);
+                core.Zoom = 100;
+                core.RenderPage(IntPtr.Zero, false, false);
+                core.DrawPageHDC(g.GetHdc());
+                g.ReleaseHdc();
+                g.Save();
+
+
+                ev.Graphics.DrawImage(bitmap, 0, 0);
+            }
+
+
+            // If more lines exist, print another page.
+            if (ev.PageSettings.PrinterSettings.PrintRange == PrintRange.AllPages) {
+                if (core.CurrentPage < core.PageCount) {
+                    core.NextPage();
+                    ev.HasMorePages = true;
+                }
+                else {
+                    ev.HasMorePages = false;
+                }
+
+            }
+            else if (ev.PageSettings.PrinterSettings.PrintRange == PrintRange.SomePages) {
+                if (core.CurrentPage < ev.PageSettings.PrinterSettings.ToPage) {
+                    core.NextPage();
+                    ev.HasMorePages = true;
+                }
+                else {
+                    ev.HasMorePages = false;
+                }
+            }
+            else {
+                ev.HasMorePages = false;
+            }
         }
 
         /* ----------------------------------------------------------------- */

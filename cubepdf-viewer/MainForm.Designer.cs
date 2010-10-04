@@ -182,9 +182,9 @@
             // 
             this.CurrentPageTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.CurrentPageTextBox.Font = new System.Drawing.Font("MS UI Gothic", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.CurrentPageTextBox.Margin = new System.Windows.Forms.Padding(2);
+            this.CurrentPageTextBox.Margin = new System.Windows.Forms.Padding(2, 5, 2, 2);
             this.CurrentPageTextBox.Name = "CurrentPageTextBox";
-            this.CurrentPageTextBox.Size = new System.Drawing.Size(50, 36);
+            this.CurrentPageTextBox.Size = new System.Drawing.Size(50, 33);
             this.CurrentPageTextBox.Text = "0";
             this.CurrentPageTextBox.TextBoxTextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.CurrentPageTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CurrentPageTextBox_KeyDown);
@@ -193,18 +193,18 @@
             // 
             this.OnlyDisplayCategoryTotalPageLabel.Font = new System.Drawing.Font("MS UI Gothic", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.OnlyDisplayCategoryTotalPageLabel.ForeColor = System.Drawing.Color.LightGray;
-            this.OnlyDisplayCategoryTotalPageLabel.Margin = new System.Windows.Forms.Padding(0, 0, -5, 0);
+            this.OnlyDisplayCategoryTotalPageLabel.Margin = new System.Windows.Forms.Padding(0, 5, -5, 0);
             this.OnlyDisplayCategoryTotalPageLabel.Name = "OnlyDisplayCategoryTotalPageLabel";
-            this.OnlyDisplayCategoryTotalPageLabel.Size = new System.Drawing.Size(19, 40);
+            this.OnlyDisplayCategoryTotalPageLabel.Size = new System.Drawing.Size(19, 35);
             this.OnlyDisplayCategoryTotalPageLabel.Text = "/";
             // 
             // TotalPageLabel
             // 
             this.TotalPageLabel.Font = new System.Drawing.Font("MS UI Gothic", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.TotalPageLabel.ForeColor = System.Drawing.Color.LightGray;
-            this.TotalPageLabel.Margin = new System.Windows.Forms.Padding(0, 0, 0, -2);
+            this.TotalPageLabel.Margin = new System.Windows.Forms.Padding(0, 5, 0, 0);
             this.TotalPageLabel.Name = "TotalPageLabel";
-            this.TotalPageLabel.Size = new System.Drawing.Size(14, 42);
+            this.TotalPageLabel.Size = new System.Drawing.Size(14, 35);
             this.TotalPageLabel.Text = "0";
             // 
             // FirstPageButton
@@ -271,21 +271,22 @@
             // 
             this.SearchTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.SearchTextBox.Font = new System.Drawing.Font("MS UI Gothic", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.SearchTextBox.Margin = new System.Windows.Forms.Padding(0, 0, -1, 0);
+            this.SearchTextBox.Margin = new System.Windows.Forms.Padding(0, 5, -1, 0);
             this.SearchTextBox.Name = "SearchTextBox";
-            this.SearchTextBox.Size = new System.Drawing.Size(100, 40);
+            this.SearchTextBox.Size = new System.Drawing.Size(100, 35);
             this.SearchTextBox.TextChanged += new System.EventHandler(this.SearchTextBox_TextChanged);
             // 
             // SearchButton
             // 
             this.SearchButton.BackColor = System.Drawing.Color.Transparent;
-            this.SearchButton.BackgroundImage = global::Cube.Properties.Resources.search;
             this.SearchButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.SearchButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.None;
+            this.SearchButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.SearchButton.Image = global::Cube.Properties.Resources.search;
+            this.SearchButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.SearchButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.SearchButton.Margin = new System.Windows.Forms.Padding(0);
+            this.SearchButton.Margin = new System.Windows.Forms.Padding(-2, 0, 0, 0);
             this.SearchButton.Name = "SearchButton";
-            this.SearchButton.Size = new System.Drawing.Size(23, 40);
+            this.SearchButton.Size = new System.Drawing.Size(25, 40);
             this.SearchButton.Text = "検索する";
             this.SearchButton.Click += new System.EventHandler(this.SearchButton_Click);
             // 
@@ -546,6 +547,7 @@
             this.KeyPreview = true;
             this.Name = "MainForm";
             this.Text = "CubePDF Viewer";
+            this.Shown += new System.EventHandler(this.MainForm_Shown);
             this.SizeChanged += new System.EventHandler(this.MainForm_SizeChanged);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MainForm_KeyDown);
             this.MenuToolStrip.ResumeLayout(false);
