@@ -566,7 +566,6 @@
             this.DefaultTabPage.AllowDrop = true;
             this.DefaultTabPage.AutoScroll = true;
             this.DefaultTabPage.BackColor = System.Drawing.Color.DimGray;
-            this.DefaultTabPage.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.DefaultTabPage.ForeColor = System.Drawing.SystemColors.ControlText;
             this.DefaultTabPage.Location = new System.Drawing.Point(4, 27);
             this.DefaultTabPage.Name = "DefaultTabPage";

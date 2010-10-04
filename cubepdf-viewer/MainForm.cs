@@ -76,7 +76,6 @@ namespace Cube {
             this.Size = new Size(System.Math.Max(x, 800), x);
 
             this.MenuToolStrip.Renderer = new CustomToolStripRenderer();
-            this.NavigationSplitContainer.Panel1Collapsed = true;
             this.MenuSplitContainer.SplitterDistance = this.MenuToolStrip.Height;
             this.FitToHeightButton.Checked = true;
             CreateTabContextMenu(this.PageViewerTabControl);
@@ -282,7 +281,7 @@ namespace Cube {
             // TabPage の設定
             tab.AutoScroll = true;
             tab.BackColor = Color.DimGray;
-            tab.BorderStyle = BorderStyle.Fixed3D;
+            //tab.BorderStyle = BorderStyle.Fixed3D;
             tab.ContextMenuStrip = new ContextMenuStrip();
             tab.Text = "(無題)";
             tab.Scroll += new ScrollEventHandler(VerticalScrolled);
