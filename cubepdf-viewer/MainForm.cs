@@ -135,7 +135,7 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         /// Open
         /* ----------------------------------------------------------------- */
-        private void Open(TabPage tab, string path, string password = "") {
+        private void Open(TabPage tab, string path, string password) {
             var canvas = CanvasPolicy.Create(tab);
             var message = "";
 
@@ -154,6 +154,28 @@ namespace Cube {
             finally {
                 this.Refresh(canvas, message);
             }
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// Open
+        /// 
+        /// <summary>
+        /// 開く前に，ファイルを既に開いているかどうかのチェックを行う．
+        /// 既にファイルを開いていた場合は，そのタブをアクティブにして
+        /// 終了する．
+        /// </summary>
+        /// 
+        /* ----------------------------------------------------------------- */
+        private void Open(TabControl control, string path, string password = "") {
+            foreach (TabPage item in control.TabPages) {
+                var s = item.Tag as string;
+                if (s != null && s == path) {
+                    this.PageViewerTabControl.SelectedTab = item;
+                    return;
+                }
+            }
+            this.Open(this.CreateTab(control), path, password);
         }
 
         /* ----------------------------------------------------------------- */
@@ -191,13 +213,14 @@ namespace Cube {
             try {
                 int prev = CanvasPolicy.CurrentPage(canvas);
                 if (CanvasPolicy.PreviousPage(canvas) == prev) status = false;
+                this.Refresh(canvas, message);
             }
             catch (Exception err) {
                 status = false;
                 message = err.Message;
             }
             finally {
-                this.Refresh(canvas, message);
+                //this.Refresh(canvas, message);
             }
             return status;
         }
@@ -273,9 +296,23 @@ namespace Cube {
         }
 
         /* ----------------------------------------------------------------- */
+        ///
         /// CreateTab
+        /// 
+        /// <summary>
+        /// 新しい「空のタブ」を生成する．
+        /// 「空のタブ」は，同時には 1 つしか存在できないようにしている．
+        /// </summary>
+        /// 
         /* ----------------------------------------------------------------- */
         public TabPage CreateTab(TabControl parent) {
+            foreach (TabPage item in parent.TabPages) {
+                if (item.Tag == null) {
+                    parent.SelectedTab = item;
+                    return item;
+                }
+            }
+
             var tab = new TabPage();
 
             // TabPage の設定
@@ -421,8 +458,7 @@ namespace Cube {
         private void MainForm_Shown(object sender, EventArgs e) {
             if (this.Tag != null) {
                 var path = (string)this.Tag;
-                var tab = this.PageViewerTabControl.SelectedTab;
-                this.Open(tab, path);
+                this.Open(this.PageViewerTabControl, path);
                 this.Tag = null;
             }
         }
@@ -505,8 +541,7 @@ namespace Cube {
             var dialog = new OpenFileDialog();
             dialog.Filter = "PDF ファイル(*.pdf)|*.pdf";
             if (dialog.ShowDialog() == DialogResult.OK) {
-                var tab = this.PageViewerTabControl.SelectedTab;
-                this.Open(tab, dialog.FileName);
+                this.Open(this.PageViewerTabControl, dialog.FileName);
             }
         }
 
@@ -868,14 +903,11 @@ namespace Cube {
             var tab = (TabPage)sender;
             var control = (TabControl)tab.Parent;
 
-            bool current = true;
             if (e.Data.GetDataPresent(DataFormats.FileDrop)) {
                 var files = (string[])e.Data.GetData(DataFormats.FileDrop);
                 foreach (var path in files) {
                     if (System.IO.Path.GetExtension(path).ToLower() != ".pdf") continue;
-                    tab = current ? control.SelectedTab : this.CreateTab(control);
-                    current = false;
-                    this.Open(tab, path);
+                    this.Open(control, path);
                 }
             }
         }
