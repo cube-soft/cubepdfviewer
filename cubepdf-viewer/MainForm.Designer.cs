@@ -55,6 +55,7 @@
             this.FitToHeightButton = new System.Windows.Forms.ToolStripButton();
             this.LogoButton = new System.Windows.Forms.ToolStripButton();
             this.OnlyDisplayCategoryZoomSeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.AdobeButton = new System.Windows.Forms.ToolStripButton();
             this.MenuSplitContainer = new System.Windows.Forms.SplitContainer();
             this.NavigationSplitContainer = new System.Windows.Forms.SplitContainer();
             this.PageViewerTabControl = new System.Windows.Forms.CustomTabControl();
@@ -99,7 +100,8 @@
             this.FitToWidthButton,
             this.FitToHeightButton,
             this.LogoButton,
-            this.OnlyDisplayCategoryZoomSeparator});
+            this.OnlyDisplayCategoryZoomSeparator,
+            this.AdobeButton});
             this.MenuToolStrip.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             this.MenuToolStrip.Location = new System.Drawing.Point(0, 0);
             this.MenuToolStrip.Name = "MenuToolStrip";
@@ -493,6 +495,22 @@
             this.OnlyDisplayCategoryZoomSeparator.Name = "OnlyDisplayCategoryZoomSeparator";
             this.OnlyDisplayCategoryZoomSeparator.Size = new System.Drawing.Size(6, 40);
             // 
+            // AdobeButton
+            // 
+            this.AdobeButton.BackColor = System.Drawing.Color.Transparent;
+            this.AdobeButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.AdobeButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.AdobeButton.Enabled = false;
+            this.AdobeButton.Image = ((System.Drawing.Image)(resources.GetObject("AdobeButton.Image")));
+            this.AdobeButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.AdobeButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.AdobeButton.Margin = new System.Windows.Forms.Padding(0, 5, 0, 0);
+            this.AdobeButton.Name = "AdobeButton";
+            this.AdobeButton.Size = new System.Drawing.Size(23, 35);
+            this.AdobeButton.Text = "Adobe Reader で開く";
+            this.AdobeButton.Visible = false;
+            this.AdobeButton.Click += new System.EventHandler(this.AdobeButton_Click);
+            // 
             // MenuSplitContainer
             // 
             this.MenuSplitContainer.BackColor = System.Drawing.Color.Black;
@@ -652,6 +670,7 @@
         private System.Windows.Forms.ToolStripSeparator OnlyDisplayCategoryPageSeparator;
         private System.Windows.Forms.ToolStripSeparator OnlyDisplayCategorySearchSeparator;
         private System.Windows.Forms.ToolStripSeparator OnlyDisplayCategoryZoomSeparator;
+        private System.Windows.Forms.ToolStripButton AdobeButton;
     }
 }
 

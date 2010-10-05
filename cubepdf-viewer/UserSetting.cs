@@ -44,6 +44,7 @@ namespace Cube {
             navi_ = (NavigationCondition)registry.GetValue(REG_NAVIGATION, NavigationCondition.Thumbnail);
             fit_ = (FitCondition)registry.GetValue(REG_FIT, FitCondition.Height);
             menu_ = ((int)registry.GetValue(REG_MENU, 1) != 0);
+            adobe_ = ((int)registry.GetValue(REG_ADOBE, 1) != 0);
         }
 
         /* ----------------------------------------------------------------- */
@@ -54,8 +55,10 @@ namespace Cube {
             try {
                 registry.SetValue(REG_NAVIGATION, (int)navi_);
                 registry.SetValue(REG_FIT, (int)fit_);
-                int menu = menu_ ? 1 : 0;
-                registry.SetValue(REG_MENU, menu);
+                int x = menu_ ? 1 : 0;
+                registry.SetValue(REG_MENU, x);
+                x = adobe_ ? 1 : 0;
+                registry.SetValue(REG_ADOBE, x);
             }
             catch (Exception /* err */) { }
         }
@@ -85,12 +88,21 @@ namespace Cube {
         }
 
         /* ----------------------------------------------------------------- */
+        /// UseAdobeExtension
+        /* ----------------------------------------------------------------- */
+        public bool UseAdobeExtension {
+            get { return adobe_; }
+            set { adobe_ = value; }
+        }
+
+        /* ----------------------------------------------------------------- */
         //  メンバ変数の定義
         /* ----------------------------------------------------------------- */
         #region Member variables
         private NavigationCondition navi_ = NavigationCondition.Thumbnail;
         private FitCondition fit_ = FitCondition.Height;
         private bool menu_ = true;
+        private bool adobe_ = true;
         #endregion
 
         /* ----------------------------------------------------------------- */
@@ -101,6 +113,7 @@ namespace Cube {
         private static string REG_NAVIGATION = "Navigation";
         private static string REG_FIT = "Fit";
         private static string REG_MENU = "ShowMenuInfo";
+        private static string REG_ADOBE = "AdobeExtension";
         #endregion
     }
 }

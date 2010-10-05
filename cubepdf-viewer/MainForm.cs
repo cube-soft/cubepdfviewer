@@ -77,10 +77,19 @@ namespace Cube {
 
             this.MenuToolStrip.Renderer = new CustomToolStripRenderer();
             this.MenuSplitContainer.SplitterDistance = this.MenuToolStrip.Height;
+            this.NavigationSplitContainer.Panel1Collapsed = (setting_.Navigaion == NavigationCondition.None);
             this.FitToHeightButton.Checked = true;
             CreateTabContextMenu(this.PageViewerTabControl);
 
             this.DefaultTabPage.MouseWheel += new MouseEventHandler(MainForm_MouseWheel);
+
+            if (setting_.UseAdobeExtension) {
+                InitializeAdobe();
+                if (adobe_.Length > 0) {
+                    this.AdobeButton.Enabled = true;
+                    this.AdobeButton.Visible = true;
+                }
+            }
         }
 
         /* ----------------------------------------------------------------- */
@@ -878,6 +887,8 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         private void ThumbButton_Click(object sender, EventArgs e) {
             this.NavigationSplitContainer.Panel1Collapsed = !this.NavigationSplitContainer.Panel1Collapsed;
+            setting_.Navigaion = this.NavigationSplitContainer.Panel1Collapsed ?
+                NavigationCondition.None : NavigationCondition.Thumbnail;
             this.Adjust(this.PageViewerTabControl.SelectedTab);
         }
 
@@ -1447,6 +1458,77 @@ namespace Cube {
         #endregion
 
         /* ----------------------------------------------------------------- */
+        // Adobe Reader との連携関係
+        /* ----------------------------------------------------------------- */
+        #region Adobe extensions
+
+        /* ----------------------------------------------------------------- */
+        /// InitializeAdobe
+        /* ----------------------------------------------------------------- */
+        private void InitializeAdobe() {
+            adobe_ = "";
+
+            var registry = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"Software\Adobe\Acrobat Reader");
+            if (registry == null) registry = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"Software\Adobe\Adobe Acrobat");
+            if (registry == null) return;
+
+            string version = "";
+            foreach (var elem in registry.GetSubKeyNames()) {
+                try {
+                    var x = double.Parse(elem);
+                    if (version.Length == 0 || x > double.Parse(version)) version = elem;
+                }
+                catch (Exception /* err */) { }
+            }
+            if (version.Length == 0) return;
+
+            var subkey = registry.OpenSubKey(version + @"\InstallPath");
+            if (subkey == null) return;
+
+            var path = (string)subkey.GetValue("");
+            if (path == null) return;
+
+            adobe_ = path + @"\AcroRd32.exe";
+            this.AdobeButton.Image = Utility.GetIcon(adobe_).ToBitmap();
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// OpenWithAdobe
+        ///
+        /// <summary>
+        /// 現在，表示されている PDF ファイルを Adobe Reader で開く．
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private void OpenWithAdobe(TabPage tab, string path) {
+            if (path == null || adobe_ == null || adobe_.Length == 0) return;
+
+            try {
+                var info = new System.Diagnostics.ProcessStartInfo();
+                info.FileName = adobe_;
+                info.Arguments = path;
+                info.CreateNoWindow = false;
+                info.UseShellExecute = false;
+                var proc = new System.Diagnostics.Process();
+                proc.StartInfo = info;
+                proc.Start();
+            }
+            catch (Exception /* err */) { }
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// SearchButton_Click
+        /* ----------------------------------------------------------------- */
+        private void AdobeButton_Click(object sender, EventArgs e) {
+            var tab = this.PageViewerTabControl.SelectedTab;
+            var path = (string)tab.Tag;
+            this.OpenWithAdobe(tab, path);
+        }
+
+        #endregion
+
+        /* ----------------------------------------------------------------- */
         //  メンバ変数の定義
         /* ----------------------------------------------------------------- */
         #region Member variables
@@ -1454,6 +1536,7 @@ namespace Cube {
         private bool begin_ = true;
         private int wheel_counter_ = 0;
         private Point pos_;
+        private string adobe_;
         #endregion
     }
 }
