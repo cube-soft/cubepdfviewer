@@ -82,6 +82,12 @@
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="MenuDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MenuDialog.Designer.cs">
+      <DependentUpon>MenuDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="PasswordDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -96,6 +102,9 @@
     <Compile Include="UserSetting.cs" />
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MenuDialog.resx">
+      <DependentUpon>MenuDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="PasswordDialog.resx">
       <DependentUpon>PasswordDialog.cs</DependentUpon>

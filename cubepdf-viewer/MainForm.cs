@@ -80,8 +80,7 @@ namespace Cube {
             this.FitToHeightButton.Checked = true;
             CreateTabContextMenu(this.PageViewerTabControl);
 
-            this.MouseEnter += new EventHandler(this.MainForm_MouseEnter);
-            this.MouseWheel += new MouseEventHandler(this.MainForm_MouseWheel);
+            this.DefaultTabPage.MouseWheel += new MouseEventHandler(MainForm_MouseWheel);
         }
 
         /* ----------------------------------------------------------------- */
@@ -127,6 +126,7 @@ namespace Cube {
                 hsb.SmallChange = (hsb.Maximum - hsb.LargeChange) / 20;
 
                 control.Parent.Refresh();
+                if (!this.NavigationSplitContainer.Panel1Collapsed) this.NavigationSplitContainer.Panel1.Refresh();
             }
 
             if (this.MainMenuStrip != null) this.MainMenuStrip.Refresh();
@@ -287,6 +287,7 @@ namespace Cube {
             tab.Scroll += new ScrollEventHandler(VerticalScrolled);
             tab.DragEnter += new DragEventHandler(TabPage_DragEnter);
             tab.DragDrop += new DragEventHandler(TabPage_DragDrop);
+            tab.MouseWheel += new MouseEventHandler(MainForm_MouseWheel);
             parent.Controls.Add(tab);
             parent.SelectedIndex = parent.TabCount - 1;
 
@@ -481,13 +482,6 @@ namespace Cube {
                     wheel_counter_ = 0;
                 }
             }
-        }
-
-        /* ----------------------------------------------------------------- */
-        /// MainForm_MouseEnter
-        /* ----------------------------------------------------------------- */
-        private void MainForm_MouseEnter(object sender, EventArgs e) {
-            this.Focus();
         }
 
         #endregion
@@ -834,6 +828,12 @@ namespace Cube {
         /// MenuModeButton_Click
         /* ----------------------------------------------------------------- */
         private void MenuModeButton_Click(object sender, EventArgs e) {
+            if (!this.MenuSplitContainer.Panel1Collapsed && setting_.ShowMenuInfo) {
+                var dialog = new MenuDialog();
+                dialog.ShowDialog(this);
+                setting_.ShowMenuInfo = !dialog.NoShowNext;
+            }
+
             this.MenuSplitContainer.Panel1Collapsed = !this.MenuSplitContainer.Panel1Collapsed;
             this.Adjust(this.PageViewerTabControl.SelectedTab);
         }

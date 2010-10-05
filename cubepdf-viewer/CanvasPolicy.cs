@@ -700,7 +700,8 @@ namespace Cube {
                 // e.Graphics.DrawString(e.Item.Text, canvas.Font, Brushes.Black, new RectangleF(e.Bounds.X, e.Bounds.Y + e.Bounds.Height - 10, e.Bounds.Width, 10), stringFormat);
 
                 if (e.ItemIndex == core.CurrentPage - 1) {
-                    var pen = new Pen(Color.FromArgb(255, 116, 0));
+                    var pen = new Pen(Color.FromArgb(255, 50, 0));
+                    pen.Width = 2;
                     e.Graphics.DrawRectangle(pen, rect);
                     pen.Dispose();
                 }
