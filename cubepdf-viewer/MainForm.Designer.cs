@@ -29,6 +29,7 @@
             this.ThumbButton = new System.Windows.Forms.ToolStripButton();
             this.OpenButton = new System.Windows.Forms.ToolStripButton();
             this.PrintButton = new System.Windows.Forms.ToolStripButton();
+            this.OnlyDisplayCategoryFileSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.CurrentPageTextBox = new System.Windows.Forms.ToolStripTextBox();
             this.OnlyDisplayCategoryTotalPageLabel = new System.Windows.Forms.ToolStripLabel();
             this.TotalPageLabel = new System.Windows.Forms.ToolStripLabel();
@@ -36,8 +37,10 @@
             this.PreviousPageButton = new System.Windows.Forms.ToolStripButton();
             this.NextPageButton = new System.Windows.Forms.ToolStripButton();
             this.LastPageButton = new System.Windows.Forms.ToolStripButton();
+            this.OnlyDisplayCategoryPageSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.SearchTextBox = new System.Windows.Forms.ToolStripTextBox();
             this.SearchButton = new System.Windows.Forms.ToolStripButton();
+            this.OnlyDisplayCategorySearchSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.ZoomDropDownButton = new System.Windows.Forms.ToolStripDropDownButton();
             this.OnlyDisplayZoom25 = new System.Windows.Forms.ToolStripMenuItem();
             this.OnlyDisplayZoom50 = new System.Windows.Forms.ToolStripMenuItem();
@@ -51,14 +54,11 @@
             this.FitToWidthButton = new System.Windows.Forms.ToolStripButton();
             this.FitToHeightButton = new System.Windows.Forms.ToolStripButton();
             this.LogoButton = new System.Windows.Forms.ToolStripButton();
+            this.OnlyDisplayCategoryZoomSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.MenuSplitContainer = new System.Windows.Forms.SplitContainer();
             this.NavigationSplitContainer = new System.Windows.Forms.SplitContainer();
             this.PageViewerTabControl = new System.Windows.Forms.CustomTabControl();
             this.DefaultTabPage = new System.Windows.Forms.TabPage();
-            this.OnlyDisplayCategoryFileSeparator = new System.Windows.Forms.ToolStripSeparator();
-            this.OnlyDisplayCategoryPageSeparator = new System.Windows.Forms.ToolStripSeparator();
-            this.OnlyDisplayCategorySearchSeparator = new System.Windows.Forms.ToolStripSeparator();
-            this.OnlyDisplayCategoryZoomSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.MenuToolStrip.SuspendLayout();
             this.MenuSplitContainer.Panel1.SuspendLayout();
             this.MenuSplitContainer.Panel2.SuspendLayout();
@@ -183,6 +183,12 @@
             this.PrintButton.MouseLeave += new System.EventHandler(this.PrintButton_MouseLeave);
             this.PrintButton.MouseUp += new System.Windows.Forms.MouseEventHandler(this.PrintButton_MouseUp);
             // 
+            // OnlyDisplayCategoryFileSeparator
+            // 
+            this.OnlyDisplayCategoryFileSeparator.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
+            this.OnlyDisplayCategoryFileSeparator.Name = "OnlyDisplayCategoryFileSeparator";
+            this.OnlyDisplayCategoryFileSeparator.Size = new System.Drawing.Size(6, 40);
+            // 
             // CurrentPageTextBox
             // 
             this.CurrentPageTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
@@ -283,6 +289,12 @@
             this.LastPageButton.MouseLeave += new System.EventHandler(this.LastPageButton_MouseLeave);
             this.LastPageButton.MouseUp += new System.Windows.Forms.MouseEventHandler(this.LastPageButton_MouseUp);
             // 
+            // OnlyDisplayCategoryPageSeparator
+            // 
+            this.OnlyDisplayCategoryPageSeparator.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
+            this.OnlyDisplayCategoryPageSeparator.Name = "OnlyDisplayCategoryPageSeparator";
+            this.OnlyDisplayCategoryPageSeparator.Size = new System.Drawing.Size(6, 40);
+            // 
             // SearchTextBox
             // 
             this.SearchTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
@@ -311,6 +323,12 @@
             this.SearchButton.MouseLeave += new System.EventHandler(this.SearchButton_MouseLeave);
             this.SearchButton.MouseUp += new System.Windows.Forms.MouseEventHandler(this.SearchButton_MouseUp);
             // 
+            // OnlyDisplayCategorySearchSeparator
+            // 
+            this.OnlyDisplayCategorySearchSeparator.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
+            this.OnlyDisplayCategorySearchSeparator.Name = "OnlyDisplayCategorySearchSeparator";
+            this.OnlyDisplayCategorySearchSeparator.Size = new System.Drawing.Size(6, 40);
+            // 
             // ZoomDropDownButton
             // 
             this.ZoomDropDownButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
@@ -336,43 +354,43 @@
             // OnlyDisplayZoom25
             // 
             this.OnlyDisplayZoom25.Name = "OnlyDisplayZoom25";
-            this.OnlyDisplayZoom25.Size = new System.Drawing.Size(152, 22);
+            this.OnlyDisplayZoom25.Size = new System.Drawing.Size(102, 22);
             this.OnlyDisplayZoom25.Text = "25%";
             // 
             // OnlyDisplayZoom50
             // 
             this.OnlyDisplayZoom50.Name = "OnlyDisplayZoom50";
-            this.OnlyDisplayZoom50.Size = new System.Drawing.Size(152, 22);
+            this.OnlyDisplayZoom50.Size = new System.Drawing.Size(102, 22);
             this.OnlyDisplayZoom50.Text = "50%";
             // 
             // OnlyDisplayZoom75
             // 
             this.OnlyDisplayZoom75.Name = "OnlyDisplayZoom75";
-            this.OnlyDisplayZoom75.Size = new System.Drawing.Size(152, 22);
+            this.OnlyDisplayZoom75.Size = new System.Drawing.Size(102, 22);
             this.OnlyDisplayZoom75.Text = "75%";
             // 
             // OnlyDisplayZoom100
             // 
             this.OnlyDisplayZoom100.Name = "OnlyDisplayZoom100";
-            this.OnlyDisplayZoom100.Size = new System.Drawing.Size(152, 22);
+            this.OnlyDisplayZoom100.Size = new System.Drawing.Size(102, 22);
             this.OnlyDisplayZoom100.Text = "100%";
             // 
             // OnlyDisplayZoom125
             // 
             this.OnlyDisplayZoom125.Name = "OnlyDisplayZoom125";
-            this.OnlyDisplayZoom125.Size = new System.Drawing.Size(152, 22);
+            this.OnlyDisplayZoom125.Size = new System.Drawing.Size(102, 22);
             this.OnlyDisplayZoom125.Text = "125%";
             // 
             // OnlyDisplayZoom150
             // 
             this.OnlyDisplayZoom150.Name = "OnlyDisplayZoom150";
-            this.OnlyDisplayZoom150.Size = new System.Drawing.Size(152, 22);
+            this.OnlyDisplayZoom150.Size = new System.Drawing.Size(102, 22);
             this.OnlyDisplayZoom150.Text = "150%";
             // 
             // OnlyDisplayZoom200
             // 
             this.OnlyDisplayZoom200.Name = "OnlyDisplayZoom200";
-            this.OnlyDisplayZoom200.Size = new System.Drawing.Size(152, 22);
+            this.OnlyDisplayZoom200.Size = new System.Drawing.Size(102, 22);
             this.OnlyDisplayZoom200.Text = "200%";
             // 
             // ZoomInButton
@@ -469,6 +487,12 @@
             this.LogoButton.MouseLeave += new System.EventHandler(this.LogoButton_MouseLeave);
             this.LogoButton.MouseUp += new System.Windows.Forms.MouseEventHandler(this.LogoButton_MouseUp);
             // 
+            // OnlyDisplayCategoryZoomSeparator
+            // 
+            this.OnlyDisplayCategoryZoomSeparator.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
+            this.OnlyDisplayCategoryZoomSeparator.Name = "OnlyDisplayCategoryZoomSeparator";
+            this.OnlyDisplayCategoryZoomSeparator.Size = new System.Drawing.Size(6, 40);
+            // 
             // MenuSplitContainer
             // 
             this.MenuSplitContainer.BackColor = System.Drawing.Color.Black;
@@ -562,30 +586,6 @@
             this.DefaultTabPage.Scroll += new System.Windows.Forms.ScrollEventHandler(this.VerticalScrolled);
             this.DefaultTabPage.DragDrop += new System.Windows.Forms.DragEventHandler(this.TabPage_DragDrop);
             this.DefaultTabPage.DragEnter += new System.Windows.Forms.DragEventHandler(this.TabPage_DragEnter);
-            // 
-            // OnlyDisplayCategoryFileSeparator
-            // 
-            this.OnlyDisplayCategoryFileSeparator.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
-            this.OnlyDisplayCategoryFileSeparator.Name = "OnlyDisplayCategoryFileSeparator";
-            this.OnlyDisplayCategoryFileSeparator.Size = new System.Drawing.Size(6, 40);
-            // 
-            // OnlyDisplayCategoryPageSeparator
-            // 
-            this.OnlyDisplayCategoryPageSeparator.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
-            this.OnlyDisplayCategoryPageSeparator.Name = "OnlyDisplayCategoryPageSeparator";
-            this.OnlyDisplayCategoryPageSeparator.Size = new System.Drawing.Size(6, 40);
-            // 
-            // OnlyDisplayCategorySearchSeparator
-            // 
-            this.OnlyDisplayCategorySearchSeparator.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
-            this.OnlyDisplayCategorySearchSeparator.Name = "OnlyDisplayCategorySearchSeparator";
-            this.OnlyDisplayCategorySearchSeparator.Size = new System.Drawing.Size(6, 40);
-            // 
-            // OnlyDisplayCategoryZoomSeparator
-            // 
-            this.OnlyDisplayCategoryZoomSeparator.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
-            this.OnlyDisplayCategoryZoomSeparator.Name = "OnlyDisplayCategoryZoomSeparator";
-            this.OnlyDisplayCategoryZoomSeparator.Size = new System.Drawing.Size(6, 40);
             // 
             // MainForm
             // 
