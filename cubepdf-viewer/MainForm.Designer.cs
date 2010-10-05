@@ -598,6 +598,7 @@
             this.KeyPreview = true;
             this.Name = "MainForm";
             this.Text = "CubePDF Viewer";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.Shown += new System.EventHandler(this.MainForm_Shown);
             this.SizeChanged += new System.EventHandler(this.MainForm_SizeChanged);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MainForm_KeyDown);

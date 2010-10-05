@@ -88,9 +88,9 @@ namespace Cube {
         /// UpdateFitCondtion
         /* ----------------------------------------------------------------- */
         private void UpdateFitCondition(FitCondition which) {
-            fit_ = which;
-            this.FitToWidthButton.Checked = ((fit_ & FitCondition.Width) != 0);
-            this.FitToHeightButton.Checked = ((fit_ & FitCondition.Height) != 0);
+            setting_.Fit = which;
+            this.FitToWidthButton.Checked = ((setting_.Fit & FitCondition.Width) != 0);
+            this.FitToHeightButton.Checked = ((setting_.Fit & FitCondition.Height) != 0);
         }
 
         /* ----------------------------------------------------------------- */
@@ -140,7 +140,7 @@ namespace Cube {
             var message = "";
 
             try {
-                CanvasPolicy.Open(canvas, path, password, fit_);
+                CanvasPolicy.Open(canvas, path, password, setting_.Fit);
                 this.CreateThumbnail(canvas);
             }
             catch (System.Security.SecurityException /* err */) {
@@ -424,6 +424,13 @@ namespace Cube {
                 this.Open(tab, path);
                 this.Tag = null;
             }
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///  MainForm_FormClosing
+        /* ----------------------------------------------------------------- */
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e) {
+            setting_.Save();
         }
 
         /* ----------------------------------------------------------------- */
@@ -1411,8 +1418,8 @@ namespace Cube {
         //  メンバ変数の定義
         /* ----------------------------------------------------------------- */
         #region Member variables
+        private UserSetting setting_ = new UserSetting();
         private bool begin_ = true;
-        private FitCondition fit_ = FitCondition.Height;
         private int wheel_counter_ = 0;
         private Point pos_;
         #endregion
