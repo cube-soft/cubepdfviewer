@@ -325,9 +325,10 @@ namespace Cube {
             var tab = new TabPage();
 
             // TabPage の設定
+            tab.AllowDrop = true;
             tab.AutoScroll = true;
             tab.BackColor = Color.DimGray;
-            //tab.BorderStyle = BorderStyle.Fixed3D;
+            tab.BorderStyle = BorderStyle.None;
             tab.ContextMenuStrip = new ContextMenuStrip();
             tab.Text = "(無題)";
             tab.Scroll += new ScrollEventHandler(VerticalScrolled);

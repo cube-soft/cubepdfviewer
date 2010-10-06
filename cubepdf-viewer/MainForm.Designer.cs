@@ -574,7 +574,7 @@
             this.PageViewerTabControl.DisplayStyleProvider.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.PageViewerTabControl.DisplayStyleProvider.Opacity = 1F;
             this.PageViewerTabControl.DisplayStyleProvider.Overlap = 0;
-            this.PageViewerTabControl.DisplayStyleProvider.Padding = new System.Drawing.Point(6, 5);
+            this.PageViewerTabControl.DisplayStyleProvider.Padding = new System.Drawing.Point(10, 5);
             this.PageViewerTabControl.DisplayStyleProvider.Radius = 3;
             this.PageViewerTabControl.DisplayStyleProvider.ShowTabCloser = true;
             this.PageViewerTabControl.DisplayStyleProvider.TextColor = System.Drawing.Color.White;
@@ -583,6 +583,7 @@
             this.PageViewerTabControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.PageViewerTabControl.HotTrack = true;
             this.PageViewerTabControl.Location = new System.Drawing.Point(0, 0);
+            this.PageViewerTabControl.Margin = new System.Windows.Forms.Padding(0);
             this.PageViewerTabControl.Name = "PageViewerTabControl";
             this.PageViewerTabControl.SelectedIndex = 0;
             this.PageViewerTabControl.Size = new System.Drawing.Size(741, 532);
