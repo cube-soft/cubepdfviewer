@@ -602,7 +602,7 @@
             this.DefaultTabPage.Size = new System.Drawing.Size(733, 501);
             this.DefaultTabPage.TabIndex = 0;
             this.DefaultTabPage.Text = "(無題)";
-            this.DefaultTabPage.Scroll += new System.Windows.Forms.ScrollEventHandler(this.VerticalScrolled);
+            this.DefaultTabPage.Scroll += new System.Windows.Forms.ScrollEventHandler(this.TabPage_Scroll);
             this.DefaultTabPage.DragDrop += new System.Windows.Forms.DragEventHandler(this.TabPage_DragDrop);
             this.DefaultTabPage.DragEnter += new System.Windows.Forms.DragEventHandler(this.TabPage_DragEnter);
             // 

@@ -26,6 +26,7 @@ using System.Windows.Forms;
 using Container = System.Collections.Generic;
 using Canvas = System.Windows.Forms.PictureBox;
 using PDF = PDFLibNet.PDFWrapper;
+using System.Drawing.Printing;
 
 namespace Cube {
     /* --------------------------------------------------------------------- */
