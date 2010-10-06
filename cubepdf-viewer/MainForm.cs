@@ -151,7 +151,9 @@ namespace Cube {
 
             try {
                 CanvasPolicy.Open(canvas, path, password, setting_.Fit);
-                this.CreateThumbnail(canvas);
+                if (!this.NavigationSplitContainer.Panel1Collapsed) {
+                    this.CreateThumbnail(canvas);
+                }
             }
             catch (System.Security.SecurityException /* err */) {
                 PasswordDialog dialog = new PasswordDialog(path);
@@ -841,8 +843,15 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         private void ThumbButton_Click(object sender, EventArgs e) {
             this.NavigationSplitContainer.Panel1Collapsed = !this.NavigationSplitContainer.Panel1Collapsed;
-            setting_.Navigaion = this.NavigationSplitContainer.Panel1Collapsed ?
-                NavigationCondition.None : NavigationCondition.Thumbnail;
+            if (!this.NavigationSplitContainer.Panel1Collapsed) {
+                setting_.Navigaion = NavigationCondition.Thumbnail;
+                var control = this.NavigationSplitContainer.Panel1;
+                if (CanvasPolicy.GetThumbnail(control) == null) {
+                    var canvas = CanvasPolicy.Get(this.PageViewerTabControl.SelectedTab);
+                    this.CreateThumbnail(canvas);
+                }
+            }
+            else setting_.Navigaion = NavigationCondition.None;
             this.Adjust(this.PageViewerTabControl.SelectedTab);
         }
 

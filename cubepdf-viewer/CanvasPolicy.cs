@@ -26,7 +26,6 @@ using System.Windows.Forms;
 using Container = System.Collections.Generic;
 using Canvas = System.Windows.Forms.PictureBox;
 using PDF = PDFLibNet.PDFWrapper;
-using System.Drawing.Printing;
 
 namespace Cube {
     /* --------------------------------------------------------------------- */
@@ -34,6 +33,21 @@ namespace Cube {
     /* --------------------------------------------------------------------- */
     public enum FitCondition {
         None = 0x00, Width = 0x01, Height = 0x02
+    }
+
+    public class ThumbnailInfo {
+        public PDF Core {
+            get { return core_; }
+            set { core_ = value; }
+        }
+
+        public Container.Dictionary<int, Image> Images {
+            get { return images_; }
+            set { images_ = value; }
+        }
+
+        private PDF core_ = null;
+        private Container.Dictionary<int, Image> images_ = null;
     }
 
     /* --------------------------------------------------------------------- */
@@ -62,14 +76,14 @@ namespace Cube {
             const int WM_LBUTTONDOWN = 0x0201;
             const int WM_LBUTTONUP   = 0x0202;
 
-            var core = (PDF)this.Tag;
-            if (core != null) {
+            var info = this.Tag as ThumbnailInfo;
+            if (info != null && info.Core != null) {
                 switch (m.Msg) {
                 case WM_SIZE:
-                    core.CancelThumbProcess();
+                    info.Core.CancelThumbProcess();
                     break;
                 case WM_VSCROLL:
-                    if (valid_) core.CancelThumbProcess();
+                    if (valid_) info.Core.CancelThumbProcess();
                     break;
                 case WM_LBUTTONDOWN:
                     valid_ = true;
@@ -185,10 +199,10 @@ namespace Cube {
                 if (which == FitCondition.Height) CanvasPolicy.FitToHeight(canvas);
                 else if (which == FitCondition.Width) CanvasPolicy.FitToWidth(canvas);
                 else core.Zoom = 100;
-                core.RenderPage(IntPtr.Zero, false, false);
                 canvas.Parent.Text = System.IO.Path.GetFileNameWithoutExtension(path);
                 canvas.Parent.Tag = path;
-                CanvasPolicy.Adjust(canvas);
+                CanvasPolicy.AsyncRender(canvas);
+                //CanvasPolicy.Adjust(canvas);
             }
         }
 
@@ -605,8 +619,12 @@ namespace Cube {
             var canvas = new Thumbnail();
             parent.Controls.Add(canvas);
 
+            var info = new ThumbnailInfo();
+            info.Core = core;
+            info.Images = new Container.Dictionary<int,Image>();
+
             canvas.Name = "Thumbnail";
-            canvas.Tag = core;
+            canvas.Tag = info;
             canvas.BackColor = background_;
             canvas.Alignment = ListViewAlignment.Default;
             canvas.MultiSelect = false;
@@ -639,11 +657,38 @@ namespace Cube {
         public static void DestroyThumbnail(Thumbnail canvas) {
             var parent = canvas.Parent;
             canvas.Items.Clear();
+            var info = canvas.Tag as ThumbnailInfo;
+            if (info == null) return;
+            foreach (var item in info.Images) item.Value.Dispose();
             canvas.Tag = null;
             parent.Controls.Remove(canvas);
         }
 
         #region Private methods
+
+        /* ----------------------------------------------------------------- */
+        /// Render (private)
+        /* ----------------------------------------------------------------- */
+        private static void Render(Canvas canvas) {
+            if (canvas == null || canvas.Tag == null) return;
+            var core = canvas.Tag as PDF;
+            core.RenderPage(IntPtr.Zero, false, false);
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// AsyncRender (private)
+        /* ----------------------------------------------------------------- */
+        private static void AsyncRender(Canvas canvas) {
+            if (canvas == null || canvas.Tag == null) return;
+            var worker = new System.ComponentModel.BackgroundWorker();
+            worker.DoWork += new System.ComponentModel.DoWorkEventHandler(DoWorkHandler);
+            worker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(RunWorkerCompletedHandler);
+            worker.RunWorkerAsync(canvas);
+        }
+
+        #endregion
+
+        #region Event handlers
 
         /* ----------------------------------------------------------------- */
         ///
@@ -657,8 +702,8 @@ namespace Cube {
         /// 
         /* ----------------------------------------------------------------- */
         private static void PaintHandler(object sender, PaintEventArgs e) {
-            var canvas = (Canvas)sender;
-            if (canvas.Tag == null) return;
+            var canvas = sender as Canvas;
+            if (canvas == null || canvas.Tag == null) return;
 
             var core = (PDF)canvas.Tag;
             core.ClientBounds = new Rectangle(new Point(0, 0), canvas.Size);
@@ -678,9 +723,12 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         private static void DrawItemHandler(object sender, DrawListViewItemEventArgs e) {
             lock (sender) {
-                var canvas = (Thumbnail)sender;
-                var core = (PDFLibNet.PDFWrapper)canvas.Tag;
-                if (core == null) return;
+                var canvas = sender as Thumbnail;
+                if (canvas == null || canvas.Tag == null) return;
+
+                var info = canvas.Tag as ThumbnailInfo;
+                if (info == null || info.Core == null) return;
+                var core = info.Core;
                 while (core.IsBusy) System.Threading.Thread.Sleep(50);
 
                 PDFLibNet.PDFPage page;
@@ -752,6 +800,31 @@ namespace Cube {
         private static void MouseEnterHandler(object sender, EventArgs e) {
             var control = (Control)sender;
             control.Focus();
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// DoWorkHandler
+        /* ----------------------------------------------------------------- */
+        private static void DoWorkHandler(object sender, System.ComponentModel.DoWorkEventArgs e) {
+            var worker = sender as System.ComponentModel.BackgroundWorker;
+            var canvas = e.Argument as Canvas;
+            if (canvas == null || canvas.Tag == null) return;
+
+            var core = canvas.Tag as PDF;
+            lock (core) {
+                core.RenderPage(IntPtr.Zero, false, false);
+            }
+            e.Result = canvas;
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// RunWorkerCompletedHandler
+        /* ----------------------------------------------------------------- */
+        private static void RunWorkerCompletedHandler(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e) {
+            var canvas = e.Result as Canvas;
+            if (canvas == null) return;
+            CanvasPolicy.Adjust(canvas);
+            canvas.Refresh();
         }
 
         #endregion
