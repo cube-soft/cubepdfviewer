@@ -106,7 +106,7 @@
             this.MenuToolStrip.Location = new System.Drawing.Point(0, 0);
             this.MenuToolStrip.Name = "MenuToolStrip";
             this.MenuToolStrip.Padding = new System.Windows.Forms.Padding(0);
-            this.MenuToolStrip.Size = new System.Drawing.Size(892, 40);
+            this.MenuToolStrip.Size = new System.Drawing.Size(934, 40);
             this.MenuToolStrip.TabIndex = 0;
             this.MenuToolStrip.Text = "メニュー";
             // 
@@ -529,7 +529,7 @@
             // MenuSplitContainer.Panel2
             // 
             this.MenuSplitContainer.Panel2.Controls.Add(this.NavigationSplitContainer);
-            this.MenuSplitContainer.Size = new System.Drawing.Size(892, 573);
+            this.MenuSplitContainer.Size = new System.Drawing.Size(934, 562);
             this.MenuSplitContainer.SplitterDistance = 40;
             this.MenuSplitContainer.SplitterWidth = 1;
             this.MenuSplitContainer.TabIndex = 4;
@@ -552,7 +552,7 @@
             this.NavigationSplitContainer.Panel2.BackColor = System.Drawing.Color.LightGray;
             this.NavigationSplitContainer.Panel2.BackgroundImage = global::Cube.Properties.Resources.background_tab;
             this.NavigationSplitContainer.Panel2.Controls.Add(this.PageViewerTabControl);
-            this.NavigationSplitContainer.Size = new System.Drawing.Size(892, 532);
+            this.NavigationSplitContainer.Size = new System.Drawing.Size(934, 521);
             this.NavigationSplitContainer.SplitterDistance = 150;
             this.NavigationSplitContainer.SplitterWidth = 1;
             this.NavigationSplitContainer.TabIndex = 2;
@@ -586,7 +586,7 @@
             this.PageViewerTabControl.Margin = new System.Windows.Forms.Padding(0);
             this.PageViewerTabControl.Name = "PageViewerTabControl";
             this.PageViewerTabControl.SelectedIndex = 0;
-            this.PageViewerTabControl.Size = new System.Drawing.Size(741, 532);
+            this.PageViewerTabControl.Size = new System.Drawing.Size(783, 521);
             this.PageViewerTabControl.TabIndex = 0;
             this.PageViewerTabControl.TabClosing += new System.EventHandler<System.Windows.Forms.TabControlCancelEventArgs>(this.PageViewerTabControl_TabClosing);
             this.PageViewerTabControl.SelectedIndexChanged += new System.EventHandler(this.PageViewerTabControl_SelectedIndexChanged);
@@ -599,7 +599,7 @@
             this.DefaultTabPage.ForeColor = System.Drawing.SystemColors.ControlText;
             this.DefaultTabPage.Location = new System.Drawing.Point(4, 27);
             this.DefaultTabPage.Name = "DefaultTabPage";
-            this.DefaultTabPage.Size = new System.Drawing.Size(733, 501);
+            this.DefaultTabPage.Size = new System.Drawing.Size(775, 490);
             this.DefaultTabPage.TabIndex = 0;
             this.DefaultTabPage.Text = "(無題)";
             this.DefaultTabPage.Scroll += new System.Windows.Forms.ScrollEventHandler(this.TabPage_Scroll);
@@ -611,11 +611,12 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(892, 573);
+            this.ClientSize = new System.Drawing.Size(934, 562);
             this.Controls.Add(this.MenuSplitContainer);
             this.DoubleBuffered = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
+            this.MinimumSize = new System.Drawing.Size(950, 200);
             this.Name = "MainForm";
             this.Text = "CubePDF Viewer";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);

@@ -72,7 +72,7 @@ namespace Cube {
             InitializeComponent();
 
             int x = Screen.PrimaryScreen.Bounds.Height - 100;
-            this.Size = new Size(System.Math.Max(x, 800), x);
+            this.Size = new Size(System.Math.Max(x, this.MinimumSize.Width), x);
 
             this.MenuToolStrip.Renderer = new CustomToolStripRenderer();
             this.MenuSplitContainer.SplitterDistance = this.MenuToolStrip.Height;

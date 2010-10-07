@@ -341,8 +341,13 @@ namespace Cube {
         protected override void Dispose(bool disposing) {
             if (disposing) {
                 var parent = this.Parent;
-                if (this.Engine != null) this.Engine.Dispose();
+                if (this.Engine != null) {
+                    this.Engine.ImageGenerated -= new ThumbEventHandler(ImageGeneratedHandler);
+                    this.Engine.Dispose();
+                }
                 this.Items.Clear();
+                this.DrawItem -= new DrawListViewItemEventHandler(DrawItemHandler);
+                this.MouseEnter -= new EventHandler(MouseEnterHandler);
                 parent.Controls.Remove(this);
             }
             base.Dispose(disposing);
