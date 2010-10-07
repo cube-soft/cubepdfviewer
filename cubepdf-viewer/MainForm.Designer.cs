@@ -60,6 +60,7 @@
             this.NavigationSplitContainer = new System.Windows.Forms.SplitContainer();
             this.PageViewerTabControl = new System.Windows.Forms.CustomTabControl();
             this.DefaultTabPage = new System.Windows.Forms.TabPage();
+            this.OnlyDisplayZoom400 = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuToolStrip.SuspendLayout();
             this.MenuSplitContainer.Panel1.SuspendLayout();
             this.MenuSplitContainer.Panel2.SuspendLayout();
@@ -341,7 +342,8 @@
             this.OnlyDisplayZoom100,
             this.OnlyDisplayZoom125,
             this.OnlyDisplayZoom150,
-            this.OnlyDisplayZoom200});
+            this.OnlyDisplayZoom200,
+            this.OnlyDisplayZoom400});
             this.ZoomDropDownButton.Font = new System.Drawing.Font("MS UI Gothic", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.ZoomDropDownButton.ForeColor = System.Drawing.Color.LightGray;
             this.ZoomDropDownButton.Image = ((System.Drawing.Image)(resources.GetObject("ZoomDropDownButton.Image")));
@@ -356,43 +358,43 @@
             // OnlyDisplayZoom25
             // 
             this.OnlyDisplayZoom25.Name = "OnlyDisplayZoom25";
-            this.OnlyDisplayZoom25.Size = new System.Drawing.Size(102, 22);
+            this.OnlyDisplayZoom25.Size = new System.Drawing.Size(152, 22);
             this.OnlyDisplayZoom25.Text = "25%";
             // 
             // OnlyDisplayZoom50
             // 
             this.OnlyDisplayZoom50.Name = "OnlyDisplayZoom50";
-            this.OnlyDisplayZoom50.Size = new System.Drawing.Size(102, 22);
+            this.OnlyDisplayZoom50.Size = new System.Drawing.Size(152, 22);
             this.OnlyDisplayZoom50.Text = "50%";
             // 
             // OnlyDisplayZoom75
             // 
             this.OnlyDisplayZoom75.Name = "OnlyDisplayZoom75";
-            this.OnlyDisplayZoom75.Size = new System.Drawing.Size(102, 22);
+            this.OnlyDisplayZoom75.Size = new System.Drawing.Size(152, 22);
             this.OnlyDisplayZoom75.Text = "75%";
             // 
             // OnlyDisplayZoom100
             // 
             this.OnlyDisplayZoom100.Name = "OnlyDisplayZoom100";
-            this.OnlyDisplayZoom100.Size = new System.Drawing.Size(102, 22);
+            this.OnlyDisplayZoom100.Size = new System.Drawing.Size(152, 22);
             this.OnlyDisplayZoom100.Text = "100%";
             // 
             // OnlyDisplayZoom125
             // 
             this.OnlyDisplayZoom125.Name = "OnlyDisplayZoom125";
-            this.OnlyDisplayZoom125.Size = new System.Drawing.Size(102, 22);
+            this.OnlyDisplayZoom125.Size = new System.Drawing.Size(152, 22);
             this.OnlyDisplayZoom125.Text = "125%";
             // 
             // OnlyDisplayZoom150
             // 
             this.OnlyDisplayZoom150.Name = "OnlyDisplayZoom150";
-            this.OnlyDisplayZoom150.Size = new System.Drawing.Size(102, 22);
+            this.OnlyDisplayZoom150.Size = new System.Drawing.Size(152, 22);
             this.OnlyDisplayZoom150.Text = "150%";
             // 
             // OnlyDisplayZoom200
             // 
             this.OnlyDisplayZoom200.Name = "OnlyDisplayZoom200";
-            this.OnlyDisplayZoom200.Size = new System.Drawing.Size(102, 22);
+            this.OnlyDisplayZoom200.Size = new System.Drawing.Size(152, 22);
             this.OnlyDisplayZoom200.Text = "200%";
             // 
             // ZoomInButton
@@ -554,7 +556,7 @@
             this.NavigationSplitContainer.Panel2.Controls.Add(this.PageViewerTabControl);
             this.NavigationSplitContainer.Size = new System.Drawing.Size(934, 521);
             this.NavigationSplitContainer.SplitterDistance = 150;
-            this.NavigationSplitContainer.SplitterWidth = 1;
+            this.NavigationSplitContainer.SplitterWidth = 2;
             this.NavigationSplitContainer.TabIndex = 2;
             // 
             // PageViewerTabControl
@@ -586,7 +588,7 @@
             this.PageViewerTabControl.Margin = new System.Windows.Forms.Padding(0);
             this.PageViewerTabControl.Name = "PageViewerTabControl";
             this.PageViewerTabControl.SelectedIndex = 0;
-            this.PageViewerTabControl.Size = new System.Drawing.Size(783, 521);
+            this.PageViewerTabControl.Size = new System.Drawing.Size(782, 521);
             this.PageViewerTabControl.TabIndex = 0;
             this.PageViewerTabControl.TabClosing += new System.EventHandler<System.Windows.Forms.TabControlCancelEventArgs>(this.PageViewerTabControl_TabClosing);
             this.PageViewerTabControl.SelectedIndexChanged += new System.EventHandler(this.PageViewerTabControl_SelectedIndexChanged);
@@ -599,12 +601,18 @@
             this.DefaultTabPage.ForeColor = System.Drawing.SystemColors.ControlText;
             this.DefaultTabPage.Location = new System.Drawing.Point(4, 27);
             this.DefaultTabPage.Name = "DefaultTabPage";
-            this.DefaultTabPage.Size = new System.Drawing.Size(775, 490);
+            this.DefaultTabPage.Size = new System.Drawing.Size(774, 490);
             this.DefaultTabPage.TabIndex = 0;
             this.DefaultTabPage.Text = "(無題)";
             this.DefaultTabPage.Scroll += new System.Windows.Forms.ScrollEventHandler(this.TabPage_Scroll);
             this.DefaultTabPage.DragDrop += new System.Windows.Forms.DragEventHandler(this.TabPage_DragDrop);
             this.DefaultTabPage.DragEnter += new System.Windows.Forms.DragEventHandler(this.TabPage_DragEnter);
+            // 
+            // OnlyDisplayZoom400
+            // 
+            this.OnlyDisplayZoom400.Name = "OnlyDisplayZoom400";
+            this.OnlyDisplayZoom400.Size = new System.Drawing.Size(152, 22);
+            this.OnlyDisplayZoom400.Text = "400%";
             // 
             // MainForm
             // 
@@ -673,6 +681,7 @@
         private System.Windows.Forms.ToolStripSeparator OnlyDisplayCategorySearchSeparator;
         private System.Windows.Forms.ToolStripSeparator OnlyDisplayCategoryZoomSeparator;
         private System.Windows.Forms.ToolStripButton AdobeButton;
+        private System.Windows.Forms.ToolStripMenuItem OnlyDisplayZoom400;
     }
 }
 

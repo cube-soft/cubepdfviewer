@@ -281,7 +281,23 @@ namespace Cube {
     /* --------------------------------------------------------------------- */
     /// Thumbnail
     /* --------------------------------------------------------------------- */
-    public class Thumbnail : System.Windows.Forms.ListView {
+    public class Thumbnail : ListView {
+        /* ----------------------------------------------------------------- */
+        ///
+        /// GetInstance
+        /// 
+        /// <summary>
+        /// 補助関数．Thumbnail オブジェクトは，何らかの Control
+        /// オブジェクトに埋め込む (Controls に登録する）形で使用する為，
+        /// 親となる Control オブジェクトから Thumbnail オブジェクトを
+        /// 見つける際に使用する．
+        /// </summary>
+        /// 
+        /* ----------------------------------------------------------------- */
+        public static Thumbnail GetInstance(Control parent) {
+            return parent.Controls["Thumbnail"] as Thumbnail;
+        }
+
         /* ----------------------------------------------------------------- */
         /// Constructor
         /* ----------------------------------------------------------------- */
@@ -294,13 +310,6 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         public ThumbEngine Engine {
             get { return engine_; }
-        }
-
-        /* ----------------------------------------------------------------- */
-        /// Get
-        /* ----------------------------------------------------------------- */
-        public static Thumbnail Get(Control parent) {
-            return parent.Controls["Thumbnail"] as Thumbnail;
         }
 
         /* ----------------------------------------------------------------- */
@@ -365,7 +374,7 @@ namespace Cube {
         }
 
         /* ----------------------------------------------------------------- */
-        /// Create
+        /// Create (private)
         /* ----------------------------------------------------------------- */
         private void Create(Control parent, Control src) {
             if (src == null || src.Tag == null) return;
