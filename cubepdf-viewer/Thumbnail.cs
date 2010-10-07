@@ -143,7 +143,16 @@ namespace Cube {
                 if (!worker_.IsBusy) worker_.RunWorkerAsync();
             }
         }
-        
+
+        /* ----------------------------------------------------------------- */
+        /// QueueCount
+        /* ----------------------------------------------------------------- */
+        public int QueueCount() {
+            lock (lock_) {
+                return queue_.Count;
+            }
+        }
+
         /* ----------------------------------------------------------------- */
         /// ClearQueue
         /* ----------------------------------------------------------------- */
@@ -417,6 +426,7 @@ namespace Cube {
             }
             else {
                 engine.Enqueue(e.ItemIndex + 1);
+                this.Cursor = Cursors.AppStarting;
 
                 // 生成されてないページは真っ白な画像を表示する．
                 var brush = new SolidBrush(Color.White);
@@ -452,6 +462,10 @@ namespace Cube {
         private void ImageGeneratedHandler(object sender, ThumbEventArgs e) {
             if (e.PageNum <= 0 && e.PageNum >= this.Items.Count) return;
             this.Invalidate(this.Items[e.PageNum - 1].Bounds);
+
+            var engine = sender as ThumbEngine;
+            if (engine == null || engine.QueueCount() <= 0) this.Cursor = Cursors.Default;
+            else this.Cursor = Cursors.AppStarting;
         }
 
         #endregion
