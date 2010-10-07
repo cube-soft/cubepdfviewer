@@ -158,7 +158,9 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         public void Clear() {
             lock (lock_) {
-                foreach (Image item in images_.Values) item.Dispose();
+                // TODO: ライブラリも Image への参照を持っているため，
+                // Dispose() できない．ライブラリ側を修正する．
+                //foreach (Image item in images_.Values) item.Dispose();
                 images_.Clear();
                 queue_.Clear();
             }
