@@ -17,7 +17,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see < http://www.gnu.org/licenses/ >.
  *
- *  Last-modified: Wed 01 Sep 2010 00:10:00 JST
+ *  Last-modified: Fri 08 Oct 2010 03:32:00 JST
  */
 /* ------------------------------------------------------------------------- */
 using System;
@@ -268,16 +268,11 @@ namespace Cube {
 
             var core = (PDF)canvas.Tag;
             core.NextPage();
-#if CUBE_ASYNC_PAGE
-            CanvasPolicy.AsyncRender(canvas);
-            var control = (ScrollableControl)canvas.Parent;
-            control.AutoScrollPosition = new Point(0, 0);
-#else
+
             if (CanvasPolicy.Render(canvas)) {
-                var control = (ScrollableControl)canvas.Parent;
-                control.AutoScrollPosition = new Point(0, 0);
+                var control = canvas.Parent as ScrollableControl;
+                if (control != null) control.AutoScrollPosition = new Point(0, 0);
             }
-#endif
             return core.CurrentPage;
         }
 
@@ -295,16 +290,11 @@ namespace Cube {
 
             var core = (PDF)canvas.Tag;
             core.PreviousPage();
-#if CUBE_ASYNC_PAGE
-            CanvasPolicy.AsyncRender(canvas);
-            var control = (ScrollableControl)canvas.Parent;
-            control.AutoScrollPosition = new Point(0, 0);
-#else
+
             if (CanvasPolicy.Render(canvas)) {
-                var control = (ScrollableControl)canvas.Parent;
-                control.AutoScrollPosition = new Point(0, 0);
+                var control = canvas.Parent as ScrollableControl;
+                if (control != null) control.AutoScrollPosition = new Point(0, 0);
             }
-#endif
             return core.CurrentPage;
         }
 

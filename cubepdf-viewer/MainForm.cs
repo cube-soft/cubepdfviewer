@@ -910,7 +910,7 @@ namespace Cube {
                 var maximum = 1 + scroll.Maximum - scroll.LargeChange; // ユーザのコントロールで取れる scroll.Value の最大値
                 var delta = -(e.Delta / 120) * scroll.SmallChange;
                 if (scroll.Value == scroll.Minimum && delta < 0) {
-                    if (wheel_counter_ > 2) {
+                    if (wheel_counter_ > 1) {
                         if (CanvasPolicy.CurrentPage(canvas) > 1 && this.PreviousPage(tab)) {
                             tab.AutoScrollPosition = new Point(0, maximum);
                         }
@@ -919,7 +919,7 @@ namespace Cube {
                     else wheel_counter_++;
                 }
                 else if (scroll.Value == maximum && delta > 0) {
-                    if (wheel_counter_ > 2) {
+                    if (wheel_counter_ > 1) {
                         if (CanvasPolicy.CurrentPage(canvas) < CanvasPolicy.PageCount(canvas) && this.NextPage(tab)) {
                             tab.AutoScrollPosition = new Point(0, 0);
                         }
