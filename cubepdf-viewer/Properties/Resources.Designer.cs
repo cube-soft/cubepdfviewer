@@ -158,6 +158,13 @@ namespace Cube.Properties {
             }
         }
         
+        internal static System.Drawing.Icon cubepdf_file {
+            get {
+                object obj = ResourceManager.GetObject("cubepdf_file", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
         internal static System.Drawing.Icon cubepdf_viewer {
             get {
                 object obj = ResourceManager.GetObject("cubepdf_viewer", resourceCulture);
