@@ -23,6 +23,7 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using System.ComponentModel;
 using Container = System.Collections.Generic;
 using Canvas = System.Windows.Forms.PictureBox;
 using PDF = PDFLibNet.PDFWrapper;
@@ -33,72 +34,6 @@ namespace Cube {
     /* --------------------------------------------------------------------- */
     public enum FitCondition {
         None = 0x00, Width = 0x01, Height = 0x02
-    }
-
-    public class ThumbnailInfo {
-        public PDF Core {
-            get { return core_; }
-            set { core_ = value; }
-        }
-
-        public Container.Dictionary<int, Image> Images {
-            get { return images_; }
-            set { images_ = value; }
-        }
-
-        private PDF core_ = null;
-        private Container.Dictionary<int, Image> images_ = null;
-    }
-
-    /* --------------------------------------------------------------------- */
-    /// Thumbnail
-    /* --------------------------------------------------------------------- */
-    public class Thumbnail : System.Windows.Forms.ListView {
-        /* ----------------------------------------------------------------- */
-        ///
-        /// WndProc
-        /// 
-        /// <summary>
-        /// サムネイル画像を生成するためのキューを特定のイベントが発生した
-        /// 際にキャンセルする．
-        /// 
-        /// NOTE: LargeChange によるスクロールが発生した場合，必要な
-        /// 画像まで生成がキャンセルされている模様．現在は，MouseDown
-        /// イベントが発生した直後の Scroll イベント時にのみキャンセル
-        /// している．キャンセルのタイミングについては，もう少し検討する
-        /// 必要がある．
-        /// </summary>
-        /// 
-        /* ----------------------------------------------------------------- */
-        protected override void WndProc(ref Message m) {
-            const int WM_SIZE        = 0x0005;
-            const int WM_VSCROLL     = 0x0115;
-            const int WM_LBUTTONDOWN = 0x0201;
-            const int WM_LBUTTONUP   = 0x0202;
-
-            var info = this.Tag as ThumbnailInfo;
-            if (info != null && info.Core != null) {
-                switch (m.Msg) {
-                case WM_SIZE:
-                    info.Core.CancelThumbProcess();
-                    break;
-                case WM_VSCROLL:
-                    if (valid_) info.Core.CancelThumbProcess();
-                    break;
-                case WM_LBUTTONDOWN:
-                    valid_ = true;
-                    break;
-                case WM_LBUTTONUP:
-                    valid_ = false;
-                    break;
-                default:
-                    break;
-                }
-            }
-            base.WndProc(ref m);
-        }
-
-        private bool valid_ = false;
     }
 
     /* --------------------------------------------------------------------- */
@@ -141,7 +76,8 @@ namespace Cube {
 
                 // プロパティ
                 canvas.Name = "Canvas";
-                canvas.BackColor = background_;
+                //canvas.BackColor = background_;
+                canvas.BackColor = Color.Transparent;
                 canvas.Size = parent.ClientSize;
                 canvas.ClientSize = canvas.Size;
                 //canvas.SizeMode = PictureBoxSizeMode.AutoSize;
@@ -196,8 +132,14 @@ namespace Cube {
 
             if (core.LoadPDF(path)) {
                 core.CurrentPage = 1;
-                if (which == FitCondition.Height) CanvasPolicy.FitToHeight(canvas);
-                else if (which == FitCondition.Width) CanvasPolicy.FitToWidth(canvas);
+                if (which == FitCondition.Height) {
+                    core.FitToHeight(canvas.Parent.Handle);
+                    core.Zoom = core.Zoom - 1; // 暫定
+                }
+                else if (which == FitCondition.Width) {
+                    core.FitToWidth(canvas.Parent.Handle);
+                    core.Zoom = core.Zoom - 1; // 暫定
+                }
                 else core.Zoom = 100;
                 canvas.Parent.Text = System.IO.Path.GetFileNameWithoutExtension(path);
                 canvas.Parent.Tag = path;
@@ -300,7 +242,7 @@ namespace Cube {
             var core = (PDF)canvas.Tag;
             int n = Math.Min(Math.Max(page, 1), core.PageCount);
             core.CurrentPage = n;
-            if (core.RenderPage(IntPtr.Zero, false, false)) {
+            if (CanvasPolicy.Render(canvas)) {
                 var control = (ScrollableControl)canvas.Parent;
                 control.AutoScrollPosition = new Point(0, 0);
             }
@@ -321,7 +263,7 @@ namespace Cube {
 
             var core = (PDF)canvas.Tag;
             core.NextPage();
-            if (core.RenderPage(IntPtr.Zero, false, false)) {
+            if (CanvasPolicy.Render(canvas)) {
                 var control = (ScrollableControl)canvas.Parent;
                 control.AutoScrollPosition = new Point(0, 0);
             }
@@ -342,7 +284,7 @@ namespace Cube {
 
             var core = (PDF)canvas.Tag;
             core.PreviousPage();
-            if (core.RenderPage(IntPtr.Zero, false, false)) {
+            if (CanvasPolicy.Render(canvas)) {
                 var control = (ScrollableControl)canvas.Parent;
                 control.AutoScrollPosition = new Point(0, 0);
             }
@@ -363,7 +305,7 @@ namespace Cube {
 
             var core = (PDF)canvas.Tag;
             core.CurrentPage = 1;
-            if (core.RenderPage(IntPtr.Zero, false, false)) {
+            if (CanvasPolicy.Render(canvas)) {
                 var control = (ScrollableControl)canvas.Parent;
                 control.AutoScrollPosition = new Point(0, 0);
             }
@@ -384,7 +326,7 @@ namespace Cube {
 
             var core = (PDF)canvas.Tag;
             core.CurrentPage = core.PageCount;
-            if (core.RenderPage(IntPtr.Zero, false, false)) {
+            if (CanvasPolicy.Render(canvas)) {
                 var control = (ScrollableControl)canvas.Parent;
                 control.AutoScrollPosition = new Point(0, 0);
             }
@@ -422,7 +364,7 @@ namespace Cube {
             var core = (PDF)canvas.Tag;
             var prev = canvas.Size;
             core.Zoom = percent;
-            core.RenderPage(IntPtr.Zero, false, false);
+            CanvasPolicy.Render(canvas);
 
             CanvasPolicy.Adjust(canvas, prev);
             return core.Zoom;
@@ -443,7 +385,7 @@ namespace Cube {
             var core = (PDF)canvas.Tag;
             var prev = canvas.Size;
             core.ZoomIN();
-            core.RenderPage(IntPtr.Zero, false, false);
+            CanvasPolicy.Render(canvas);
 
             CanvasPolicy.Adjust(canvas, prev);
             return core.Zoom;
@@ -464,7 +406,7 @@ namespace Cube {
             var core = (PDF)canvas.Tag;
             var prev = canvas.Size;
             core.ZoomOut();
-            core.RenderPage(IntPtr.Zero, false, false);
+            CanvasPolicy.Render(canvas);
 
             CanvasPolicy.Adjust(canvas, prev);
             return core.Zoom;
@@ -486,7 +428,7 @@ namespace Cube {
             var prev = canvas.Size;
             core.FitToWidth(canvas.Parent.Handle);
             core.Zoom = core.Zoom - 1; // 暫定
-            core.RenderPage(IntPtr.Zero, false, false);
+            CanvasPolicy.Render(canvas);
 
             CanvasPolicy.Adjust(canvas, prev);
             return core.Zoom;
@@ -508,7 +450,7 @@ namespace Cube {
             var prev = canvas.Size;
             core.FitToHeight(canvas.Parent.Handle);
             core.Zoom = core.Zoom - 1; // 暫定
-            core.RenderPage(IntPtr.Zero, false, false);
+            CanvasPolicy.Render(canvas);
 
             CanvasPolicy.Adjust(canvas, prev);
             return core.Zoom;
@@ -532,7 +474,7 @@ namespace Cube {
 
             if (result > 0) {
                 core.CurrentPage = core.SearchResults[0].Page;
-                core.RenderPage(IntPtr.Zero, false, false);
+                CanvasPolicy.Render(canvas);
             }
 
             return result > 0;
@@ -592,87 +534,25 @@ namespace Cube {
             CanvasPolicy.Adjust(canvas, CanvasPolicy.PageSize(canvas));
         }
 
-        /* ----------------------------------------------------------------- */
-        /// GetThumbnail
-        /* ----------------------------------------------------------------- */
-        public static Thumbnail GetThumbnail(Control parent) {
-            return (Thumbnail)parent.Controls["Thumbnail"];
-        }
-
-        /* ----------------------------------------------------------------- */
-        ///
-        /// CreateThumbnail
-        /// 
-        /// <summary>
-        /// src に指定された画面に表示されている PDF ファイルのサムネイルを
-        /// dest に指定された画面に表示する．
-        /// 
-        /// MEMO: サイズが変わった際にスクロールバーの表示/非表示が変わると
-        /// 見た目がおかしくなる．
-        /// </summary>
-        /// 
-        /* ----------------------------------------------------------------- */
-        public static Thumbnail CreateThumbnail(Canvas src, Control parent) {
-            var core = (PDF)src.Tag;
-            if (core == null) return null;
-
-            var canvas = new Thumbnail();
-            parent.Controls.Add(canvas);
-
-            var info = new ThumbnailInfo();
-            info.Core = core;
-            info.Images = new Container.Dictionary<int,Image>();
-
-            canvas.Name = "Thumbnail";
-            canvas.Tag = info;
-            canvas.BackColor = background_;
-            canvas.Alignment = ListViewAlignment.Default;
-            canvas.MultiSelect = false;
-            canvas.Dock = DockStyle.Fill;
-            canvas.OwnerDraw = true;
-            canvas.DrawItem -= new DrawListViewItemEventHandler(CanvasPolicy.DrawItemHandler);
-            canvas.DrawItem += new DrawListViewItemEventHandler(CanvasPolicy.DrawItemHandler);
-            canvas.MouseEnter += new EventHandler(CanvasPolicy.MouseEnterHandler);
-
-            // 水平スクロールバーが出ないサイズ．
-            // 16 は垂直スクロールバーの幅（TODO: 垂直スクロールバーの幅の取得方法）．
-            double ratio = core.Pages[1].Height / (double)core.Pages[1].Width;
-            int width = parent.ClientSize.Width;
-            if (width * ratio * core.PageCount > parent.Size.Height) width -= 20;
-            width -= 3; // NOTE: 余白を持たせる．手動で微調整したもの
-
-            canvas.View = View.Tile;
-            canvas.TileSize = new Size(width, (int)(width * ratio));
-            canvas.BeginUpdate();
-            canvas.Clear();
-            for (int i = 0; i < core.PageCount; i++) canvas.Items.Add((i + 1).ToString());
-            canvas.EndUpdate();
-            
-            return canvas;
-        }
-
-        /* ----------------------------------------------------------------- */
-        /// DestroyThumbnail
-        /* ----------------------------------------------------------------- */
-        public static void DestroyThumbnail(Thumbnail canvas) {
-            var parent = canvas.Parent;
-            canvas.Items.Clear();
-            var info = canvas.Tag as ThumbnailInfo;
-            if (info == null) return;
-            foreach (var item in info.Images) item.Value.Dispose();
-            canvas.Tag = null;
-            parent.Controls.Remove(canvas);
-        }
-
         #region Private methods
 
         /* ----------------------------------------------------------------- */
+        ///
         /// Render (private)
+        ///
+        /// <summary>
+        /// MEMO: ロックは暫定処理．Microsoft によると public にアクセス
+        /// 可能なオブジェクトを用いた lock は想定していないらしい．
+        /// http://msdn.microsoft.com/ja-jp/library/c5kehkcz%28VS.80%29.aspx
+        /// </summary>
+        /// 
         /* ----------------------------------------------------------------- */
-        private static void Render(Canvas canvas) {
-            if (canvas == null || canvas.Tag == null) return;
+        private static bool Render(Canvas canvas) {
+            if (canvas == null || canvas.Tag == null) return false;
             var core = canvas.Tag as PDF;
-            core.RenderPage(IntPtr.Zero, false, false);
+            lock (core) {
+                return core.RenderPage(IntPtr.Zero, false, false);
+            }
         }
 
         /* ----------------------------------------------------------------- */
@@ -680,9 +560,10 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         private static void AsyncRender(Canvas canvas) {
             if (canvas == null || canvas.Tag == null) return;
-            var worker = new System.ComponentModel.BackgroundWorker();
-            worker.DoWork += new System.ComponentModel.DoWorkEventHandler(DoWorkHandler);
-            worker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(RunWorkerCompletedHandler);
+            var worker = new BackgroundWorker();
+            worker.DoWork += new DoWorkEventHandler(CanvasDoWorkHandler);
+            worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(CanvasRunWorkerCompletedHandler);
+            canvas.Cursor = Cursors.WaitCursor;
             worker.RunWorkerAsync(canvas);
         }
 
@@ -710,51 +591,6 @@ namespace Cube {
             Graphics g = e.Graphics;
             core.DrawPageHDC(g.GetHdc());
             g.ReleaseHdc();
-        }
-
-        /* ----------------------------------------------------------------- */
-        ///
-        /// DrawItemHandler (private)
-        /// 
-        /// <summary>
-        /// サムネイルの DrawItem イベントハンドラ．
-        /// </summary>
-        /// 
-        /* ----------------------------------------------------------------- */
-        private static void DrawItemHandler(object sender, DrawListViewItemEventArgs e) {
-            lock (sender) {
-                var canvas = sender as Thumbnail;
-                if (canvas == null || canvas.Tag == null) return;
-
-                var info = canvas.Tag as ThumbnailInfo;
-                if (info == null || info.Core == null) return;
-                var core = info.Core;
-                while (core.IsBusy) System.Threading.Thread.Sleep(50);
-
-                PDFLibNet.PDFPage page;
-                if (!core.Pages.TryGetValue(e.ItemIndex + 1, out page)) return;
-
-                Rectangle rect = new Rectangle(e.Bounds.Location, e.Bounds.Size);
-                rect.Inflate(-5, -5);
-                int width = canvas.TileSize.Width - 10;
-                double ratio = page.Height / (double)page.Width;
-                Image image = page.LoadThumbnail(width, (int)(width * ratio));
-                if (image != null) e.Graphics.DrawImageUnscaledAndClipped(image, rect);
-                e.Graphics.DrawRectangle(Pens.LightGray, rect);
-
-                // MEMO: キャプションを描画する方法．
-                // var stringFormat = new StringFormat();
-                // stringFormat.Alignment = StringAlignment.Center;
-                // stringFormat.LineAlignment = StringAlignment.Center;
-                // e.Graphics.DrawString(e.Item.Text, canvas.Font, Brushes.Black, new RectangleF(e.Bounds.X, e.Bounds.Y + e.Bounds.Height - 10, e.Bounds.Width, 10), stringFormat);
-
-                if (e.ItemIndex == core.CurrentPage - 1) {
-                    var pen = new Pen(Color.FromArgb(255, 50, 0));
-                    pen.Width = 2;
-                    e.Graphics.DrawRectangle(pen, rect);
-                    pen.Dispose();
-                }
-            }
         }
 
         /* ----------------------------------------------------------------- */
@@ -803,9 +639,17 @@ namespace Cube {
         }
 
         /* ----------------------------------------------------------------- */
-        /// DoWorkHandler
+        /// 
+        /// CanvasDoWorkHandler
+        /// 
+        /// <summary>
+        /// MEMO: ロックは暫定処理．Microsoft によると public にアクセス
+        /// 可能なオブジェクトを用いた lock は想定していないらしい．
+        /// http://msdn.microsoft.com/ja-jp/library/c5kehkcz%28VS.80%29.aspx
+        /// </summary>
+        /// 
         /* ----------------------------------------------------------------- */
-        private static void DoWorkHandler(object sender, System.ComponentModel.DoWorkEventArgs e) {
+        private static void CanvasDoWorkHandler(object sender, DoWorkEventArgs e) {
             var worker = sender as System.ComponentModel.BackgroundWorker;
             var canvas = e.Argument as Canvas;
             if (canvas == null || canvas.Tag == null) return;
@@ -814,16 +658,18 @@ namespace Cube {
             lock (core) {
                 core.RenderPage(IntPtr.Zero, false, false);
             }
+            
             e.Result = canvas;
         }
 
         /* ----------------------------------------------------------------- */
-        /// RunWorkerCompletedHandler
+        /// CanvasRunWorkerCompletedHandler
         /* ----------------------------------------------------------------- */
-        private static void RunWorkerCompletedHandler(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e) {
+        private static void CanvasRunWorkerCompletedHandler(object sender, RunWorkerCompletedEventArgs e) {
             var canvas = e.Result as Canvas;
             if (canvas == null) return;
             CanvasPolicy.Adjust(canvas);
+            canvas.Cursor = Cursors.Default;
             canvas.Refresh();
         }
 
@@ -832,7 +678,6 @@ namespace Cube {
         #region Variables
         private static bool is_mouse_down_ = false;
         private static Point origin_;
-        private static Color background_ = Color.DimGray;
         #endregion
     }
 }

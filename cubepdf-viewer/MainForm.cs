@@ -347,8 +347,11 @@ namespace Cube {
         public void DestroyTab(TabPage tab) {
             var parent = (TabControl)tab.Parent;
             var canvas = CanvasPolicy.Get(tab);
-            var thumb = CanvasPolicy.GetThumbnail(this.NavigationSplitContainer.Panel1);
-            if (thumb != null) CanvasPolicy.DestroyThumbnail(thumb);
+            var thumb = Thumbnail.Get(this.NavigationSplitContainer.Panel1);
+            if (thumb != null) {
+                thumb.Dispose();
+                thumb = null;
+            }
             CanvasPolicy.Destroy(canvas);
             if (this.PageViewerTabControl.TabCount > 1) parent.TabPages.Remove(tab);
         }
@@ -370,9 +373,11 @@ namespace Cube {
             var menu = new ContextMenuStrip();
             var elem = new ToolStripMenuItem();
             elem.Text = "閉じる";
+            elem.Click -= new EventHandler(TabClosed);
             elem.Click += new EventHandler(TabClosed);
             menu.Items.Add(elem);
-            parent.MouseDown += new MouseEventHandler(ContextMenu_MouseDown);
+            parent.MouseDown -= new MouseEventHandler(PageViewerTabControl_MouseDown);
+            parent.MouseDown += new MouseEventHandler(PageViewerTabControl_MouseDown);
             parent.ContextMenuStrip = menu;
 
             foreach (TabPage child in parent.TabPages) {
@@ -384,9 +389,10 @@ namespace Cube {
         /// CreateThumbnail
         /* ----------------------------------------------------------------- */
         private void CreateThumbnail(PictureBox canvas) {
-            var old = CanvasPolicy.GetThumbnail(this.NavigationSplitContainer.Panel1);
-            if (old != null) CanvasPolicy.DestroyThumbnail(old);
-            ListView thumb = CanvasPolicy.CreateThumbnail(canvas, this.NavigationSplitContainer.Panel1);
+            var old = Thumbnail.Get(this.NavigationSplitContainer.Panel1);
+            if (old != null) old.Dispose();
+            Thumbnail thumb = new Thumbnail(this.NavigationSplitContainer.Panel1, canvas);
+            thumb.SelectedIndexChanged -= new EventHandler(PageChanged);
             thumb.SelectedIndexChanged += new EventHandler(PageChanged);
         }
 
@@ -846,8 +852,9 @@ namespace Cube {
             if (!this.NavigationSplitContainer.Panel1Collapsed) {
                 setting_.Navigaion = NavigationCondition.Thumbnail;
                 var control = this.NavigationSplitContainer.Panel1;
-                if (CanvasPolicy.GetThumbnail(control) == null) {
+                if (Thumbnail.Get(control) == null) {
                     var canvas = CanvasPolicy.Get(this.PageViewerTabControl.SelectedTab);
+                    if (canvas == null) return;
                     this.CreateThumbnail(canvas);
                 }
             }
@@ -898,18 +905,25 @@ namespace Cube {
                 else this.PreviousPage(tab);
             }
             else {
+                var canvas = CanvasPolicy.Get(tab);
+                if (canvas == null) return;
+
                 var maximum = 1 + scroll.Maximum - scroll.LargeChange; // ユーザのコントロールで取れる scroll.Value の最大値
                 var delta = -(e.Delta / 120) * scroll.SmallChange;
                 if (scroll.Value == scroll.Minimum && delta < 0) {
                     if (wheel_counter_ > 2) {
-                        if (this.PreviousPage(tab)) tab.AutoScrollPosition = new Point(0, maximum);
+                        if (CanvasPolicy.CurrentPage(canvas) > 1 && this.PreviousPage(tab)) {
+                            tab.AutoScrollPosition = new Point(0, maximum);
+                        }
                         wheel_counter_ = 0;
                     }
                     else wheel_counter_++;
                 }
                 else if (scroll.Value == maximum && delta > 0) {
                     if (wheel_counter_ > 2) {
-                        if (this.NextPage(tab)) tab.AutoScrollPosition = new Point(0, 0);
+                        if (CanvasPolicy.CurrentPage(canvas) < CanvasPolicy.PageCount(canvas) && this.NextPage(tab)) {
+                            tab.AutoScrollPosition = new Point(0, 0);
+                        }
                         wheel_counter_ = 0;
                     }
                     else wheel_counter_++;
@@ -956,11 +970,23 @@ namespace Cube {
         }
 
         /* ----------------------------------------------------------------- */
+        /// PageViewerTabControl_MouseDown
+        /* ----------------------------------------------------------------- */
+        private void PageViewerTabControl_MouseDown(object sender, MouseEventArgs e) {
+            if (e.Button == System.Windows.Forms.MouseButtons.Right) {
+                var control = sender as TabControl;
+                if (control == null || control.ContextMenuStrip == null) return;
+                var context = control.ContextMenuStrip;
+                context.Tag = e.Location;
+            }
+        }
+
+        /* ----------------------------------------------------------------- */
         /// PageChanged
         /* ----------------------------------------------------------------- */
         private void PageChanged(object sender, EventArgs e) {
-            var thumb = (ListView)sender;
-            if (thumb.SelectedItems.Count == 0) return;
+            var thumb = sender as Thumbnail;
+            if (thumb == null || thumb.SelectedItems.Count == 0) return;
             var page = thumb.SelectedItems[0].Index + 1;
 
             var tab = this.PageViewerTabControl.SelectedTab;
@@ -979,22 +1005,23 @@ namespace Cube {
         /// 
         /* ----------------------------------------------------------------- */
         private void TabClosed(object sender, EventArgs e) {
-            var control = this.PageViewerTabControl;
-            for (int i = 0; i < control.TabCount; i++) {
-                var rect = control.GetTabRect(i);
-                if (pos_.X > rect.Left && pos_.X < rect.Right && pos_.Y > rect.Top && pos_.Y < rect.Bottom) {
-                    TabPage tab = control.TabPages[i];
-                    this.DestroyTab(tab);
-                    break;
+            try {
+                var control = this.PageViewerTabControl;
+                var item = sender as ToolStripMenuItem;
+                var context = item.Owner as ContextMenuStrip;
+                if (control == null || context == null) return;
+                
+                var pos = (Point)context.Tag;
+                for (int i = 0; i < control.TabCount; i++) {
+                    var rect = control.GetTabRect(i);
+                    if (pos.X > rect.Left && pos.X < rect.Right && pos.Y > rect.Top && pos.Y < rect.Bottom) {
+                        TabPage tab = control.TabPages[i];
+                        this.DestroyTab(tab);
+                        break;
+                    }
                 }
             }
-        }
-
-        /* ----------------------------------------------------------------- */
-        /// ContextMenu_MouseDown
-        /* ----------------------------------------------------------------- */
-        private void ContextMenu_MouseDown(object sender, MouseEventArgs e) {
-            pos_ = e.Location;
+            catch (Exception /* err */) { }
         }
 
         #endregion
@@ -1541,7 +1568,6 @@ namespace Cube {
         private UserSetting setting_ = new UserSetting();
         private bool begin_ = true;
         private int wheel_counter_ = 0;
-        private Point pos_;
         private string adobe_;
         #endregion
     }
