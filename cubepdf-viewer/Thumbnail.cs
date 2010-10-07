@@ -82,7 +82,9 @@ namespace Cube {
         public ThumbEngine(PDF core, int width) {
             core_ = core;
             width_ = width;
+            worker_.DoWork -= new DoWorkEventHandler(DoWorkHandler);
             worker_.DoWork += new DoWorkEventHandler(DoWorkHandler);
+            worker_.RunWorkerCompleted -= new RunWorkerCompletedEventHandler(RunCompletedHandler);
             worker_.RunWorkerCompleted += new RunWorkerCompletedEventHandler(RunCompletedHandler);
             worker_.RunWorkerAsync();
         }
@@ -119,9 +121,11 @@ namespace Cube {
         /// Enqueue
         /// 
         /// <summary>
-        /// TODO: 不必要なキューの削除は，本来はイベントが発生した段階
-        /// でクリアするはずなのだが，うまくいかない（lock_ を奪えてない？）
-        /// この辺りの処理を改善する．
+        /// MEMO: 不必要なキューの削除は，本来はイベントが発生した段階
+        /// でクリアするはずなのだが，うまくいっていない（lock_ を奪えてない？）
+        /// 現状は，必要なさそうな数（画面に表示されるサムネイルは 5 ～ 10
+        /// 程度）のキューが溜まったら順次 Dequeue() で削除している．
+        /// TODO: 不必要なキューの削除処理を改善する．
         /// </summary>
         /// 
         /* ----------------------------------------------------------------- */
@@ -129,7 +133,6 @@ namespace Cube {
             lock (lock_) {
                 if (!queue_.Contains(pagenum)) {
                     queue_.Enqueue(pagenum);
-                    // 画面に表示されていない画像の生成をキャンセル．
                     if (queue_.Count > 15) queue_.Dequeue();
                 }
                 if (!worker_.IsBusy) worker_.RunWorkerAsync();
@@ -355,6 +358,7 @@ namespace Cube {
             this.OwnerDraw = true;
             this.DrawItem -= new DrawListViewItemEventHandler(DrawItemHandler);
             this.DrawItem += new DrawListViewItemEventHandler(DrawItemHandler);
+            this.MouseEnter -= new EventHandler(MouseEnterHandler);
             this.MouseEnter += new EventHandler(MouseEnterHandler);
 
             // 水平スクロールバーが出ないサイズ．
