@@ -136,9 +136,14 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         public void Enqueue(int pagenum) {
             lock (lock_) {
-                if (!queue_.Contains(pagenum)) {
-                    queue_.Enqueue(pagenum);
-                    if (queue_.Count > 15) queue_.Dequeue();
+                if (!queue_.ContainsKey(pagenum)) {
+                    queue_.Add(pagenum, null);
+                    if (queue_.Count > 10) {
+                        var first = queue_.Keys[0];
+                        var last = queue_.Keys[queue_.Count - 1];
+                        if (Math.Abs(pagenum - first) > Math.Abs(pagenum - last)) queue_.Remove(first);
+                        else queue_.Remove(last);
+                    }
                 }
                 if (!worker_.IsBusy) worker_.RunWorkerAsync();
             }
@@ -216,7 +221,10 @@ namespace Cube {
         private void DoWorkHandler(object sender, DoWorkEventArgs e) {
             int pagenum = 0;
             lock (lock_) {
-                if (queue_.Count > 0) pagenum = queue_.Dequeue();
+                if (queue_.Count > 0) {
+                    pagenum = queue_.Keys[0];
+                    queue_.Remove(queue_.Keys[0]);
+                }
             }
             if (pagenum > 0) this.GenerateImage(pagenum);
             e.Result = pagenum;
@@ -271,7 +279,8 @@ namespace Cube {
         private PDF core_ = null;
         private int width_ = 0;
         private Container.Dictionary<int, Image> images_ = new Container.Dictionary<int,Image>();
-        private Container.Queue<int> queue_ = new Container.Queue<int>();
+        //private Container.Queue<int> queue_ = new Container.Queue<int>();
+        private Container.SortedList<int, object> queue_ = new Container.SortedList<int,object>();
         private object lock_ = new object();
         private bool disposed_ = false;
         private BackgroundWorker worker_ = new BackgroundWorker();

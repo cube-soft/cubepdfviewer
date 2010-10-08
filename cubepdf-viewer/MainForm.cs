@@ -396,6 +396,29 @@ namespace Cube {
         }
 
         /* ----------------------------------------------------------------- */
+        /// WndProc
+        /* ----------------------------------------------------------------- */
+        protected override void WndProc(ref Message m) {
+            try {
+                switch (m.Msg) {
+                case Program.WM_COPYDATA:
+                    // 既にプログラムが起動している場合に PDF ファイルが
+                    // ダブルクリックされた場合，起動しているプログラムに
+                    // 新たなタブを生成して描画する．
+                    var mystr = new Program.COPYDATASTRUCT();
+                    mystr = (Program.COPYDATASTRUCT)m.GetLParam(typeof(Program.COPYDATASTRUCT));
+                    var path = mystr.lpData;
+                    this.Open(this.PageViewerTabControl, path);
+                    break;
+                default:
+                    break;
+                }
+            }
+            catch (Exception /* err */) { }
+            base.WndProc(ref m);
+        }
+
+        /* ----------------------------------------------------------------- */
         //  キーボード・ショートカット一覧
         /* ----------------------------------------------------------------- */
         #region Keybord shortcuts
