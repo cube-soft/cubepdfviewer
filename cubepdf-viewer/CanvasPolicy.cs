@@ -76,11 +76,9 @@ namespace Cube {
 
                 // プロパティ
                 canvas.Name = "Canvas";
-                //canvas.BackColor = background_;
                 canvas.BackColor = Color.Transparent;
                 canvas.Size = parent.ClientSize;
                 canvas.ClientSize = canvas.Size;
-                //canvas.SizeMode = PictureBoxSizeMode.AutoSize;
 
                 // イベントハンドラの登録
                 canvas.Paint += new PaintEventHandler(CanvasPolicy.PaintHandler);
