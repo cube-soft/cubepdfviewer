@@ -21,6 +21,7 @@
  */
 /* ------------------------------------------------------------------------- */
 using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Runtime.InteropServices;
 
@@ -29,6 +30,17 @@ namespace Cube {
     /// Utility
     /* --------------------------------------------------------------------- */
     public abstract class Utility {
+        /* ----------------------------------------------------------------- */
+        /// SetupLog
+        /* ----------------------------------------------------------------- */
+        public static void SetupLog(string src) {
+            if (System.IO.File.Exists(src)) System.IO.File.Delete(src);
+            Trace.Listeners.Remove("Default");
+            Trace.Listeners.Add(new TextWriterTraceListener(src));
+            Trace.AutoFlush = true;
+            Trace.WriteLine("initialized");
+        }
+
         /* ----------------------------------------------------------------- */
         /// GetIcon
         /* ----------------------------------------------------------------- */

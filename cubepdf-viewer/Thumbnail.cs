@@ -259,14 +259,16 @@ namespace Cube {
         private void GenerateImage(int pagenum) {
             if (core_ == null || images_.ContainsKey(pagenum)) return;
 
+            Image image;
             lock (core_) {
                 PDFLibNet.PDFPage page;
                 if (!core_.Pages.TryGetValue(pagenum, out page)) return;
                 double ratio = page.Height / (double)page.Width;
-                Image image = page.LoadThumbnail(width_, (int)(width_ * ratio));
-                lock (lock_) {
-                    images_.Add(pagenum, image);
-                }
+                image = page.LoadThumbnail(width_, (int)(width_ * ratio));
+            }
+
+            lock (lock_) {
+                images_.Add(pagenum, image);
             }
         }
 
@@ -376,6 +378,7 @@ namespace Cube {
                 }
                 this.Items.Clear();
                 this.DrawItem -= new DrawListViewItemEventHandler(DrawItemHandler);
+                this.SizeChanged -= new EventHandler(SizeChangedHandler);
                 this.MouseEnter -= new EventHandler(MouseEnterHandler);
                 parent.Controls.Remove(this);
             }
@@ -388,17 +391,38 @@ namespace Cube {
         private void Create(Control parent, Control src) {
             if (src == null || src.Tag == null) return;
             var core = src.Tag as PDF;
-            
+
             this.Name = "Thumbnail";
             this.BackColor = Color.DimGray;
             this.Alignment = ListViewAlignment.Default;
             this.MultiSelect = false;
             this.Dock = DockStyle.Fill;
             this.OwnerDraw = true;
+
+            engine_ = new ThumbEngine(core, 512);
+            engine_.ImageGenerated -= new ThumbEventHandler(ImageGeneratedHandler);
+            engine_.ImageGenerated += new ThumbEventHandler(ImageGeneratedHandler);
+
+            parent.Controls.Add(this);
+            this.Reset(this);
+
             this.DrawItem -= new DrawListViewItemEventHandler(DrawItemHandler);
             this.DrawItem += new DrawListViewItemEventHandler(DrawItemHandler);
+            this.SizeChanged -= new EventHandler(SizeChangedHandler);
+            this.SizeChanged += new EventHandler(SizeChangedHandler);
             this.MouseEnter -= new EventHandler(MouseEnterHandler);
             this.MouseEnter += new EventHandler(MouseEnterHandler);
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// Reset (private)
+        /* ----------------------------------------------------------------- */
+        private void Reset(object sender) {
+            var control = sender as Control;
+            if (control == null) return;
+
+            var parent = control.Parent;
+            var core = engine_.Core;
 
             // 水平スクロールバーが出ないサイズ．
             // 16 は垂直スクロールバーの幅（TODO: 垂直スクロールバーの幅の取得方法）．
@@ -407,16 +431,12 @@ namespace Cube {
             if (width * ratio * core.PageCount > parent.Size.Height) width -= 20;
             width -= 3; // NOTE: 余白を持たせる．手動で微調整したもの
 
-            engine_ = new ThumbEngine(core, width - 10);
-            engine_.ImageGenerated -= new ThumbEventHandler(ImageGeneratedHandler);
-            engine_.ImageGenerated += new ThumbEventHandler(ImageGeneratedHandler);
-
+            this.BeginUpdate();
             this.View = View.Tile;
             this.TileSize = new Size(width, (int)(width * ratio));
             this.Clear();
             for (int i = 0; i < core.PageCount; i++) this.Items.Add((i + 1).ToString());
-
-            parent.Controls.Add(this);
+            this.EndUpdate();
         }
 
         /* ----------------------------------------------------------------- */
@@ -465,6 +485,13 @@ namespace Cube {
                 e.Graphics.DrawRectangle(pen, rect);
                 pen.Dispose();
             }
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// SizeChangedHandler
+        /* ----------------------------------------------------------------- */
+        private void SizeChangedHandler(object sender, EventArgs e) {
+            this.Reset(sender);
         }
 
         /* ----------------------------------------------------------------- */

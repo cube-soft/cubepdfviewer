@@ -71,8 +71,13 @@ namespace Cube {
         private void Initialize() {
             InitializeComponent();
 
+            var exec = System.Reflection.Assembly.GetEntryAssembly();
+            var dir = System.IO.Path.GetDirectoryName(exec.Location);
+            Utility.SetupLog(dir + @"\debug.log");
             int x = Screen.PrimaryScreen.Bounds.Height - 100;
             this.Size = new Size(System.Math.Max(x, this.MinimumSize.Width), x);
+            this.StartPosition = FormStartPosition.Manual;
+            this.Location = new Point(30, 30);
 
             this.MenuToolStrip.Renderer = new CustomToolStripRenderer();
             this.MenuSplitContainer.SplitterDistance = this.MenuToolStrip.Height;
@@ -509,10 +514,23 @@ namespace Cube {
         }
 
         /* ----------------------------------------------------------------- */
+        ///
         /// MainForm_SizeChanged
+        /// 
+        /// <summary>
+        /// サムネイル画像の最大サイズを指定したいが，各パネルには MinSize
+        /// しか設定できないため，メイン画面側のパネルの MinSize を動的に
+        /// 変更する事で対応する．
+        /// 
+        /// MEMO: Panel2MinSize を動的に変更すると，ウィンドウを縮小した
+        /// ときにうまく位置調整されない（原因は不明）．今のところは
+        /// 無効にしておく．
+        /// </summary>
+        /// 
         /* ----------------------------------------------------------------- */
         private void MainForm_SizeChanged(object sender, EventArgs e) {
             this.Adjust(this.PageViewerTabControl.SelectedTab);
+            //this.NavigationSplitContainer.Panel2MinSize = this.NavigationSplitContainer.Width - 256;
         }
 
         #endregion
