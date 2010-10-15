@@ -103,6 +103,7 @@ namespace Cube {
             foreach (var child in parent.Controls.Find("Canvas", false)) {
                 CanvasPolicy.Close((Canvas)child);
                 parent.Controls.Remove(child);
+                child.Dispose();
             }
         }
         

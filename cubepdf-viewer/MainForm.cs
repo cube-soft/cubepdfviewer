@@ -24,6 +24,7 @@ using System;
 using System.Drawing;
 using System.Drawing.Printing;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace Cube {
     /* --------------------------------------------------------------------- */
@@ -73,7 +74,8 @@ namespace Cube {
 
             var exec = System.Reflection.Assembly.GetEntryAssembly();
             var dir = System.IO.Path.GetDirectoryName(exec.Location);
-            Utility.SetupLog(dir + @"\debug.log");
+            Utility.SetupLog(dir + @"cubepdf-viewer.log");
+
             int x = Screen.PrimaryScreen.Bounds.Height - 100;
             this.Size = new Size(System.Math.Max(x, this.MinimumSize.Width), x);
             this.StartPosition = FormStartPosition.Manual;
@@ -95,6 +97,16 @@ namespace Cube {
                     this.AdobeButton.Visible = true;
                 }
             }
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// ErrorLog
+        /* ----------------------------------------------------------------- */
+        private void ErrorLog(Exception err) {
+            Trace.WriteLine(DateTime.Now.ToString() + ": TYPE: " + err.GetType().ToString());
+            Trace.WriteLine(DateTime.Now.ToString() + ": SOURCE: " + err.Source);
+            Trace.WriteLine(DateTime.Now.ToString() + ": MESSAGE: " + err.Message);
+            Trace.WriteLine(DateTime.Now.ToString() + ": STACKTRACE: " + err.StackTrace);
         }
 
         /* ----------------------------------------------------------------- */
@@ -167,6 +179,7 @@ namespace Cube {
                 if (dialog.Password.Length > 0) this.Open(tab, path, dialog.Password);
             }
             catch (Exception err) {
+                this.ErrorLog(err);
                 message = err.Message;
             }
             finally {
@@ -212,6 +225,7 @@ namespace Cube {
                 this.Refresh(canvas, message);
             }
             catch (Exception err) {
+                this.ErrorLog(err);
                 status = false;
                 message = err.Message;
             }
@@ -234,6 +248,7 @@ namespace Cube {
                 this.Refresh(canvas, message);
             }
             catch (Exception err) {
+                this.ErrorLog(err);
                 status = false;
                 message = err.Message;
             }
@@ -259,6 +274,7 @@ namespace Cube {
                 begin_ = !result; // 最後まで検索したら始めに戻る
             }
             catch (Exception err) {
+                this.ErrorLog(err);
                 message = err.Message;
             }
             finally {
@@ -303,6 +319,7 @@ namespace Cube {
                 else CanvasPolicy.Adjust(canvas, CanvasPolicy.PageSize(canvas));
             }
             catch (Exception err) {
+                this.ErrorLog(err);
                 message = err.Message;
             }
             finally {
@@ -358,7 +375,10 @@ namespace Cube {
                 thumb.Dispose();
             }
             CanvasPolicy.Destroy(canvas);
-            if (this.PageViewerTabControl.TabCount > 1) parent.TabPages.Remove(tab);
+            if (this.PageViewerTabControl.TabCount > 1) {
+                parent.TabPages.Remove(tab);
+                tab.Dispose();
+            }
         }
 
         /* ----------------------------------------------------------------- */
@@ -399,6 +419,7 @@ namespace Cube {
             Thumbnail thumb = new Thumbnail(this.NavigationSplitContainer.Panel1, canvas);
             thumb.SelectedIndexChanged -= new EventHandler(PageChanged);
             thumb.SelectedIndexChanged += new EventHandler(PageChanged);
+            //GC.Collect(2);
         }
 
         /* ----------------------------------------------------------------- */
@@ -420,8 +441,12 @@ namespace Cube {
                     break;
                 }
             }
-            catch (Exception /* err */) { }
-            base.WndProc(ref m);
+            catch (Exception err) {
+                this.ErrorLog(err);
+            }
+            finally {
+                base.WndProc(ref m);
+            }
         }
 
         /* ----------------------------------------------------------------- */
@@ -691,6 +716,7 @@ namespace Cube {
                 CanvasPolicy.ZoomIn(canvas);
             }
             catch (Exception err) {
+                this.ErrorLog(err);
                 message = err.Message;
             }
             finally {
@@ -711,6 +737,7 @@ namespace Cube {
                 CanvasPolicy.ZoomOut(canvas);
             }
             catch (Exception err) {
+                this.ErrorLog(err);
                 message = err.Message;
             }
             finally {
@@ -732,6 +759,7 @@ namespace Cube {
                 CanvasPolicy.Zoom(canvas, int.Parse(zoom));
             }
             catch (Exception err) {
+                this.ErrorLog(err);
                 message = err.Message;
             }
             finally {
@@ -752,6 +780,7 @@ namespace Cube {
                 if (this.FitToWidthButton.Checked) CanvasPolicy.FitToWidth(canvas);
             }
             catch (Exception err) {
+                this.ErrorLog(err);
                 message = err.Message;
             }
             finally {
@@ -772,6 +801,7 @@ namespace Cube {
                 if (this.FitToHeightButton.Checked) CanvasPolicy.FitToHeight(canvas);
             }
             catch (Exception err) {
+                this.ErrorLog(err);
                 message = err.Message;
             }
             finally {
@@ -806,6 +836,7 @@ namespace Cube {
                 CanvasPolicy.FirstPage(canvas);
             }
             catch (Exception err) {
+                this.ErrorLog(err);
                 message = err.Message;
             }
             finally {
@@ -826,6 +857,7 @@ namespace Cube {
                 CanvasPolicy.LastPage(canvas);
             }
             catch (Exception err) {
+                this.ErrorLog(err);
                 message = err.Message;
             }
             finally {
@@ -849,6 +881,7 @@ namespace Cube {
                     CanvasPolicy.MovePage(canvas, page);
                 }
                 catch (Exception err) {
+                    this.ErrorLog(err);
                     message = err.Message;
                 }
                 finally {
