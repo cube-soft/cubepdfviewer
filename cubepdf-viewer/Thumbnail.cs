@@ -87,11 +87,20 @@ namespace Cube {
         public ThumbEngine(PDF core, int width) {
             core_ = core;
             width_ = width;
+
+            var tmp = System.Environment.GetEnvironmentVariable("tmp");
+            if (tmp == null) tmp = System.Environment.GetEnvironmentVariable("temp");
+            if (tmp == null) {
+                var exec = System.Reflection.Assembly.GetEntryAssembly();
+                tmp = System.IO.Path.GetDirectoryName(exec.Location);
+            }
+            cached_ = tmp + '\\' + System.IO.Path.GetRandomFileName();
+            System.IO.Directory.CreateDirectory(cached_);
+
             worker_.DoWork -= new DoWorkEventHandler(DoWorkHandler);
             worker_.DoWork += new DoWorkEventHandler(DoWorkHandler);
             worker_.RunWorkerCompleted -= new RunWorkerCompletedEventHandler(RunCompletedHandler);
             worker_.RunWorkerCompleted += new RunWorkerCompletedEventHandler(RunCompletedHandler);
-            worker_.RunWorkerAsync();
         }
 
         /* ----------------------------------------------------------------- */
@@ -174,7 +183,7 @@ namespace Cube {
             lock (lock_) {
                 // TODO: ライブラリも Image への参照を持っているため，
                 // Dispose() できない．ライブラリ側を修正する．
-                //foreach (Image item in images_.Values) item.Dispose();
+                foreach (Image item in images_.Values) item.Dispose();
                 images_.Clear();
                 queue_.Clear();
             }
@@ -197,6 +206,13 @@ namespace Cube {
                     while (worker_.IsBusy) System.Threading.Thread.Sleep(100);
                     worker_.Dispose();
                     this.Clear();
+
+                    try {
+                        if (cached_ != null && System.IO.Directory.Exists(cached_)) {
+                            System.IO.Directory.Delete(cached_, true);
+                        }
+                    }
+                    catch (Exception /* err */) { }
                 }
             }
             disposed_ = true;
@@ -264,7 +280,7 @@ namespace Cube {
                 PDFLibNet.PDFPage page;
                 if (!core_.Pages.TryGetValue(pagenum, out page)) return;
                 double ratio = page.Height / (double)page.Width;
-                image = page.LoadThumbnail(width_, (int)(width_ * ratio));
+                image = page.GetBitmap(width_, (int)(width_ * ratio));
             }
 
             lock (lock_) {
@@ -280,9 +296,9 @@ namespace Cube {
         #region Member variables
         private PDF core_ = null;
         private int width_ = 0;
-        private Container.Dictionary<int, Image> images_ = new Container.Dictionary<int,Image>();
-        //private Container.Queue<int> queue_ = new Container.Queue<int>();
         private Container.SortedList<int, object> queue_ = new Container.SortedList<int,object>();
+        private Container.Dictionary<int, Image> images_ = new Container.Dictionary<int, Image>();
+        private string cached_ = null;
         private object lock_ = new object();
         private bool disposed_ = false;
         private BackgroundWorker worker_ = new BackgroundWorker();
@@ -376,11 +392,13 @@ namespace Cube {
                     this.Engine.ImageGenerated -= new ThumbEventHandler(ImageGeneratedHandler);
                     this.Engine.Dispose();
                 }
+#if nouse
                 this.Items.Clear();
                 this.DrawItem -= new DrawListViewItemEventHandler(DrawItemHandler);
                 this.SizeChanged -= new EventHandler(SizeChangedHandler);
                 this.MouseEnter -= new EventHandler(MouseEnterHandler);
                 parent.Controls.Remove(this);
+#endif
             }
             base.Dispose(disposing);
         }
@@ -434,7 +452,7 @@ namespace Cube {
             this.BeginUpdate();
             this.View = View.Tile;
             this.TileSize = new Size(width, (int)(width * ratio));
-            this.Clear();
+            if (this.Items.Count > 0) this.Items.Clear();
             for (int i = 0; i < core.PageCount; i++) this.Items.Add((i + 1).ToString());
             this.EndUpdate();
         }
