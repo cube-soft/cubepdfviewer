@@ -467,8 +467,8 @@ namespace Cube {
             var core = (PDF)canvas.Tag;
             core.FitToWidth(canvas.Parent.Handle);
             core.Zoom = core.Zoom - 1; // 暫定
-#if CUBE_ASYNC_FIT
-            CanvasPolicy.AsyncRender(canvas);
+#if CUBE_ASYNC
+            CanvasPolicy.AsyncRender(canvas, true);
 #else
             CanvasPolicy.Render(canvas);
 #endif
@@ -490,8 +490,8 @@ namespace Cube {
             var core = (PDF)canvas.Tag;
             core.FitToHeight(canvas.Parent.Handle);
             core.Zoom = core.Zoom - 1; // 暫定
-#if CUBE_ASYNC_FIT
-            CanvasPolicy.AsyncRender(canvas);
+#if CUBE_ASYNC
+            CanvasPolicy.AsyncRender(canvas, true);
 #else
             CanvasPolicy.Render(canvas);
 #endif
