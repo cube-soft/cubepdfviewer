@@ -43,6 +43,8 @@ namespace Cube {
             var registry = Microsoft.Win32.Registry.CurrentUser.CreateSubKey(REG_ROOT);
             navi_ = (NavigationCondition)registry.GetValue(REG_NAVIGATION, NavigationCondition.Thumbnail);
             fit_ = (FitCondition)registry.GetValue(REG_FIT, FitCondition.Height);
+            pos_.X = (int)registry.GetValue(REG_X, 30);
+            pos_.Y = (int)registry.GetValue(REG_Y, 30);
             menu_ = ((int)registry.GetValue(REG_MENU, 1) != 0);
             adobe_ = ((int)registry.GetValue(REG_ADOBE, 1) != 0);
         }
@@ -55,6 +57,8 @@ namespace Cube {
             try {
                 registry.SetValue(REG_NAVIGATION, (int)navi_);
                 registry.SetValue(REG_FIT, (int)fit_);
+                registry.SetValue(REG_X, pos_.X);
+                registry.SetValue(REG_Y, pos_.Y);
                 int x = menu_ ? 1 : 0;
                 registry.SetValue(REG_MENU, x);
                 x = adobe_ ? 1 : 0;
@@ -80,6 +84,14 @@ namespace Cube {
         }
 
         /* ----------------------------------------------------------------- */
+        /// Position
+        /* ----------------------------------------------------------------- */
+        public Point Position {
+            get { return pos_; }
+            set { pos_ = value; }
+        }
+
+        /* ----------------------------------------------------------------- */
         /// ShowMenuWarning
         /* ----------------------------------------------------------------- */
         public bool ShowMenuInfo {
@@ -101,6 +113,7 @@ namespace Cube {
         #region Member variables
         private NavigationCondition navi_ = NavigationCondition.Thumbnail;
         private FitCondition fit_ = FitCondition.Height;
+        private Point pos_ = new Point(0, 0);
         private bool menu_ = true;
         private bool adobe_ = true;
         #endregion
@@ -112,6 +125,8 @@ namespace Cube {
         private static string REG_ROOT = @"Software\CubeSoft\CubePDF Viewer";
         private static string REG_NAVIGATION = "Navigation";
         private static string REG_FIT = "Fit";
+        private static string REG_X = "X";
+        private static string REG_Y = "Y";
         private static string REG_MENU = "ShowMenuInfo";
         private static string REG_ADOBE = "AdobeExtension";
         #endregion

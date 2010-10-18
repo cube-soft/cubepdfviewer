@@ -79,7 +79,7 @@ namespace Cube {
             int x = Screen.PrimaryScreen.Bounds.Height - 100;
             this.Size = new Size(System.Math.Max(x, this.MinimumSize.Width), x);
             this.StartPosition = FormStartPosition.Manual;
-            this.Location = new Point(30, 30);
+            this.Location = setting_.Position;
 
             this.MenuToolStrip.Renderer = new CustomToolStripRenderer();
             this.MenuSplitContainer.SplitterDistance = this.MenuToolStrip.Height;
@@ -96,16 +96,6 @@ namespace Cube {
                     this.AdobeButton.Visible = true;
                 }
             }
-        }
-
-        /* ----------------------------------------------------------------- */
-        /// ErrorLog
-        /* ----------------------------------------------------------------- */
-        private void ErrorLog(Exception err) {
-            Trace.WriteLine(DateTime.Now.ToString() + ": TYPE: " + err.GetType().ToString());
-            Trace.WriteLine(DateTime.Now.ToString() + ": SOURCE: " + err.Source);
-            Trace.WriteLine(DateTime.Now.ToString() + ": MESSAGE: " + err.Message);
-            Trace.WriteLine(DateTime.Now.ToString() + ": STACKTRACE: " + err.StackTrace);
         }
 
         /* ----------------------------------------------------------------- */
@@ -175,7 +165,7 @@ namespace Cube {
                 if (dialog.Password.Length > 0) this.Open(tab, path, dialog.Password);
             }
             catch (Exception err) {
-                this.ErrorLog(err);
+                Utility.ErrorLog(err);
                 message = err.Message;
             }
             finally {
@@ -221,7 +211,7 @@ namespace Cube {
                 this.Refresh(canvas, message);
             }
             catch (Exception err) {
-                this.ErrorLog(err);
+                Utility.ErrorLog(err);
                 status = false;
                 message = err.Message;
             }
@@ -244,7 +234,7 @@ namespace Cube {
                 this.Refresh(canvas, message);
             }
             catch (Exception err) {
-                this.ErrorLog(err);
+                Utility.ErrorLog(err);
                 status = false;
                 message = err.Message;
             }
@@ -270,7 +260,7 @@ namespace Cube {
                 begin_ = !result; // 最後まで検索したら始めに戻る
             }
             catch (Exception err) {
-                this.ErrorLog(err);
+                Utility.ErrorLog(err);
                 message = err.Message;
             }
             finally {
@@ -315,7 +305,7 @@ namespace Cube {
                 else CanvasPolicy.Adjust(canvas);
             }
             catch (Exception err) {
-                this.ErrorLog(err);
+                Utility.ErrorLog(err);
                 message = err.Message;
             }
             finally {
@@ -443,7 +433,7 @@ namespace Cube {
                 }
             }
             catch (Exception err) {
-                this.ErrorLog(err);
+                Utility.ErrorLog(err);
             }
             finally {
                 base.WndProc(ref m);
@@ -537,6 +527,7 @@ namespace Cube {
         ///  MainForm_FormClosing
         /* ----------------------------------------------------------------- */
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e) {
+            setting_.Position = this.Location;
             setting_.Save();
         }
 
@@ -745,7 +736,7 @@ namespace Cube {
                 CanvasPolicy.ZoomIn(canvas);
             }
             catch (Exception err) {
-                this.ErrorLog(err);
+                Utility.ErrorLog(err);
                 message = err.Message;
             }
             finally {
@@ -766,7 +757,7 @@ namespace Cube {
                 CanvasPolicy.ZoomOut(canvas);
             }
             catch (Exception err) {
-                this.ErrorLog(err);
+                Utility.ErrorLog(err);
                 message = err.Message;
             }
             finally {
@@ -788,7 +779,7 @@ namespace Cube {
                 CanvasPolicy.Zoom(canvas, int.Parse(zoom));
             }
             catch (Exception err) {
-                this.ErrorLog(err);
+                Utility.ErrorLog(err);
                 message = err.Message;
             }
             finally {
@@ -809,7 +800,7 @@ namespace Cube {
                 if (this.FitToWidthButton.Checked) CanvasPolicy.FitToWidth(canvas);
             }
             catch (Exception err) {
-                this.ErrorLog(err);
+                Utility.ErrorLog(err);
                 message = err.Message;
             }
             finally {
@@ -830,7 +821,7 @@ namespace Cube {
                 if (this.FitToHeightButton.Checked) CanvasPolicy.FitToHeight(canvas);
             }
             catch (Exception err) {
-                this.ErrorLog(err);
+                Utility.ErrorLog(err);
                 message = err.Message;
             }
             finally {
@@ -865,7 +856,7 @@ namespace Cube {
                 CanvasPolicy.FirstPage(canvas);
             }
             catch (Exception err) {
-                this.ErrorLog(err);
+                Utility.ErrorLog(err);
                 message = err.Message;
             }
             finally {
@@ -886,7 +877,7 @@ namespace Cube {
                 CanvasPolicy.LastPage(canvas);
             }
             catch (Exception err) {
-                this.ErrorLog(err);
+                Utility.ErrorLog(err);
                 message = err.Message;
             }
             finally {
@@ -910,7 +901,7 @@ namespace Cube {
                     CanvasPolicy.MovePage(canvas, page);
                 }
                 catch (Exception err) {
-                    this.ErrorLog(err);
+                    Utility.ErrorLog(err);
                     message = err.Message;
                 }
                 finally {

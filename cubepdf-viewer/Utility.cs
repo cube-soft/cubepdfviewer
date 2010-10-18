@@ -42,6 +42,16 @@ namespace Cube {
         }
 
         /* ----------------------------------------------------------------- */
+        /// ErrorLog
+        /* ----------------------------------------------------------------- */
+        public static void ErrorLog(Exception err) {
+            Trace.WriteLine(DateTime.Now.ToString() + ": TYPE: " + err.GetType().ToString());
+            Trace.WriteLine(DateTime.Now.ToString() + ": SOURCE: " + err.Source);
+            Trace.WriteLine(DateTime.Now.ToString() + ": MESSAGE: " + err.Message);
+            Trace.WriteLine(DateTime.Now.ToString() + ": STACKTRACE: " + err.StackTrace);
+        }
+
+        /* ----------------------------------------------------------------- */
         /// GetIcon
         /* ----------------------------------------------------------------- */
         public static Icon GetIcon(string path) {

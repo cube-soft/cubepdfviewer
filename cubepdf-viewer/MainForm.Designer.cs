@@ -574,16 +574,16 @@
             // 
             // 
             // 
-            this.PageViewerTabControl.DisplayStyleProvider.BorderColor = System.Drawing.SystemColors.ControlDark;
-            this.PageViewerTabControl.DisplayStyleProvider.BorderColorHot = System.Drawing.SystemColors.ControlDark;
+            this.PageViewerTabControl.DisplayStyleProvider.BorderColor = System.Drawing.Color.DimGray;
+            this.PageViewerTabControl.DisplayStyleProvider.BorderColorHot = System.Drawing.Color.DimGray;
             this.PageViewerTabControl.DisplayStyleProvider.BorderColorSelected = System.Drawing.Color.FromArgb(((int)(((byte)(127)))), ((int)(((byte)(157)))), ((int)(((byte)(185)))));
-            this.PageViewerTabControl.DisplayStyleProvider.CloserColor = System.Drawing.Color.DarkGray;
+            this.PageViewerTabControl.DisplayStyleProvider.CloserColor = System.Drawing.Color.DimGray;
             this.PageViewerTabControl.DisplayStyleProvider.FocusTrack = true;
             this.PageViewerTabControl.DisplayStyleProvider.HotTrack = true;
             this.PageViewerTabControl.DisplayStyleProvider.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.PageViewerTabControl.DisplayStyleProvider.Opacity = 1F;
             this.PageViewerTabControl.DisplayStyleProvider.Overlap = 0;
-            this.PageViewerTabControl.DisplayStyleProvider.Padding = new System.Drawing.Point(10, 5);
+            this.PageViewerTabControl.DisplayStyleProvider.Padding = new System.Drawing.Point(10, 6);
             this.PageViewerTabControl.DisplayStyleProvider.Radius = 3;
             this.PageViewerTabControl.DisplayStyleProvider.ShowTabCloser = true;
             this.PageViewerTabControl.DisplayStyleProvider.TextColor = System.Drawing.SystemColors.ControlText;
@@ -606,9 +606,9 @@
             this.DefaultTabPage.AutoScroll = true;
             this.DefaultTabPage.BackColor = System.Drawing.Color.DimGray;
             this.DefaultTabPage.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.DefaultTabPage.Location = new System.Drawing.Point(4, 27);
+            this.DefaultTabPage.Location = new System.Drawing.Point(4, 29);
             this.DefaultTabPage.Name = "DefaultTabPage";
-            this.DefaultTabPage.Size = new System.Drawing.Size(772, 490);
+            this.DefaultTabPage.Size = new System.Drawing.Size(772, 488);
             this.DefaultTabPage.TabIndex = 0;
             this.DefaultTabPage.Text = "(無題)";
             this.DefaultTabPage.Scroll += new System.Windows.Forms.ScrollEventHandler(this.TabPage_Scroll);

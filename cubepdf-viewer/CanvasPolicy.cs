@@ -88,8 +88,6 @@ namespace Cube {
                 canvas.MouseEnter += new EventHandler(CanvasPolicy.MouseEnterHandler);
 
                 parent.Controls.Add(canvas);
-                //parent.MouseEnter -= new EventHandler(CanvasPolicy.MouseEnterHandler);
-                //parent.MouseEnter += new EventHandler(CanvasPolicy.MouseEnterHandler);
             }
             return canvas;
         }

@@ -476,18 +476,25 @@ namespace Cube {
         /// Dispose
         /* ----------------------------------------------------------------- */
         protected override void Dispose(bool disposing) {
-            if (disposing) {
-                this.DrawItem -= new DrawListViewItemEventHandler(DrawItemHandler);
-                this.Resize -= new EventHandler(ResizeHandler);
-                this.MouseEnter -= new EventHandler(MouseEnterHandler);
+            try {
+                if (disposing) {
+                    this.DrawItem -= new DrawListViewItemEventHandler(DrawItemHandler);
+                    this.Resize -= new EventHandler(ResizeHandler);
+                    this.MouseEnter -= new EventHandler(MouseEnterHandler);
 
-                var parent = this.Parent;
-                if (this.Engine != null) {
-                    this.Engine.ImageGenerated -= new ThumbEventHandler(ImageGeneratedHandler);
-                    this.Engine.Dispose();
+                    var parent = this.Parent;
+                    if (this.Engine != null) {
+                        this.Engine.ImageGenerated -= new ThumbEventHandler(ImageGeneratedHandler);
+                        this.Engine.Dispose();
+                    }
                 }
             }
-            base.Dispose(disposing);
+            catch (Exception err) {
+                Utility.ErrorLog(err);
+            }
+            finally {
+                base.Dispose(disposing);
+            }
         }
 
         /* ----------------------------------------------------------------- */
