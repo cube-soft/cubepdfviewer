@@ -141,7 +141,7 @@ namespace Cube {
                 else core.Zoom = 100;
                 canvas.Parent.Text = System.IO.Path.GetFileNameWithoutExtension(path);
                 canvas.Parent.Tag = path;
-                CanvasPolicy.AsyncRender(canvas);
+                CanvasPolicy.AsyncRender(canvas, true);
             }
         }
 
@@ -240,7 +240,7 @@ namespace Cube {
             int n = Math.Min(Math.Max(page, 1), core.PageCount);
             core.CurrentPage = n;
 #if CUBE_ASYNC
-            CanvasPolicy.AsyncRender(canvas);
+            CanvasPolicy.AsyncRender(canvas, false);
             var control = (ScrollableControl)canvas.Parent;
             control.AutoScrollPosition = new Point(0, 0);
 #else
@@ -267,10 +267,16 @@ namespace Cube {
             var core = (PDF)canvas.Tag;
             core.NextPage();
 
+#if CUBE_ASYNC
+            CanvasPolicy.AsyncRender(canvas, false);
+            var control = (ScrollableControl)canvas.Parent;
+            control.AutoScrollPosition = new Point(0, 0);
+#else
             if (CanvasPolicy.Render(canvas)) {
-                var control = canvas.Parent as ScrollableControl;
-                if (control != null) control.AutoScrollPosition = new Point(0, 0);
+                var control = (ScrollableControl)canvas.Parent;
+                control.AutoScrollPosition = new Point(0, 0);
             }
+#endif
             return core.CurrentPage;
         }
 
@@ -289,10 +295,16 @@ namespace Cube {
             var core = (PDF)canvas.Tag;
             core.PreviousPage();
 
+#if CUBE_ASYNC
+            CanvasPolicy.AsyncRender(canvas, false);
+            var control = (ScrollableControl)canvas.Parent;
+            control.AutoScrollPosition = new Point(0, 0);
+#else
             if (CanvasPolicy.Render(canvas)) {
-                var control = canvas.Parent as ScrollableControl;
-                if (control != null) control.AutoScrollPosition = new Point(0, 0);
+                var control = (ScrollableControl)canvas.Parent;
+                control.AutoScrollPosition = new Point(0, 0);
             }
+#endif
             return core.CurrentPage;
         }
 
@@ -311,7 +323,7 @@ namespace Cube {
             var core = (PDF)canvas.Tag;
             core.CurrentPage = 1;
 #if CUBE_ASYNC
-            CanvasPolicy.AsyncRender(canvas);
+            CanvasPolicy.AsyncRender(canvas, false);
             var control = (ScrollableControl)canvas.Parent;
             control.AutoScrollPosition = new Point(0, 0);
 #else
@@ -338,7 +350,7 @@ namespace Cube {
             var core = (PDF)canvas.Tag;
             core.CurrentPage = core.PageCount;
 #if CUBE_ASYNC
-            CanvasPolicy.AsyncRender(canvas);
+            CanvasPolicy.AsyncRender(canvas, false);
             var control = (ScrollableControl)canvas.Parent;
             control.AutoScrollPosition = new Point(0, 0);
 #else
@@ -383,7 +395,7 @@ namespace Cube {
             if (percent < core.Zoom || core.Zoom < 400) {
                 core.Zoom = Math.Min(percent, 400);
 #if CUBE_ASYNC
-                CanvasPolicy.AsyncRender(canvas);
+                CanvasPolicy.AsyncRender(canvas, true);
 #else
                 CanvasPolicy.Render(canvas);
 #endif
@@ -409,7 +421,7 @@ namespace Cube {
                 core.ZoomIN();
                 if (core.Zoom > 400) core.Zoom = 400;
 #if CUBE_ASYNC
-                CanvasPolicy.AsyncRender(canvas);
+                CanvasPolicy.AsyncRender(canvas, true);
 #else
                 CanvasPolicy.Render(canvas);
 #endif
@@ -433,7 +445,7 @@ namespace Cube {
             var prev = canvas.Size;
             core.ZoomOut();
 #if CUBE_ASYNC
-            CanvasPolicy.AsyncRender(canvas);
+            CanvasPolicy.AsyncRender(canvas, true);
 #else
             CanvasPolicy.Render(canvas);
 #endif
@@ -575,11 +587,12 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         /// AsyncRender (private)
         /* ----------------------------------------------------------------- */
-        private static void AsyncRender(Canvas canvas) {
+        private static void AsyncRender(Canvas canvas, bool adjust) {
             if (canvas == null || canvas.Tag == null) return;
             var worker = new BackgroundWorker();
-            worker.DoWork += new DoWorkEventHandler(CanvasDoWorkHandler);
-            worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(CanvasRunWorkerCompletedHandler);
+            worker.DoWork += new DoWorkEventHandler(DoWorkHandler);
+            if (adjust) worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(Adjust_WorkCompletedHandler);
+            else worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(NoAdjust_WorkCompletedHandler);
             canvas.Cursor = Cursors.WaitCursor;
             worker.RunWorkerAsync(canvas);
         }
@@ -664,7 +677,7 @@ namespace Cube {
 
         /* ----------------------------------------------------------------- */
         /// 
-        /// CanvasDoWorkHandler
+        /// DoWorkHandler
         /// 
         /// <summary>
         /// MEMO: ロックは暫定処理．Microsoft によると public にアクセス
@@ -673,7 +686,7 @@ namespace Cube {
         /// </summary>
         /// 
         /* ----------------------------------------------------------------- */
-        private static void CanvasDoWorkHandler(object sender, DoWorkEventArgs e) {
+        private static void DoWorkHandler(object sender, DoWorkEventArgs e) {
             var worker = sender as System.ComponentModel.BackgroundWorker;
             var canvas = e.Argument as Canvas;
             if (canvas == null) return;
@@ -688,14 +701,22 @@ namespace Cube {
         }
 
         /* ----------------------------------------------------------------- */
-        /// CanvasRunWorkerCompletedHandler
+        /// NoAdjust_WorkCompletedHandler
         /* ----------------------------------------------------------------- */
-        private static void CanvasRunWorkerCompletedHandler(object sender, RunWorkerCompletedEventArgs e) {
+        private static void NoAdjust_WorkCompletedHandler(object sender, RunWorkerCompletedEventArgs e) {
             var canvas = e.Result as Canvas;
             if (canvas == null) return;
-            canvas.Visible = false;
+            canvas.Cursor = Cursors.Default;
+            canvas.Invalidate();
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// Adjust_WorkCompletedHandler
+        /* ----------------------------------------------------------------- */
+        private static void Adjust_WorkCompletedHandler(object sender, RunWorkerCompletedEventArgs e) {
+            var canvas = e.Result as Canvas;
+            if (canvas == null) return;
             CanvasPolicy.Adjust(canvas);
-            canvas.Visible = true;
             canvas.Cursor = Cursors.Default;
             canvas.Invalidate();
         }
