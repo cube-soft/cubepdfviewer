@@ -442,6 +442,14 @@ namespace Cube {
         }
 
         /* ----------------------------------------------------------------- */
+        /// EraseBackground
+        /* ----------------------------------------------------------------- */
+        public bool EraseBackground {
+            get { return erase_background_; }
+            set { erase_background_ = value; }
+        }
+
+        /* ----------------------------------------------------------------- */
         ///
         /// WndProc
         /// 
@@ -459,6 +467,7 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         protected override void WndProc(ref Message m) {
             const int WM_SIZE = 0x0005;
+            const int WM_ERASEBKGND = 0x0014;
             const int WM_VSCROLL = 0x0115;
             const int WM_LBUTTONDOWN = 0x0201;
             const int WM_LBUTTONUP = 0x0202;
@@ -468,6 +477,9 @@ namespace Cube {
                 case WM_SIZE:
                     engine_.ClearQueue();
                     break;
+                case WM_ERASEBKGND:
+                    if (erase_background_) base.WndProc(ref m);
+                    return;
                 case WM_VSCROLL:
                     if (valid_) engine_.ClearQueue();
                     break;
@@ -648,6 +660,7 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         #region Member variables
         private bool valid_ = false;
+        private bool erase_background_ = true;
         private ThumbEngine engine_ = null;
         #endregion
     }

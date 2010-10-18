@@ -570,6 +570,8 @@ namespace Cube {
         private void MainForm_ResizeBegin(object sender, EventArgs e) {
             resize_ = 0;
             resize_ |= 0x01;
+            var thumb = Thumbnail.GetInstance(this.NavigationSplitContainer.Panel1);
+            if (thumb != null) thumb.EraseBackground = false;
         }
 
         /* ----------------------------------------------------------------- */
@@ -578,6 +580,8 @@ namespace Cube {
         private void MainForm_ResizeEnd(object sender, EventArgs e) {
             if ((resize_ & 0x02) != 0) this.Adjust(this.PageViewerTabControl.SelectedTab);
             resize_ = 0;
+            var thumb = Thumbnail.GetInstance(this.NavigationSplitContainer.Panel1);
+            if (thumb != null) thumb.EraseBackground = true;
         }
 
         #endregion
