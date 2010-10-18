@@ -1596,6 +1596,9 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         #region Adobe extensions
 
+        private Image adobe_icon_ = null;
+        private Image adobe_icon_selected_ = null;
+
         /* ----------------------------------------------------------------- */
         /// InitializeAdobe
         /* ----------------------------------------------------------------- */
@@ -1623,7 +1626,22 @@ namespace Cube {
             if (path == null) return;
 
             adobe_ = path + @"\AcroRd32.exe";
-            this.AdobeButton.Image = Utility.GetIcon(adobe_).ToBitmap();
+
+            adobe_icon_ = new Bitmap(32, 32);
+            var normal = Graphics.FromImage(adobe_icon_);
+            normal.DrawImage(Utility.GetIcon(adobe_).ToBitmap(), 4, 4, adobe_icon_.Width - 8, adobe_icon_.Height - 8);
+            normal.Dispose();
+
+            adobe_icon_selected_ = new Bitmap(32, 32);
+            var selected = Graphics.FromImage(adobe_icon_selected_);
+            selected.FillRectangle(SystemBrushes.GradientActiveCaption, new Rectangle(0, 0, adobe_icon_selected_.Width - 2, adobe_icon_selected_.Height - 2));
+            selected.DrawImage(Utility.GetIcon(adobe_).ToBitmap(), 4, 4, adobe_icon_.Width - 8, adobe_icon_.Height - 8);
+            selected.DrawRectangle(SystemPens.Highlight, new Rectangle(0, 0, adobe_icon_selected_.Width - 2, adobe_icon_selected_.Height - 2));
+            selected.Dispose();
+
+            this.AdobeButton.MouseEnter += new EventHandler(AdobeButton_MouseEnter);
+            this.AdobeButton.MouseLeave += new EventHandler(AdobeButton_MouseLeave);
+            this.AdobeButton.Image = adobe_icon_;
         }
 
         /* ----------------------------------------------------------------- */
@@ -1652,12 +1670,28 @@ namespace Cube {
         }
 
         /* ----------------------------------------------------------------- */
-        /// SearchButton_Click
+        /// AdobeButton_Click
         /* ----------------------------------------------------------------- */
         private void AdobeButton_Click(object sender, EventArgs e) {
             var tab = this.PageViewerTabControl.SelectedTab;
             var path = (string)tab.Tag;
             this.OpenWithAdobe(tab, path);
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// AdobeButton_MouseEnter
+        /* ----------------------------------------------------------------- */
+        private void AdobeButton_MouseEnter(object sender, EventArgs e) {
+            var control = (ToolStripButton)sender;
+            if (adobe_icon_selected_ != null) control.Image = adobe_icon_selected_;
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// AdobeButton_MouseLeave
+        /* ----------------------------------------------------------------- */
+        private void AdobeButton_MouseLeave(object sender, EventArgs e) {
+            var control = (ToolStripButton)sender;
+            if (adobe_icon_ != null) control.Image = adobe_icon_;
         }
 
         #endregion
