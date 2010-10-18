@@ -380,12 +380,14 @@ namespace Cube {
 
             var core = (PDF)canvas.Tag;
             var prev = canvas.Size;
-            core.Zoom = percent;
+            if (percent < core.Zoom || core.Zoom < 400) {
+                core.Zoom = Math.Min(percent, 400);
 #if CUBE_ASYNC
-            CanvasPolicy.AsyncRender(canvas);
+                CanvasPolicy.AsyncRender(canvas);
 #else
-            CanvasPolicy.Render(canvas);
+                CanvasPolicy.Render(canvas);
 #endif
+            }
             return core.Zoom;
         }
 
@@ -403,12 +405,15 @@ namespace Cube {
 
             var core = (PDF)canvas.Tag;
             var prev = canvas.Size;
-            core.ZoomIN();
+            if (core.Zoom < 400) {
+                core.ZoomIN();
+                if (core.Zoom > 400) core.Zoom = 400;
 #if CUBE_ASYNC
-            CanvasPolicy.AsyncRender(canvas);
+                CanvasPolicy.AsyncRender(canvas);
 #else
-            CanvasPolicy.Render(canvas);
+                CanvasPolicy.Render(canvas);
 #endif
+            }
             return core.Zoom;
         }
 
