@@ -304,7 +304,11 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         private void RunCompletedHandler(object sender, RunWorkerCompletedEventArgs e) {
             lock (lock_) {
-                if (queue_.Count > 0) worker_.RunWorkerAsync();
+                if (queue_.Count > 0) {
+                    lock (worker_) {
+                        worker_.RunWorkerAsync();
+                    }
+                }
             }
             
             int pagenum = (int)e.Result;
@@ -326,7 +330,7 @@ namespace Cube {
         /// 
         /* ----------------------------------------------------------------- */
         private void GenerateImage(int pagenum) {
-            if (core_ == null || images_.ContainsKey(pagenum)) return;
+            if (core_ == null || images_ == null || images_.ContainsKey(pagenum)) return;
 
             Image image = null;
             var path = this.GetArchivedPath(pagenum);
