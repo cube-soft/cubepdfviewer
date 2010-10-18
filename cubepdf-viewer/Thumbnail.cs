@@ -17,7 +17,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see < http://www.gnu.org/licenses/ >.
  *
- *  Last-modified: Thu 07 Oct 2010 23:26:00 JST
+ *  Last-modified: Mon 18 Oct 2010 13:40:00 JST
  */
 /* ------------------------------------------------------------------------- */
 using System;
@@ -389,7 +389,6 @@ namespace Cube {
         private string cached_ = null;
         private int cache_size_ = 5;
         private object lock_ = new object();
-        private object proc_lock_ = new object();
         private bool disposed_ = false;
         private BackgroundWorker worker_ = new BackgroundWorker();
         #endregion

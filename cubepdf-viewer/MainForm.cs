@@ -17,7 +17,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see < http://www.gnu.org/licenses/ >.
  *
- *  Last-modified: Wed 01 Sep 2010 00:10:00 JST
+ *  Last-modified: Mon 18 Oct 2010 18:40:00 JST
  */
 /* ------------------------------------------------------------------------- */
 using System;
@@ -44,9 +44,6 @@ namespace Cube {
     /// 追記: PDFLoad() よりは，その後の RenderPage() メソッドの方に
     /// 大きく時間を食われている模様．そのため，これらのイベントは
     /// あまり気にしなくて良い．
-    /// 
-    /// RenderFinished の他に RenderNotifyFinished と言うイベントも存在
-    /// する．現状では，どのような条件でこのイベントが発生するのかは不明．
     /// </summary>
     /// 
     /* --------------------------------------------------------------------- */

@@ -29,7 +29,7 @@ namespace Cube {
     /// Navigaion
     /* --------------------------------------------------------------------- */
     public enum NavigationCondition {
-        None = 0x00, Thumbnail = 0x01, Bookmark
+        None = 0x00, Thumbnail = 0x01, Bookmark = 0x02
     }
 
     /* --------------------------------------------------------------------- */
