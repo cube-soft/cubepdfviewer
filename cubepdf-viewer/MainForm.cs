@@ -139,8 +139,8 @@ namespace Cube {
                 hsb.SmallChange = (hsb.Maximum - hsb.LargeChange) / 20;
 
                 // 選択・非選択の枠線を更新するために再描画が必要となる．
-                var thumb = Thumbnail.GetInstance(this.NavigationSplitContainer.Panel1);
-                if (thumb != null) thumb.Invalidate();
+                //var thumb = Thumbnail.GetInstance(this.NavigationSplitContainer.Panel1);
+                //if (thumb != null) thumb.Invalidate();
             }
 
             if (this.MainMenuStrip != null) this.MainMenuStrip.Refresh();
@@ -208,6 +208,7 @@ namespace Cube {
                 int prev = CanvasPolicy.CurrentPage(canvas);
                 if (prev >= CanvasPolicy.PageCount(canvas)) return true;
                 if (CanvasPolicy.NextPage(canvas) == prev) status = false;
+                this.RefreshThumbnail(this.NavigationSplitContainer.Panel1, CanvasPolicy.CurrentPage(canvas), prev);
                 this.Refresh(canvas, message);
             }
             catch (Exception err) {
@@ -231,6 +232,7 @@ namespace Cube {
                 int prev = CanvasPolicy.CurrentPage(canvas);
                 if (prev <= 1) return true;
                 if (CanvasPolicy.PreviousPage(canvas) == prev) status = false;
+                this.RefreshThumbnail(this.NavigationSplitContainer.Panel1, CanvasPolicy.CurrentPage(canvas), prev);
                 this.Refresh(canvas, message);
             }
             catch (Exception err) {
@@ -411,6 +413,19 @@ namespace Cube {
             if (thumb == null) return;
             thumb.Dispose();
             parent.Controls.Remove(thumb);
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// RefreshThumbnail
+        /* ----------------------------------------------------------------- */
+        private void RefreshThumbnail(Control parent, int current, int previous) {
+            var thumb = Thumbnail.GetInstance(parent);
+            if (thumb == null) return;
+
+            var index0 = Math.Min(Math.Max(previous - 1, 0), thumb.Items.Count);
+            var index1 = Math.Min(Math.Max(current - 1, 0), thumb.Items.Count);
+            thumb.Invalidate(thumb.Items[index0].Bounds);
+            thumb.Items[index1].Selected = true;
         }
 
         /* ----------------------------------------------------------------- */
@@ -857,14 +872,15 @@ namespace Cube {
 
             var message = "";
             try {
-                CanvasPolicy.FirstPage(canvas);
+                var prev = CanvasPolicy.CurrentPage(canvas);
+                if (prev <= 1) return;
+                if (CanvasPolicy.FirstPage(canvas) == prev) return;
+                this.RefreshThumbnail(this.NavigationSplitContainer.Panel1, CanvasPolicy.CurrentPage(canvas), prev);
+                this.Refresh(canvas, message);
             }
             catch (Exception err) {
                 Utility.ErrorLog(err);
                 message = err.Message;
-            }
-            finally {
-                this.Refresh(canvas, message);
             }
         }
 
@@ -878,14 +894,15 @@ namespace Cube {
 
             var message = "";
             try {
-                CanvasPolicy.LastPage(canvas);
+                var prev = CanvasPolicy.CurrentPage(canvas);
+                if (prev >= CanvasPolicy.PageCount(canvas)) return;
+                if (CanvasPolicy.LastPage(canvas) == prev) return;
+                this.RefreshThumbnail(this.NavigationSplitContainer.Panel1, CanvasPolicy.CurrentPage(canvas), prev);
+                this.Refresh(canvas, message);
             }
             catch (Exception err) {
                 Utility.ErrorLog(err);
                 message = err.Message;
-            }
-            finally {
-                this.Refresh(canvas);
             }
         }
 
@@ -901,15 +918,16 @@ namespace Cube {
                 var message = "";
                 try {
                     var control = (ToolStripTextBox)sender;
-                    int page = int.Parse(control.Text);
-                    CanvasPolicy.MovePage(canvas, page);
+                    var page = int.Parse(control.Text);
+                    var prev = CanvasPolicy.CurrentPage(canvas);
+                    if (page == prev) return;
+                    if (CanvasPolicy.MovePage(canvas, page) == prev) return;
+                    this.RefreshThumbnail(this.NavigationSplitContainer.Panel1, CanvasPolicy.CurrentPage(canvas), prev);
+                    this.Refresh(canvas, message);
                 }
                 catch (Exception err) {
                     Utility.ErrorLog(err);
                     message = err.Message;
-                }
-                finally {
-                    this.Refresh(canvas, message);
                 }
             }
         }

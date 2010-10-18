@@ -577,6 +577,7 @@ namespace Cube {
         private static bool Render(Canvas canvas, bool adjust) {
             if (canvas == null || canvas.Tag == null) return false;
             var core = canvas.Tag as PDF;
+
             lock (core) {
                 var status = core.RenderPage(IntPtr.Zero, false, false);
                 if (status && adjust) CanvasPolicy.Adjust(canvas);
