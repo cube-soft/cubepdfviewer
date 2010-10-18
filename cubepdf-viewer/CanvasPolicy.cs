@@ -580,6 +580,7 @@ namespace Cube {
             lock (core) {
                 var status = core.RenderPage(IntPtr.Zero, false, false);
                 if (status && adjust) CanvasPolicy.Adjust(canvas);
+                canvas.Invalidate();
                 return status;
             }
         }
