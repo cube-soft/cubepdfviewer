@@ -85,7 +85,6 @@ namespace Cube {
             this.MenuSplitContainer.SplitterDistance = this.MenuToolStrip.Height;
             this.NavigationSplitContainer.Panel1Collapsed = (setting_.Navigaion == NavigationCondition.None);
             this.UpdateFitCondition(setting_.Fit);
-            //this.NavigationSplitContainer.Panel2.SizeChanged += new EventHandler(MainForm_SizeChanged);
             CreateTabContextMenu(this.PageViewerTabControl);
 
             this.DefaultTabPage.MouseWheel += new MouseEventHandler(TabPage_MouseWheel);

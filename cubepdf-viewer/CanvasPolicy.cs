@@ -88,7 +88,8 @@ namespace Cube {
                 canvas.MouseEnter += new EventHandler(CanvasPolicy.MouseEnterHandler);
 
                 parent.Controls.Add(canvas);
-                parent.MouseEnter += new EventHandler(CanvasPolicy.MouseEnterHandler);
+                //parent.MouseEnter -= new EventHandler(CanvasPolicy.MouseEnterHandler);
+                //parent.MouseEnter += new EventHandler(CanvasPolicy.MouseEnterHandler);
             }
             return canvas;
         }
@@ -644,11 +645,18 @@ namespace Cube {
         }
 
         /* ----------------------------------------------------------------- */
+        ///
         /// MouseEnterHandler
+        /// 
+        /// <summary>
+        /// MEMO: control.Focus() を実行するとスクロールバーがリセット
+        /// されてしまう為，control.Parent.Focus() を実行する．
+        /// </summary>
+        /// 
         /* ----------------------------------------------------------------- */
         private static void MouseEnterHandler(object sender, EventArgs e) {
             var control = (Control)sender;
-            control.Focus();
+            control.Parent.Focus();
         }
 
         /* ----------------------------------------------------------------- */
