@@ -482,9 +482,10 @@ namespace Cube {
                     this.MouseEnter -= new EventHandler(MouseEnterHandler);
 
                     var parent = this.Parent;
-                    if (this.Engine != null) {
-                        this.Engine.ImageGenerated -= new ThumbEventHandler(ImageGeneratedHandler);
-                        this.Engine.Dispose();
+                    if (engine_ != null) {
+                        engine_.ImageGenerated -= new ThumbEventHandler(ImageGeneratedHandler);
+                        engine_.Dispose();
+                        engine_ = null;
                     }
                 }
             }
