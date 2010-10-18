@@ -570,24 +570,24 @@
             // 
             this.PageViewerTabControl.AllowDrop = true;
             this.PageViewerTabControl.Controls.Add(this.DefaultTabPage);
-            this.PageViewerTabControl.DisplayStyle = System.Windows.Forms.TabStyle.VS2010;
+            this.PageViewerTabControl.DisplayStyle = System.Windows.Forms.TabStyle.Rounded;
             // 
             // 
             // 
-            this.PageViewerTabControl.DisplayStyleProvider.BorderColor = System.Drawing.Color.White;
-            this.PageViewerTabControl.DisplayStyleProvider.BorderColorHot = System.Drawing.Color.FromArgb(((int)(((byte)(155)))), ((int)(((byte)(167)))), ((int)(((byte)(183)))));
+            this.PageViewerTabControl.DisplayStyleProvider.BorderColor = System.Drawing.SystemColors.ControlDark;
+            this.PageViewerTabControl.DisplayStyleProvider.BorderColorHot = System.Drawing.SystemColors.ControlDark;
             this.PageViewerTabControl.DisplayStyleProvider.BorderColorSelected = System.Drawing.Color.FromArgb(((int)(((byte)(127)))), ((int)(((byte)(157)))), ((int)(((byte)(185)))));
-            this.PageViewerTabControl.DisplayStyleProvider.CloserColor = System.Drawing.Color.FromArgb(((int)(((byte)(117)))), ((int)(((byte)(99)))), ((int)(((byte)(61)))));
-            this.PageViewerTabControl.DisplayStyleProvider.FocusTrack = false;
+            this.PageViewerTabControl.DisplayStyleProvider.CloserColor = System.Drawing.Color.DarkGray;
+            this.PageViewerTabControl.DisplayStyleProvider.FocusTrack = true;
             this.PageViewerTabControl.DisplayStyleProvider.HotTrack = true;
             this.PageViewerTabControl.DisplayStyleProvider.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.PageViewerTabControl.DisplayStyleProvider.Opacity = 1F;
             this.PageViewerTabControl.DisplayStyleProvider.Overlap = 0;
-            this.PageViewerTabControl.DisplayStyleProvider.Padding = new System.Drawing.Point(6, 5);
+            this.PageViewerTabControl.DisplayStyleProvider.Padding = new System.Drawing.Point(10, 5);
             this.PageViewerTabControl.DisplayStyleProvider.Radius = 3;
             this.PageViewerTabControl.DisplayStyleProvider.ShowTabCloser = true;
-            this.PageViewerTabControl.DisplayStyleProvider.TextColor = System.Drawing.Color.White;
-            this.PageViewerTabControl.DisplayStyleProvider.TextColorDisabled = System.Drawing.Color.WhiteSmoke;
+            this.PageViewerTabControl.DisplayStyleProvider.TextColor = System.Drawing.SystemColors.ControlText;
+            this.PageViewerTabControl.DisplayStyleProvider.TextColorDisabled = System.Drawing.SystemColors.ControlDark;
             this.PageViewerTabControl.DisplayStyleProvider.TextColorSelected = System.Drawing.SystemColors.ControlText;
             this.PageViewerTabControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.PageViewerTabControl.HotTrack = true;

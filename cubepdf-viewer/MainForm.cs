@@ -369,6 +369,7 @@ namespace Cube {
             var canvas = CanvasPolicy.Get(tab);
             var thumb = Thumbnail.GetInstance(this.NavigationSplitContainer.Panel1);
             if (thumb != null) {
+                this.NavigationSplitContainer.Panel1.Controls.Remove(thumb);
                 thumb.Dispose();
             }
             CanvasPolicy.Destroy(canvas);

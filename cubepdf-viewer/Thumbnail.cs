@@ -246,6 +246,7 @@ namespace Cube {
         protected virtual void Dispose(bool disposing) {
             if (!disposed_) {
                 if (disposing) {
+                    this.ClearQueue();
                     while (worker_.IsBusy) System.Threading.Thread.Sleep(100);
                     worker_.Dispose();
                     this.Clear();
@@ -476,6 +477,10 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         protected override void Dispose(bool disposing) {
             if (disposing) {
+                this.DrawItem -= new DrawListViewItemEventHandler(DrawItemHandler);
+                this.Resize -= new EventHandler(ResizeHandler);
+                this.MouseEnter -= new EventHandler(MouseEnterHandler);
+
                 var parent = this.Parent;
                 if (this.Engine != null) {
                     this.Engine.ImageGenerated -= new ThumbEventHandler(ImageGeneratedHandler);
@@ -483,9 +488,6 @@ namespace Cube {
                 }
 #if nouse
                 this.Items.Clear();
-                this.DrawItem -= new DrawListViewItemEventHandler(DrawItemHandler);
-                this.SizeChanged -= new EventHandler(SizeChangedHandler);
-                this.MouseEnter -= new EventHandler(MouseEnterHandler);
                 parent.Controls.Remove(this);
 #endif
             }
@@ -538,12 +540,14 @@ namespace Cube {
             if (width * ratio * core.PageCount > parent.Size.Height) width -= 20;
             width -= 3; // NOTE: 余白を持たせる．手動で微調整したもの
 
-            this.BeginUpdate();
-            this.View = View.Tile;
-            this.TileSize = new Size(width, (int)(width * ratio));
-            if (this.Items.Count > 0) this.Items.Clear();
-            for (int i = 0; i < core.PageCount; i++) this.Items.Add((i + 1).ToString());
-            this.EndUpdate();
+            if (width != this.TileSize.Width) {
+                this.BeginUpdate();
+                this.View = View.Tile;
+                this.TileSize = new Size(width, (int)(width * ratio));
+                if (this.Items.Count > 0) this.Items.Clear();
+                for (int i = 0; i < core.PageCount; i++) this.Items.Add((i + 1).ToString());
+                this.EndUpdate();
+            }
         }
 
         /* ----------------------------------------------------------------- */
