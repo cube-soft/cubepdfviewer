@@ -367,11 +367,7 @@ namespace Cube {
         public void DestroyTab(TabPage tab) {
             var parent = (TabControl)tab.Parent;
             var canvas = CanvasPolicy.Get(tab);
-            var thumb = Thumbnail.GetInstance(this.NavigationSplitContainer.Panel1);
-            if (thumb != null) {
-                this.NavigationSplitContainer.Panel1.Controls.Remove(thumb);
-                thumb.Dispose();
-            }
+            this.DestroyThumbnail(this.NavigationSplitContainer.Panel1);
             CanvasPolicy.Destroy(canvas);
             if (this.PageViewerTabControl.TabCount > 1) {
                 parent.TabPages.Remove(tab);
@@ -412,11 +408,20 @@ namespace Cube {
         /// CreateThumbnail
         /* ----------------------------------------------------------------- */
         private void CreateThumbnail(PictureBox canvas) {
-            var old = Thumbnail.GetInstance(this.NavigationSplitContainer.Panel1);
-            if (old != null) old.Dispose();
+            this.DestroyThumbnail(this.NavigationSplitContainer.Panel1);
             Thumbnail thumb = new Thumbnail(this.NavigationSplitContainer.Panel1, canvas);
             thumb.SelectedIndexChanged -= new EventHandler(Thumbnail_SelectedIndexChanged);
             thumb.SelectedIndexChanged += new EventHandler(Thumbnail_SelectedIndexChanged);
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// DestroyThumbnail
+        /* ----------------------------------------------------------------- */
+        private void DestroyThumbnail(Control parent) {
+            var thumb = Thumbnail.GetInstance(parent);
+            if (thumb == null) return;
+            parent.Controls.Remove(thumb);
+            thumb.Dispose();
         }
 
         /* ----------------------------------------------------------------- */

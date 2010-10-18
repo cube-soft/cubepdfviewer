@@ -528,7 +528,7 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         private void Reset(object sender) {
             var control = sender as Control;
-            if (control == null) return;
+            if (control == null || engine_ == null || engine_.Core == null) return;
 
             var parent = control.Parent;
             var core = engine_.Core;
@@ -539,11 +539,16 @@ namespace Cube {
             int width = parent.ClientSize.Width;
             if (width * ratio * core.PageCount > parent.Size.Height) width -= 20;
             width -= 3; // NOTE: 余白を持たせる．手動で微調整したもの
+            int height = (int)(width * ratio);
+
+            engine_.ClearQueue();
+            engine_.QueueLimit = parent.Height / height * 2;
+            engine_.CacheSize = engine_.QueueLimit;
 
             if (width != this.TileSize.Width) {
                 this.BeginUpdate();
                 this.View = View.Tile;
-                this.TileSize = new Size(width, (int)(width * ratio));
+                this.TileSize = new Size(width, height);
                 if (this.Items.Count > 0) this.Items.Clear();
                 for (int i = 0; i < core.PageCount; i++) this.Items.Add((i + 1).ToString());
                 this.EndUpdate();
