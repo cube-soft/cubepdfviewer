@@ -137,7 +137,10 @@ namespace Cube {
                 vsb.SmallChange = (vsb.Maximum - vsb.LargeChange) / 20;
                 hsb.SmallChange = (hsb.Maximum - hsb.LargeChange) / 20;
 
+                // 選択・非選択の枠線を更新するために再描画が必要となる．
                 control.Parent.Refresh();
+                var thumb = Thumbnail.GetInstance(this.NavigationSplitContainer.Panel1);
+                if (thumb != null) thumb.Invalidate();
             }
 
             if (this.MainMenuStrip != null) this.MainMenuStrip.Refresh();
