@@ -486,10 +486,6 @@ namespace Cube {
                     this.Engine.ImageGenerated -= new ThumbEventHandler(ImageGeneratedHandler);
                     this.Engine.Dispose();
                 }
-#if nouse
-                this.Items.Clear();
-                parent.Controls.Remove(this);
-#endif
             }
             base.Dispose(disposing);
         }
