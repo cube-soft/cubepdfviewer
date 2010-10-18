@@ -448,7 +448,11 @@ namespace Cube {
         /// Engine
         /* ----------------------------------------------------------------- */
         public ThumbEngine Engine {
-            get { return engine_; }
+            get {
+                lock (lock_) {
+                    return engine_;
+                }
+            }
         }
 
         /* ----------------------------------------------------------------- */
@@ -482,26 +486,28 @@ namespace Cube {
             const int WM_LBUTTONDOWN = 0x0201;
             const int WM_LBUTTONUP = 0x0202;
 
-            if (engine_ != null) {
-                switch (m.Msg) {
-                case WM_SIZE:
-                    engine_.ClearQueue();
-                    break;
-                case WM_ERASEBKGND:
-                    if (erase_background_) base.WndProc(ref m);
-                    return;
-                case WM_VSCROLL:
-                    if (valid_) engine_.ClearQueue();
-                    break;
-                case WM_LBUTTONDOWN:
-                    valid_ = true;
-                    break;
-                case WM_LBUTTONUP:
-                    valid_ = false;
-                    break;
-                default:
-                    Trace.WriteLine(m.Msg.ToString());
-                    break;
+            lock (lock_) {
+                if (engine_ != null) {
+                    switch (m.Msg) {
+                    case WM_SIZE:
+                        engine_.ClearQueue();
+                        break;
+                    case WM_ERASEBKGND:
+                        if (erase_background_) base.WndProc(ref m);
+                        return;
+                    case WM_VSCROLL:
+                        if (valid_) engine_.ClearQueue();
+                        break;
+                    case WM_LBUTTONDOWN:
+                        valid_ = true;
+                        break;
+                    case WM_LBUTTONUP:
+                        valid_ = false;
+                        break;
+                    default:
+                        Trace.WriteLine(m.Msg.ToString());
+                        break;
+                    }
                 }
             }
             base.WndProc(ref m);
@@ -514,10 +520,12 @@ namespace Cube {
             base.Dispose(disposing);
             try {
                 if (disposing) {
-                    if (engine_ != null) {
-                        engine_.ImageGenerated -= new ThumbEventHandler(ImageGeneratedHandler);
-                        engine_.Dispose();
-                        engine_ = null;
+                    lock (lock_) {
+                        if (engine_ != null) {
+                            engine_.ImageGenerated -= new ThumbEventHandler(ImageGeneratedHandler);
+                            engine_.Dispose();
+                            engine_ = null;
+                        }
                     }
                 }
             }
@@ -540,9 +548,11 @@ namespace Cube {
             this.Dock = DockStyle.Fill;
             this.OwnerDraw = true;
 
-            engine_ = new ThumbEngine(core, 256);
-            engine_.ImageGenerated -= new ThumbEventHandler(ImageGeneratedHandler);
-            engine_.ImageGenerated += new ThumbEventHandler(ImageGeneratedHandler);
+            lock (lock_) {
+                engine_ = new ThumbEngine(core, 256);
+                engine_.ImageGenerated -= new ThumbEventHandler(ImageGeneratedHandler);
+                engine_.ImageGenerated += new ThumbEventHandler(ImageGeneratedHandler);
+            }
 
             parent.Controls.Add(this);
             this.Reset(this);
@@ -573,9 +583,11 @@ namespace Cube {
             width -= 3; // NOTE: 余白を持たせる．手動で微調整したもの
             int height = (int)(width * ratio);
 
-            engine_.ClearQueue();
-            engine_.QueueLimit = parent.Height / height * 2;
-            engine_.CacheSize = engine_.QueueLimit;
+            lock (lock_) {
+                engine_.ClearQueue();
+                engine_.QueueLimit = parent.Height / height * 2;
+                engine_.CacheSize = engine_.QueueLimit;
+            }
 
             if (width != this.TileSize.Width) {
                 this.BeginUpdate();
@@ -603,7 +615,7 @@ namespace Cube {
         private void DrawItemHandler(object sender, DrawListViewItemEventArgs e) {
             if (e.ItemIndex >= this.Items.Count) return;
 
-            lock (engine_) {
+            lock (lock_) {
                 if (engine_ == null) return;
 
                 Rectangle rect = new Rectangle(e.Bounds.Location, e.Bounds.Size);
@@ -675,6 +687,7 @@ namespace Cube {
         private bool valid_ = false;
         private bool erase_background_ = true;
         private ThumbEngine engine_ = null;
+        private object lock_ = new object();
         #endregion
     }
 }
