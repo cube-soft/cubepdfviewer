@@ -716,8 +716,8 @@ namespace Cube {
         private static void Adjust_WorkCompletedHandler(object sender, RunWorkerCompletedEventArgs e) {
             var canvas = e.Result as Canvas;
             if (canvas == null) return;
-            CanvasPolicy.Adjust(canvas);
             canvas.Cursor = Cursors.Default;
+            CanvasPolicy.Adjust(canvas);
             canvas.Invalidate();
         }
 
