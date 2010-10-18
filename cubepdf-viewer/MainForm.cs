@@ -1627,17 +1627,21 @@ namespace Cube {
 
             adobe_ = path + @"\AcroRd32.exe";
 
+            var original = Utility.GetIcon(adobe_).ToBitmap();
+
             adobe_icon_ = new Bitmap(32, 32);
             var normal = Graphics.FromImage(adobe_icon_);
-            normal.DrawImage(Utility.GetIcon(adobe_).ToBitmap(), 4, 4, adobe_icon_.Width - 8, adobe_icon_.Height - 8);
+            normal.DrawImage(original, 4, 4, adobe_icon_.Width - 8, adobe_icon_.Height - 8);
             normal.Dispose();
 
             adobe_icon_selected_ = new Bitmap(32, 32);
             var selected = Graphics.FromImage(adobe_icon_selected_);
             selected.FillRectangle(SystemBrushes.GradientActiveCaption, new Rectangle(0, 0, adobe_icon_selected_.Width - 2, adobe_icon_selected_.Height - 2));
-            selected.DrawImage(Utility.GetIcon(adobe_).ToBitmap(), 4, 4, adobe_icon_.Width - 8, adobe_icon_.Height - 8);
+            selected.DrawImage(original, 4, 4, adobe_icon_.Width - 8, adobe_icon_.Height - 8);
             selected.DrawRectangle(SystemPens.Highlight, new Rectangle(0, 0, adobe_icon_selected_.Width - 2, adobe_icon_selected_.Height - 2));
             selected.Dispose();
+
+            original.Dispose();
 
             this.AdobeButton.MouseEnter += new EventHandler(AdobeButton_MouseEnter);
             this.AdobeButton.MouseLeave += new EventHandler(AdobeButton_MouseLeave);
