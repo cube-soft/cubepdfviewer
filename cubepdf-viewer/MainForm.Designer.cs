@@ -564,6 +564,7 @@
             this.NavigationSplitContainer.SplitterDistance = 151;
             this.NavigationSplitContainer.SplitterWidth = 3;
             this.NavigationSplitContainer.TabIndex = 2;
+            this.NavigationSplitContainer.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.NavigationSplitContainer_SplitterMoved);
             // 
             // PageViewerTabControl
             // 
@@ -573,7 +574,7 @@
             // 
             // 
             // 
-            this.PageViewerTabControl.DisplayStyleProvider.BorderColor = System.Drawing.Color.Transparent;
+            this.PageViewerTabControl.DisplayStyleProvider.BorderColor = System.Drawing.Color.White;
             this.PageViewerTabControl.DisplayStyleProvider.BorderColorHot = System.Drawing.Color.FromArgb(((int)(((byte)(155)))), ((int)(((byte)(167)))), ((int)(((byte)(183)))));
             this.PageViewerTabControl.DisplayStyleProvider.BorderColorSelected = System.Drawing.Color.FromArgb(((int)(((byte)(127)))), ((int)(((byte)(157)))), ((int)(((byte)(185)))));
             this.PageViewerTabControl.DisplayStyleProvider.CloserColor = System.Drawing.Color.FromArgb(((int)(((byte)(117)))), ((int)(((byte)(99)))), ((int)(((byte)(61)))));
@@ -582,7 +583,7 @@
             this.PageViewerTabControl.DisplayStyleProvider.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.PageViewerTabControl.DisplayStyleProvider.Opacity = 1F;
             this.PageViewerTabControl.DisplayStyleProvider.Overlap = 0;
-            this.PageViewerTabControl.DisplayStyleProvider.Padding = new System.Drawing.Point(10, 5);
+            this.PageViewerTabControl.DisplayStyleProvider.Padding = new System.Drawing.Point(6, 5);
             this.PageViewerTabControl.DisplayStyleProvider.Radius = 3;
             this.PageViewerTabControl.DisplayStyleProvider.ShowTabCloser = true;
             this.PageViewerTabControl.DisplayStyleProvider.TextColor = System.Drawing.Color.White;
@@ -624,13 +625,14 @@
             this.DoubleBuffered = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
-            this.MinimumSize = new System.Drawing.Size(950, 200);
             this.Name = "MainForm";
             this.Text = "CubePDF Viewer";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.Shown += new System.EventHandler(this.MainForm_Shown);
-            this.SizeChanged += new System.EventHandler(this.MainForm_SizeChanged);
+            this.ResizeBegin += new System.EventHandler(this.MainForm_ResizeBegin);
+            this.ResizeEnd += new System.EventHandler(this.MainForm_ResizeEnd);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MainForm_KeyDown);
+            this.Resize += new System.EventHandler(this.MainForm_Resize);
             this.MenuToolStrip.ResumeLayout(false);
             this.MenuToolStrip.PerformLayout();
             this.MenuSplitContainer.Panel1.ResumeLayout(false);

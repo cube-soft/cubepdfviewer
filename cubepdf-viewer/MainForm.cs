@@ -85,7 +85,7 @@ namespace Cube {
             this.MenuSplitContainer.SplitterDistance = this.MenuToolStrip.Height;
             this.NavigationSplitContainer.Panel1Collapsed = (setting_.Navigaion == NavigationCondition.None);
             this.UpdateFitCondition(setting_.Fit);
-            this.NavigationSplitContainer.Panel2.SizeChanged += new EventHandler(MainForm_SizeChanged);
+            //this.NavigationSplitContainer.Panel2.SizeChanged += new EventHandler(MainForm_SizeChanged);
             CreateTabContextMenu(this.PageViewerTabControl);
 
             this.DefaultTabPage.MouseWheel += new MouseEventHandler(TabPage_MouseWheel);
@@ -152,9 +152,6 @@ namespace Cube {
                 hsb.SmallChange = (hsb.Maximum - hsb.LargeChange) / 20;
 
                 control.Parent.Refresh();
-                if (!this.NavigationSplitContainer.Panel1Collapsed) {
-                    foreach (Control item in this.NavigationSplitContainer.Panel1.Controls) item.Invalidate();
-                }
             }
 
             if (this.MainMenuStrip != null) this.MainMenuStrip.Refresh();
@@ -312,11 +309,11 @@ namespace Cube {
         private void Adjust(TabPage tab) {
             var canvas = CanvasPolicy.Get(tab);
             var message = "";
-
+            
             try {
                 if (this.FitToWidthButton.Checked) CanvasPolicy.FitToWidth(canvas);
                 else if (this.FitToHeightButton.Checked) CanvasPolicy.FitToHeight(canvas);
-                else CanvasPolicy.Adjust(canvas, CanvasPolicy.PageSize(canvas));
+                else CanvasPolicy.Adjust(canvas);
             }
             catch (Exception err) {
                 this.ErrorLog(err);
@@ -398,8 +395,8 @@ namespace Cube {
             var menu = new ContextMenuStrip();
             var elem = new ToolStripMenuItem();
             elem.Text = "閉じる";
-            elem.Click -= new EventHandler(TabClosed);
-            elem.Click += new EventHandler(TabClosed);
+            elem.Click -= new EventHandler(TabCloseMenuItem_Click);
+            elem.Click += new EventHandler(TabCloseMenuItem_Click);
             menu.Items.Add(elem);
             parent.MouseDown -= new MouseEventHandler(PageViewerTabControl_MouseDown);
             parent.MouseDown += new MouseEventHandler(PageViewerTabControl_MouseDown);
@@ -417,9 +414,8 @@ namespace Cube {
             var old = Thumbnail.GetInstance(this.NavigationSplitContainer.Panel1);
             if (old != null) old.Dispose();
             Thumbnail thumb = new Thumbnail(this.NavigationSplitContainer.Panel1, canvas);
-            thumb.SelectedIndexChanged -= new EventHandler(PageChanged);
-            thumb.SelectedIndexChanged += new EventHandler(PageChanged);
-            //GC.Collect(2);
+            thumb.SelectedIndexChanged -= new EventHandler(Thumbnail_SelectedIndexChanged);
+            thumb.SelectedIndexChanged += new EventHandler(Thumbnail_SelectedIndexChanged);
         }
 
         /* ----------------------------------------------------------------- */
@@ -541,7 +537,7 @@ namespace Cube {
 
         /* ----------------------------------------------------------------- */
         ///
-        /// MainForm_SizeChanged
+        /// MainForm_Resize
         /// 
         /// <summary>
         /// サムネイル画像の最大サイズを指定したいが，各パネルには MinSize
@@ -554,9 +550,38 @@ namespace Cube {
         /// </summary>
         /// 
         /* ----------------------------------------------------------------- */
-        private void MainForm_SizeChanged(object sender, EventArgs e) {
-            this.Adjust(this.PageViewerTabControl.SelectedTab);
+        private void MainForm_Resize(object sender, EventArgs e) {
             //this.NavigationSplitContainer.Panel2MinSize = this.NavigationSplitContainer.Width - 256;
+            if ((resize_ & 0x01) == 0) this.Adjust(this.PageViewerTabControl.SelectedTab);
+            resize_ |= 0x02;
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// MainForm_ResizeBegin
+        /// 
+        /// <summary>
+        /// ドラッグ形式のリサイズの場合，リアルタイムに変更すると動作が
+        /// 重くなるため，ドラッグ中はリサイズを行わないようにする．
+        /// 
+        /// MEMO: ユーザの操作と発生するイベント
+        ///  1. ドラッグによるのリサイズ: ReizeBegin -> Resize -> ResizeEnd
+        ///  2. 最大化: Resize
+        ///  3. ドラッグによる移動: ResizeBegin -> ResizeEnd
+        /// </summary>
+        /// 
+        /* ----------------------------------------------------------------- */
+        private void MainForm_ResizeBegin(object sender, EventArgs e) {
+            resize_ = 0;
+            resize_ |= 0x01;
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// MainForm_ResizeEnd
+        /* ----------------------------------------------------------------- */
+        private void MainForm_ResizeEnd(object sender, EventArgs e) {
+            if ((resize_ & 0x02) != 0) this.Adjust(this.PageViewerTabControl.SelectedTab);
+            resize_ = 0;
         }
 
         #endregion
@@ -632,7 +657,6 @@ namespace Cube {
                     core.CurrentPage = settings.page;
                     core.Zoom = settings.zoom;
                     core.RenderPage(IntPtr.Zero, false, false);
-                    //Adjust(this.PageViewerTabControl.SelectedTab);
                 }
             }
         }
@@ -944,6 +968,13 @@ namespace Cube {
         }
 
         /* ----------------------------------------------------------------- */
+        /// NavigationSplitContainer_SplitterMoved
+        /* ----------------------------------------------------------------- */
+        private void NavigationSplitContainer_SplitterMoved(object sender, SplitterEventArgs e) {
+            this.Adjust(this.PageViewerTabControl.SelectedTab);
+        }
+
+        /* ----------------------------------------------------------------- */
         /// TabPage_Scroll
         /* ----------------------------------------------------------------- */
         private void TabPage_Scroll(object sender, ScrollEventArgs e) {
@@ -1056,9 +1087,9 @@ namespace Cube {
         }
 
         /* ----------------------------------------------------------------- */
-        /// PageChanged
+        /// Thumbnail_SelectedIndexChanged
         /* ----------------------------------------------------------------- */
-        private void PageChanged(object sender, EventArgs e) {
+        private void Thumbnail_SelectedIndexChanged(object sender, EventArgs e) {
             var thumb = sender as Thumbnail;
             if (thumb == null || thumb.SelectedItems.Count == 0) return;
             var page = thumb.SelectedItems[0].Index + 1;
@@ -1071,14 +1102,14 @@ namespace Cube {
 
         /* ----------------------------------------------------------------- */
         ///
-        /// TabClosed
+        /// TabCloseMenuItem_Click
         /// 
         /// <summary>
         /// コンテキストメニューの「閉じる」が押された時のイベントハンドラ．
         /// </summary>
         /// 
         /* ----------------------------------------------------------------- */
-        private void TabClosed(object sender, EventArgs e) {
+        private void TabCloseMenuItem_Click(object sender, EventArgs e) {
             try {
                 var control = this.PageViewerTabControl;
                 var item = sender as ToolStripMenuItem;
@@ -1642,6 +1673,7 @@ namespace Cube {
         private UserSetting setting_ = new UserSetting();
         private bool begin_ = true;
         private int wheel_counter_ = 0;
+        static int resize_ = 0;
         private string adobe_;
         #endregion
     }

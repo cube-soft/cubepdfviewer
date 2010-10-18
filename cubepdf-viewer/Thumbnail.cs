@@ -515,8 +515,8 @@ namespace Cube {
 
             this.DrawItem -= new DrawListViewItemEventHandler(DrawItemHandler);
             this.DrawItem += new DrawListViewItemEventHandler(DrawItemHandler);
-            this.SizeChanged -= new EventHandler(SizeChangedHandler);
-            this.SizeChanged += new EventHandler(SizeChangedHandler);
+            this.Resize -= new EventHandler(ResizeHandler);
+            this.Resize += new EventHandler(ResizeHandler);
             this.MouseEnter -= new EventHandler(MouseEnterHandler);
             this.MouseEnter += new EventHandler(MouseEnterHandler);
         }
@@ -597,9 +597,9 @@ namespace Cube {
         }
 
         /* ----------------------------------------------------------------- */
-        /// SizeChangedHandler
+        /// ResizeHandler
         /* ----------------------------------------------------------------- */
-        private void SizeChangedHandler(object sender, EventArgs e) {
+        private void ResizeHandler(object sender, EventArgs e) {
             this.Reset(sender);
         }
 

@@ -386,7 +386,6 @@ namespace Cube {
             CanvasPolicy.AsyncRender(canvas);
 #else
             CanvasPolicy.Render(canvas);
-            CanvasPolicy.Adjust(canvas, prev);
 #endif
             return core.Zoom;
         }
@@ -410,7 +409,6 @@ namespace Cube {
             CanvasPolicy.AsyncRender(canvas);
 #else
             CanvasPolicy.Render(canvas);
-            CanvasPolicy.Adjust(canvas, prev);
 #endif
             return core.Zoom;
         }
@@ -434,7 +432,6 @@ namespace Cube {
             CanvasPolicy.AsyncRender(canvas);
 #else
             CanvasPolicy.Render(canvas);
-            CanvasPolicy.Adjust(canvas, prev);
 #endif
             return core.Zoom;
         }
@@ -452,14 +449,12 @@ namespace Cube {
             if (canvas == null || canvas.Tag == null) return 0.0;
 
             var core = (PDF)canvas.Tag;
-            var prev = canvas.Size;
             core.FitToWidth(canvas.Parent.Handle);
             core.Zoom = core.Zoom - 1; // 暫定
 #if CUBE_ASYNC_FIT
             CanvasPolicy.AsyncRender(canvas);
 #else
             CanvasPolicy.Render(canvas);
-            CanvasPolicy.Adjust(canvas, prev);
 #endif
             return core.Zoom;
         }
@@ -477,14 +472,12 @@ namespace Cube {
             if (canvas == null || canvas.Tag == null) return 0.0;
 
             var core = (PDF)canvas.Tag;
-            var prev = canvas.Size;
             core.FitToHeight(canvas.Parent.Handle);
             core.Zoom = core.Zoom - 1; // 暫定
 #if CUBE_ASYNC_FIT
             CanvasPolicy.AsyncRender(canvas);
 #else
             CanvasPolicy.Render(canvas);
-            CanvasPolicy.Adjust(canvas, prev);
 #endif
             return core.Zoom;
         }
@@ -525,9 +518,10 @@ namespace Cube {
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        public static void Adjust(Canvas canvas, Size previous) {
+        public static void Adjust(Canvas canvas) {
             if (canvas == null || canvas.Tag == null) return;
 
+            var previous = canvas.Size;
             var core = (PDF)canvas.Tag;
             var parent = (ScrollableControl)canvas.Parent;
             canvas.Size = new Size(core.PageWidth, core.PageHeight);
@@ -551,22 +545,6 @@ namespace Cube {
             parent.AutoScrollPosition = scroll;
         }
 
-        /* ----------------------------------------------------------------- */
-        ///
-        /// Adjust
-        /// 
-        /// <summary>
-        /// 画面の位置を調整する．このメソッドは，画面の位置を調整する前と
-        /// canvas のサイズに変更がない場合に使用する．canvas のサイズに
-        /// 変更があった場合は，変更前の canvas のサイズを第2引数に指定
-        /// する．
-        /// </summary>
-        /// 
-        /* ----------------------------------------------------------------- */
-        public static void Adjust(Canvas canvas) {
-            CanvasPolicy.Adjust(canvas, CanvasPolicy.PageSize(canvas));
-        }
-
         #region Private methods
 
         /* ----------------------------------------------------------------- */
@@ -584,7 +562,9 @@ namespace Cube {
             if (canvas == null || canvas.Tag == null) return false;
             var core = canvas.Tag as PDF;
             lock (core) {
-                return core.RenderPage(IntPtr.Zero, false, false);
+                var status = core.RenderPage(IntPtr.Zero, false, false);
+                if (status) CanvasPolicy.Adjust(canvas);
+                return status;
             }
         }
 
