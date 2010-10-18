@@ -244,7 +244,7 @@ namespace Cube {
             var control = (ScrollableControl)canvas.Parent;
             control.AutoScrollPosition = new Point(0, 0);
 #else
-            if (CanvasPolicy.Render(canvas)) {
+            if (CanvasPolicy.Render(canvas, false)) {
                 var control = (ScrollableControl)canvas.Parent;
                 control.AutoScrollPosition = new Point(0, 0);
             }
@@ -272,7 +272,7 @@ namespace Cube {
             var control = (ScrollableControl)canvas.Parent;
             control.AutoScrollPosition = new Point(0, 0);
 #else
-            if (CanvasPolicy.Render(canvas)) {
+            if (CanvasPolicy.Render(canvas, false)) {
                 var control = (ScrollableControl)canvas.Parent;
                 control.AutoScrollPosition = new Point(0, 0);
             }
@@ -300,7 +300,7 @@ namespace Cube {
             var control = (ScrollableControl)canvas.Parent;
             control.AutoScrollPosition = new Point(0, 0);
 #else
-            if (CanvasPolicy.Render(canvas)) {
+            if (CanvasPolicy.Render(canvas, false)) {
                 var control = (ScrollableControl)canvas.Parent;
                 control.AutoScrollPosition = new Point(0, 0);
             }
@@ -327,7 +327,7 @@ namespace Cube {
             var control = (ScrollableControl)canvas.Parent;
             control.AutoScrollPosition = new Point(0, 0);
 #else
-            if (CanvasPolicy.Render(canvas)) {
+            if (CanvasPolicy.Render(canvas, false)) {
                 var control = (ScrollableControl)canvas.Parent;
                 control.AutoScrollPosition = new Point(0, 0);
             }
@@ -354,7 +354,7 @@ namespace Cube {
             var control = (ScrollableControl)canvas.Parent;
             control.AutoScrollPosition = new Point(0, 0);
 #else
-            if (CanvasPolicy.Render(canvas)) {
+            if (CanvasPolicy.Render(canvas, false)) {
                 var control = (ScrollableControl)canvas.Parent;
                 control.AutoScrollPosition = new Point(0, 0);
             }
@@ -397,7 +397,7 @@ namespace Cube {
 #if CUBE_ASYNC
                 CanvasPolicy.AsyncRender(canvas, true);
 #else
-                CanvasPolicy.Render(canvas);
+                CanvasPolicy.Render(canvas, true);
 #endif
             }
             return core.Zoom;
@@ -423,7 +423,7 @@ namespace Cube {
 #if CUBE_ASYNC
                 CanvasPolicy.AsyncRender(canvas, true);
 #else
-                CanvasPolicy.Render(canvas);
+                CanvasPolicy.Render(canvas, true);
 #endif
             }
             return core.Zoom;
@@ -447,7 +447,7 @@ namespace Cube {
 #if CUBE_ASYNC
             CanvasPolicy.AsyncRender(canvas, true);
 #else
-            CanvasPolicy.Render(canvas);
+            CanvasPolicy.Render(canvas, true);
 #endif
             return core.Zoom;
         }
@@ -470,7 +470,7 @@ namespace Cube {
 #if CUBE_ASYNC
             CanvasPolicy.AsyncRender(canvas, true);
 #else
-            CanvasPolicy.Render(canvas);
+            CanvasPolicy.Render(canvas, true);
 #endif
             return core.Zoom;
         }
@@ -493,7 +493,7 @@ namespace Cube {
 #if CUBE_ASYNC
             CanvasPolicy.AsyncRender(canvas, true);
 #else
-            CanvasPolicy.Render(canvas);
+            CanvasPolicy.Render(canvas, true);
 #endif
             return core.Zoom;
         }
@@ -516,7 +516,7 @@ namespace Cube {
 
             if (result > 0) {
                 core.CurrentPage = core.SearchResults[0].Page;
-                CanvasPolicy.Render(canvas);
+                CanvasPolicy.Render(canvas, false);
             }
 
             return result > 0;
@@ -574,12 +574,12 @@ namespace Cube {
         /// </summary>
         /// 
         /* ----------------------------------------------------------------- */
-        private static bool Render(Canvas canvas) {
+        private static bool Render(Canvas canvas, bool adjust) {
             if (canvas == null || canvas.Tag == null) return false;
             var core = canvas.Tag as PDF;
             lock (core) {
                 var status = core.RenderPage(IntPtr.Zero, false, false);
-                if (status) CanvasPolicy.Adjust(canvas);
+                if (status && adjust) CanvasPolicy.Adjust(canvas);
                 return status;
             }
         }
