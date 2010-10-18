@@ -496,13 +496,13 @@ namespace Cube {
                         if (erase_background_) base.WndProc(ref m);
                         return;
                     case WM_VSCROLL:
-                        if (valid_) engine_.ClearQueue();
+                        if (clear_queue_) engine_.ClearQueue();
                         break;
                     case WM_LBUTTONDOWN:
-                        valid_ = true;
+                        clear_queue_ = true;
                         break;
                     case WM_LBUTTONUP:
-                        valid_ = false;
+                        clear_queue_ = false;
                         break;
                     default:
                         Trace.WriteLine(m.Msg.ToString());
@@ -684,7 +684,7 @@ namespace Cube {
         //  メンバ変数の定義
         /* ----------------------------------------------------------------- */
         #region Member variables
-        private bool valid_ = false;
+        private bool clear_queue_ = false;
         private bool erase_background_ = true;
         private ThumbEngine engine_ = null;
         private object lock_ = new object();
