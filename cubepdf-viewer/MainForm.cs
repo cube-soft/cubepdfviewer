@@ -71,7 +71,7 @@ namespace Cube {
 
             var exec = System.Reflection.Assembly.GetEntryAssembly();
             var dir = System.IO.Path.GetDirectoryName(exec.Location);
-            Utility.SetupLog(dir + @"cubepdf-viewer.log");
+            Utility.SetupLog(dir + @"\cubepdf-viewer.log");
 
             int x = Screen.PrimaryScreen.Bounds.Height - 100;
             this.Size = new Size(System.Math.Max(x, this.MinimumSize.Width), x);
@@ -81,6 +81,7 @@ namespace Cube {
             this.MenuToolStrip.Renderer = new CustomToolStripRenderer();
             this.MenuSplitContainer.SplitterDistance = this.MenuToolStrip.Height;
             this.NavigationSplitContainer.Panel1Collapsed = (setting_.Navigaion == NavigationCondition.None);
+
             this.UpdateFitCondition(setting_.Fit);
             CreateTabContextMenu(this.PageViewerTabControl);
 
@@ -408,8 +409,8 @@ namespace Cube {
         private void DestroyThumbnail(Control parent) {
             var thumb = Thumbnail.GetInstance(parent);
             if (thumb == null) return;
-            parent.Controls.Remove(thumb);
             thumb.Dispose();
+            parent.Controls.Remove(thumb);
         }
 
         /* ----------------------------------------------------------------- */

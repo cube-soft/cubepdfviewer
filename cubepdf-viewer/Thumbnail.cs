@@ -22,6 +22,7 @@
 /* ------------------------------------------------------------------------- */
 using System;
 using System.Drawing;
+using System.Diagnostics;
 using System.Windows.Forms;
 using System.ComponentModel;
 using Container = System.Collections.Generic;
@@ -241,15 +242,23 @@ namespace Cube {
         }
 
         /* ----------------------------------------------------------------- */
+        ///
         /// Dispose
+        /// 
+        /// <summary>
+        /// TODO: worker を何とかする．
+        /// </summary>
+        /// 
         /* ----------------------------------------------------------------- */
         protected virtual void Dispose(bool disposing) {
             if (!disposed_) {
                 if (disposing) {
-                    this.ClearQueue();
-                    while (worker_.IsBusy) System.Threading.Thread.Sleep(100);
-                    worker_.Dispose();
+                    queue_.Clear();
+                    lock (worker_) {
+                        worker_.Dispose();
+                    }
                     this.Clear();
+                    core_ = null;
 
                     try {
                         if (cached_ != null && System.IO.Directory.Exists(cached_)) {
@@ -465,6 +474,7 @@ namespace Cube {
                     valid_ = false;
                     break;
                 default:
+                    Trace.WriteLine(m.Msg.ToString());
                     break;
                 }
             }
@@ -475,13 +485,9 @@ namespace Cube {
         /// Dispose
         /* ----------------------------------------------------------------- */
         protected override void Dispose(bool disposing) {
+            base.Dispose(disposing);
             try {
                 if (disposing) {
-                    this.DrawItem -= new DrawListViewItemEventHandler(DrawItemHandler);
-                    this.Resize -= new EventHandler(ResizeHandler);
-                    this.MouseEnter -= new EventHandler(MouseEnterHandler);
-
-                    var parent = this.Parent;
                     if (engine_ != null) {
                         engine_.ImageGenerated -= new ThumbEventHandler(ImageGeneratedHandler);
                         engine_.Dispose();
@@ -491,9 +497,6 @@ namespace Cube {
             }
             catch (Exception err) {
                 Utility.ErrorLog(err);
-            }
-            finally {
-                base.Dispose(disposing);
             }
         }
 
