@@ -208,6 +208,9 @@ namespace Cube {
                         else queue_.Remove(last);
                     }
                 }
+            }
+
+            lock (internal_lock_) {
                 if (!worker_.IsBusy) worker_.RunWorkerAsync();
             }
         }
@@ -253,19 +256,22 @@ namespace Cube {
         protected virtual void Dispose(bool disposing) {
             if (!disposed_) {
                 if (disposing) {
-                    queue_.Clear();
-                    lock (worker_) {
-                        worker_.Dispose();
-                    }
-                    this.Clear();
-                    core_ = null;
-
-                    try {
-                        if (cached_ != null && System.IO.Directory.Exists(cached_)) {
-                            System.IO.Directory.Delete(cached_, true);
+                    lock (internal_lock_) {
+                        lock (lock_) {
+                            queue_.Clear();
                         }
+
+                        worker_.Dispose();
+                        this.Clear();
+                        core_ = null;
+
+                        try {
+                            if (cached_ != null && System.IO.Directory.Exists(cached_)) {
+                                System.IO.Directory.Delete(cached_, true);
+                            }
+                        }
+                        catch (Exception /* err */) { }
                     }
-                    catch (Exception /* err */) { }
                 }
             }
             disposed_ = true;
@@ -305,7 +311,7 @@ namespace Cube {
         private void RunCompletedHandler(object sender, RunWorkerCompletedEventArgs e) {
             lock (lock_) {
                 if (queue_.Count > 0) {
-                    lock (worker_) {
+                    lock (internal_lock_) {
                         worker_.RunWorkerAsync();
                     }
                 }
@@ -330,17 +336,18 @@ namespace Cube {
         /// 
         /* ----------------------------------------------------------------- */
         private void GenerateImage(int pagenum) {
-            if (core_ == null || images_ == null || images_.ContainsKey(pagenum)) return;
-
             Image image = null;
-            var path = this.GetArchivedPath(pagenum);
-            if (System.IO.File.Exists(path)) image = Bitmap.FromFile(path);
-            else {
-                lock (core_) {
-                    PDFLibNet.PDFPage page;
-                    if (!core_.Pages.TryGetValue(pagenum, out page)) return;
-                    double ratio = page.Height / (double)page.Width;
-                    image = page.GetBitmap(width_, (int)(width_ * ratio));
+            lock (internal_lock_) {
+                if (core_ == null || images_ == null || images_.ContainsKey(pagenum)) return;
+                var path = this.GetArchivedPath(pagenum);
+                if (System.IO.File.Exists(path)) image = Bitmap.FromFile(path);
+                else {
+                    lock (core_) {
+                        PDFLibNet.PDFPage page;
+                        if (!core_.Pages.TryGetValue(pagenum, out page)) return;
+                        double ratio = page.Height / (double)page.Width;
+                        image = page.GetBitmap(width_, (int)(width_ * ratio));
+                    }
                 }
             }
 
@@ -362,12 +369,14 @@ namespace Cube {
         /// ArchiveImage (private)
         /* ----------------------------------------------------------------- */
         private void ArchiveImage(int pagenum) {
-            if (core_ == null || !images_.ContainsKey(pagenum)) return;
-            
             Image image = null;
-            lock (lock_) {
-                image = images_[pagenum];
-                images_.Remove(pagenum);
+            lock (internal_lock_) {
+                if (core_ == null || !images_.ContainsKey(pagenum)) return;
+
+                lock (lock_) {
+                    image = images_[pagenum];
+                    images_.Remove(pagenum);
+                }
             }
 
             var path = this.GetArchivedPath(pagenum);
@@ -402,6 +411,7 @@ namespace Cube {
         private string cached_ = null;
         private int cache_size_ = 5;
         private object lock_ = new object();
+        private object internal_lock_ = new object();
         private bool disposed_ = false;
         private BackgroundWorker worker_ = new BackgroundWorker();
         #endregion
@@ -591,38 +601,41 @@ namespace Cube {
         /// 
         /* ----------------------------------------------------------------- */
         private void DrawItemHandler(object sender, DrawListViewItemEventArgs e) {
-            var engine = this.Engine;
-            if (engine == null) return;
+            if (e.ItemIndex >= this.Items.Count) return;
 
-            Rectangle rect = new Rectangle(e.Bounds.Location, e.Bounds.Size);
-            rect.Inflate(-5, -5);
-            var image = engine.Get(e.ItemIndex + 1);
-            if (image != null) {
-                lock (image) {
-                    e.Graphics.DrawImage(image, rect);
+            lock (engine_) {
+                if (engine_ == null) return;
+
+                Rectangle rect = new Rectangle(e.Bounds.Location, e.Bounds.Size);
+                rect.Inflate(-5, -5);
+                var image = engine_.Get(e.ItemIndex + 1);
+                if (image != null) {
+                    lock (image) {
+                        e.Graphics.DrawImage(image, rect);
+                    }
                 }
-            }
-            else {
-                engine.Enqueue(e.ItemIndex + 1);
-                this.Cursor = Cursors.AppStarting;
+                else {
+                    engine_.Enqueue(e.ItemIndex + 1);
+                    this.Cursor = Cursors.AppStarting;
 
-                // 生成されてないページは真っ白な画像を表示する．
-                using (var brush = new SolidBrush(Color.White)) {
-                    e.Graphics.FillRectangle(brush, rect);
+                    // 生成されてないページは真っ白な画像を表示する．
+                    using (var brush = new SolidBrush(Color.White)) {
+                        e.Graphics.FillRectangle(brush, rect);
+                    }
                 }
-            }
-            e.Graphics.DrawRectangle(Pens.LightGray, rect);
+                e.Graphics.DrawRectangle(Pens.LightGray, rect);
 
-            // MEMO: キャプションを描画する方法．
-            // var stringFormat = new StringFormat();
-            // stringFormat.Alignment = StringAlignment.Center;
-            // stringFormat.LineAlignment = StringAlignment.Center;
-            // e.Graphics.DrawString(e.Item.Text, canvas.Font, Brushes.Black, new RectangleF(e.Bounds.X, e.Bounds.Y + e.Bounds.Height - 10, e.Bounds.Width, 10), stringFormat);
+                // MEMO: キャプションを描画する方法．
+                // var stringFormat = new StringFormat();
+                // stringFormat.Alignment = StringAlignment.Center;
+                // stringFormat.LineAlignment = StringAlignment.Center;
+                // e.Graphics.DrawString(e.Item.Text, canvas.Font, Brushes.Black, new RectangleF(e.Bounds.X, e.Bounds.Y + e.Bounds.Height - 10, e.Bounds.Width, 10), stringFormat);
 
-            if (e.ItemIndex == engine.Core.CurrentPage - 1) {
-                using (var pen = new Pen(Color.FromArgb(255, 50, 0))) {
-                    pen.Width = 2;
-                    e.Graphics.DrawRectangle(pen, rect);
+                if (e.ItemIndex == engine_.Core.CurrentPage - 1) {
+                    using (var pen = new Pen(Color.FromArgb(255, 50, 0))) {
+                        pen.Width = 2;
+                        e.Graphics.DrawRectangle(pen, rect);
+                    }
                 }
             }
         }
