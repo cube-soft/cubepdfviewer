@@ -208,9 +208,6 @@ namespace Cube {
                         else queue_.Remove(last);
                     }
                 }
-            }
-
-            lock (internal_lock_) {
                 if (!worker_.IsBusy) worker_.RunWorkerAsync();
             }
         }
