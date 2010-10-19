@@ -70,7 +70,9 @@ namespace Cube {
                 x = adobe_ ? 1 : 0;
                 registry.SetValue(REG_ADOBE, x);
             }
-            catch (Exception /* err */) { }
+            catch (Exception err) {
+                Utility.ErrorLog(err);
+            }
         }
 
         /* ----------------------------------------------------------------- */

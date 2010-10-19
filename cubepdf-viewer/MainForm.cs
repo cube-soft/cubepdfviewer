@@ -415,6 +415,7 @@ namespace Cube {
         private void DestroyThumbnail(Control parent) {
             var thumb = Thumbnail.GetInstance(parent);
             if (thumb == null) return;
+            parent.Controls.Remove(thumb);
             thumb.Dispose();
         }
 
@@ -1662,7 +1663,9 @@ namespace Cube {
                     var x = double.Parse(elem);
                     if (version.Length == 0 || x > double.Parse(version)) version = elem;
                 }
-                catch (Exception /* err */) { }
+                catch (Exception err) {
+                    Utility.ErrorLog(err);
+                }
             }
             if (version.Length == 0) return;
 
@@ -1717,7 +1720,9 @@ namespace Cube {
                 proc.StartInfo = info;
                 proc.Start();
             }
-            catch (Exception /* err */) { }
+            catch (Exception err) {
+                Utility.ErrorLog(err);
+            }
         }
 
         /* ----------------------------------------------------------------- */

@@ -38,7 +38,6 @@ namespace Cube {
             Trace.Listeners.Remove("Default");
             Trace.Listeners.Add(new TextWriterTraceListener(src));
             Trace.AutoFlush = true;
-            Trace.WriteLine("initialized");
         }
 
         /* ----------------------------------------------------------------- */
