@@ -71,7 +71,9 @@ namespace Cube {
 
             var exec = System.Reflection.Assembly.GetEntryAssembly();
             var dir = System.IO.Path.GetDirectoryName(exec.Location);
-            Utility.SetupLog(dir + @"\cubepdf-viewer.log");
+            var path = dir + @"\cubepdf-viewer.log";
+            if (System.IO.File.Exists(path)) System.IO.File.Delete(path);
+            Utility.SetupLog(path);
 
             int x = Screen.PrimaryScreen.Bounds.Height - 100;
             this.Size = new Size(System.Math.Max(x, this.MinimumSize.Width), x);
