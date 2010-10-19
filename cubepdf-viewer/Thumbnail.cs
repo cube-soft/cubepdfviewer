@@ -479,11 +479,11 @@ namespace Cube {
         /// 
         /* ----------------------------------------------------------------- */
         protected override void WndProc(ref Message m) {
-            const int WM_SIZE = 0x0005;
-            const int WM_ERASEBKGND = 0x0014;
-            const int WM_VSCROLL = 0x0115;
-            const int WM_LBUTTONDOWN = 0x0201;
-            const int WM_LBUTTONUP = 0x0202;
+            const int WM_SIZE           = 0x0005;
+            const int WM_ERASEBKGND     = 0x0014;
+            const int WM_VSCROLL        = 0x0115;
+            const int WM_LBUTTONDOWN    = 0x0201;
+            const int WM_LBUTTONUP      = 0x0202;
 
             lock (lock_) {
                 if (engine_ != null) {
