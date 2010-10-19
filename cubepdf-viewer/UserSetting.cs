@@ -154,7 +154,7 @@ namespace Cube {
         private static string REG_WIDTH = "Width";
         private static string REG_HEIGHT = "Height";
         private static string REG_THUMBWIDTH = "ThumbWidth";
-        private static string REG_MENU = "ShowMenuInfo";
+        private static string REG_MENU = "MenuWarnDialog";
         private static string REG_ADOBE = "AdobeExtension";
         #endregion
     }
