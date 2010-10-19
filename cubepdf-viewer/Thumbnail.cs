@@ -260,8 +260,10 @@ namespace Cube {
 
                         worker_.Dispose();
                         this.Clear();
-                        core_ = null;
-
+                        lock (core_)
+                        {
+                            core_ = null;
+                        }
                         try {
                             if (cached_ != null && System.IO.Directory.Exists(cached_)) {
                                 System.IO.Directory.Delete(cached_, true);
@@ -541,15 +543,16 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         private void Reset(object sender) {
             lock (lock_) {
-                try {
+                try
+                {
                     var control = sender as Control;
                     if (control == null || engine_ == null) return;
 
                     var parent = control.Parent;
+                    if (parent == null) return;
                     var core = engine_.Core;
 
                     if (core == null) return;
-
                     // 水平スクロールバーが出ないサイズ．
                     // 16 は垂直スクロールバーの幅（TODO: 垂直スクロールバーの幅の取得方法）．
                     int rot = core.Pages[1].Rotation;
@@ -560,12 +563,12 @@ namespace Cube {
                     if (width * ratio * core.PageCount > parent.Size.Height) width -= 20;
                     width -= 3; // NOTE: 余白を持たせる．手動で微調整したもの
                     int height = (int)(width * ratio);
-
                     engine_.ClearQueue();
                     engine_.QueueLimit = parent.Height / height * 2;
                     engine_.CacheSize = engine_.QueueLimit;
 
-                    if (width != this.TileSize.Width) {
+                    if (width != this.TileSize.Width)
+                    {
                         this.BeginUpdate();
                         this.View = View.Tile;
                         this.TileSize = new Size(width, height);
@@ -573,8 +576,10 @@ namespace Cube {
                         for (int i = 0; i < core.PageCount; i++) this.Items.Add((i + 1).ToString());
                         this.EndUpdate();
                     }
+
                 }
-                catch (Exception err) {
+                catch (Exception err)
+                {
                     Utility.ErrorLog(err);
                 }
             }
