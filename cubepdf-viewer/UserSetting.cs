@@ -146,16 +146,16 @@ namespace Cube {
         //  レジストリの名前の定義
         /* ----------------------------------------------------------------- */
         #region Registry settings
-        private static string REG_ROOT = @"Software\CubeSoft\CubePDF Viewer";
-        private static string REG_NAVIGATION = "Navigation";
-        private static string REG_FIT = "Fit";
-        private static string REG_X = "X";
-        private static string REG_Y = "Y";
-        private static string REG_WIDTH = "Width";
-        private static string REG_HEIGHT = "Height";
-        private static string REG_THUMBWIDTH = "ThumbWidth";
-        private static string REG_MENU = "MenuWarnDialog";
-        private static string REG_ADOBE = "AdobeExtension";
+        private static string REG_ROOT          = @"Software\CubeSoft\CubePDF Viewer";
+        private static string REG_NAVIGATION    = "Navigation";
+        private static string REG_FIT           = "Fit";
+        private static string REG_X             = "X";
+        private static string REG_Y             = "Y";
+        private static string REG_WIDTH         = "Width";
+        private static string REG_HEIGHT        = "Height";
+        private static string REG_THUMBWIDTH    = "ThumbWidth";
+        private static string REG_MENU          = "MenuWarnDialog";
+        private static string REG_ADOBE         = "AdobeExtension";
         #endregion
     }
 }
