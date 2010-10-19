@@ -1098,9 +1098,11 @@ namespace Cube {
         /// PageViewerTabControl_TabClosing
         /* ----------------------------------------------------------------- */
         private void PageViewerTabControl_TabClosing(object sender, TabControlCancelEventArgs e) {
-            this.DestroyTab(e.TabPage);
             var control = (CustomTabControl)sender;
+            var index = control.SelectedIndex;
             if (control.TabCount <= 1) e.Cancel = true;
+            else if (e.TabPageIndex == index) control.SelectedIndex = Math.Max(index - 1, 0);
+            this.DestroyTab(e.TabPage);
         }
 
         /* ----------------------------------------------------------------- */
@@ -1146,16 +1148,20 @@ namespace Cube {
                 if (control == null || context == null) return;
                 
                 var pos = (Point)context.Tag;
+                var index = control.SelectedIndex;
                 for (int i = 0; i < control.TabCount; i++) {
                     var rect = control.GetTabRect(i);
                     if (pos.X > rect.Left && pos.X < rect.Right && pos.Y > rect.Top && pos.Y < rect.Bottom) {
+                        if (i == index) control.SelectedIndex = Math.Max(index - 1, 0);
                         TabPage tab = control.TabPages[i];
                         this.DestroyTab(tab);
                         break;
                     }
                 }
             }
-            catch (Exception /* err */) { }
+            catch (Exception err) {
+                Utility.ErrorLog(err);
+            }
         }
 
         #endregion
