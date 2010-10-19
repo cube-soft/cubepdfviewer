@@ -45,6 +45,9 @@ namespace Cube {
             fit_ = (FitCondition)registry.GetValue(REG_FIT, FitCondition.Height);
             pos_.X = (int)registry.GetValue(REG_X, 30);
             pos_.Y = (int)registry.GetValue(REG_Y, 30);
+            size_.Width = (int)registry.GetValue(REG_WIDTH, 0);
+            size_.Height = (int)registry.GetValue(REG_HEIGHT, 0);
+            thumb_width_ = (int)registry.GetValue(REG_THUMBWIDTH, 0);
             menu_ = ((int)registry.GetValue(REG_MENU, 1) != 0);
             adobe_ = ((int)registry.GetValue(REG_ADOBE, 1) != 0);
         }
@@ -59,6 +62,9 @@ namespace Cube {
                 registry.SetValue(REG_FIT, (int)fit_);
                 registry.SetValue(REG_X, pos_.X);
                 registry.SetValue(REG_Y, pos_.Y);
+                registry.SetValue(REG_WIDTH, size_.Width);
+                registry.SetValue(REG_HEIGHT, size_.Height);
+                registry.SetValue(REG_THUMBWIDTH, thumb_width_);
                 int x = menu_ ? 1 : 0;
                 registry.SetValue(REG_MENU, x);
                 x = adobe_ ? 1 : 0;
@@ -92,6 +98,22 @@ namespace Cube {
         }
 
         /* ----------------------------------------------------------------- */
+        /// Size
+        /* ----------------------------------------------------------------- */
+        public Size Size {
+            get { return size_; }
+            set { size_ = value; }
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// ThumbWidth
+        /* ----------------------------------------------------------------- */
+        public int ThumbWidth {
+            get { return thumb_width_; }
+            set { thumb_width_ = value; }
+        }
+
+        /* ----------------------------------------------------------------- */
         /// ShowMenuWarning
         /* ----------------------------------------------------------------- */
         public bool ShowMenuInfo {
@@ -114,6 +136,8 @@ namespace Cube {
         private NavigationCondition navi_ = NavigationCondition.Thumbnail;
         private FitCondition fit_ = FitCondition.Height;
         private Point pos_ = new Point(0, 0);
+        private Size size_ = new Size(0, 0);
+        private int thumb_width_ = 0;
         private bool menu_ = true;
         private bool adobe_ = true;
         #endregion
@@ -127,6 +151,9 @@ namespace Cube {
         private static string REG_FIT = "Fit";
         private static string REG_X = "X";
         private static string REG_Y = "Y";
+        private static string REG_WIDTH = "Width";
+        private static string REG_HEIGHT = "Height";
+        private static string REG_THUMBWIDTH = "ThumbWidth";
         private static string REG_MENU = "ShowMenuInfo";
         private static string REG_ADOBE = "AdobeExtension";
         #endregion

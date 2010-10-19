@@ -76,13 +76,15 @@ namespace Cube {
             Utility.SetupLog(path);
 
             int x = Screen.PrimaryScreen.Bounds.Height - 100;
-            this.Size = new Size(System.Math.Max(x, this.MinimumSize.Width), x);
+            this.Size = (setting_.Size.Width > 0 && setting_.Size.Height > 0) ?
+                setting_.Size : new Size(System.Math.Max(x, this.MinimumSize.Width), x);
             this.StartPosition = FormStartPosition.Manual;
             this.Location = setting_.Position;
 
             this.MenuToolStrip.Renderer = new CustomToolStripRenderer();
             this.MenuSplitContainer.SplitterDistance = this.MenuToolStrip.Height;
             this.NavigationSplitContainer.Panel1Collapsed = (setting_.Navigaion == NavigationCondition.None);
+            this.NavigationSplitContainer.SplitterDistance = Math.Max(setting_.ThumbWidth, this.NavigationSplitContainer.Panel1MinSize);
 
             this.UpdateFitCondition(setting_.Fit);
             CreateTabContextMenu(this.PageViewerTabControl);
@@ -545,6 +547,8 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e) {
             setting_.Position = this.Location;
+            setting_.Size = this.Size;
+            setting_.ThumbWidth = this.NavigationSplitContainer.SplitterDistance;
             setting_.Save();
         }
 
