@@ -139,8 +139,8 @@ namespace Cube {
                 var hsb = control.HorizontalScroll;
 
                 // Minimumは0と仮定
-                vsb.SmallChange = (vsb.Maximum - vsb.LargeChange) / 20;
-                hsb.SmallChange = (hsb.Maximum - hsb.LargeChange) / 20;
+                vsb.SmallChange = Math.Max(1, (vsb.Maximum - vsb.LargeChange) / 20);
+                hsb.SmallChange = Math.Max(1, (hsb.Maximum - hsb.LargeChange) / 20);
 
                 // 選択・非選択の枠線を更新するために再描画が必要となる．
                 //var thumb = Thumbnail.GetInstance(this.NavigationSplitContainer.Panel1);
