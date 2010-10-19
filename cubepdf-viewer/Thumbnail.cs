@@ -342,7 +342,9 @@ namespace Cube {
                     lock (core_) {
                         PDFLibNet.PDFPage page;
                         if (!core_.Pages.TryGetValue(pagenum, out page)) return;
-                        double ratio = page.Height / (double)page.Width;
+                        int rot = page.Rotation;
+                        double ratio = (rot >= 45 && rot < 135) || (rot >= 225 && rot < 315) ?
+                            page.Width / (double)page.Height : page.Height / (double)page.Width;
                         image = page.GetBitmap(width_, (int)(width_ * ratio));
                     }
                 }
@@ -574,7 +576,10 @@ namespace Cube {
 
             // 水平スクロールバーが出ないサイズ．
             // 16 は垂直スクロールバーの幅（TODO: 垂直スクロールバーの幅の取得方法）．
-            double ratio = core.Pages[1].Height / (double)core.Pages[1].Width;
+            int rot = core.Pages[1].Rotation;
+            double ratio = (rot >= 45 && rot < 135) || (rot >= 225 && rot < 315) ?
+                core.Pages[1].Width / (double)core.Pages[1].Height :
+                core.Pages[1].Height / (double)core.Pages[1].Width;
             int width = parent.ClientSize.Width;
             if (width * ratio * core.PageCount > parent.Size.Height) width -= 20;
             width -= 3; // NOTE: 余白を持たせる．手動で微調整したもの
