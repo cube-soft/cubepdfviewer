@@ -504,7 +504,6 @@ namespace Cube {
                         clear_queue_ = false;
                         break;
                     default:
-                        Trace.WriteLine(m.Msg.ToString());
                         break;
                     }
                 }
