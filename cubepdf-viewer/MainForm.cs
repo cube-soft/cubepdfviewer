@@ -79,7 +79,9 @@ namespace Cube {
             this.Size = (setting_.Size.Width > 0 && setting_.Size.Height > 0) ?
                 setting_.Size : new Size(System.Math.Max(x, this.MinimumSize.Width), x);
             this.StartPosition = FormStartPosition.Manual;
-            this.Location = setting_.Position;
+            var pos = new Point(Math.Min(setting_.Position.X, Screen.PrimaryScreen.Bounds.Width),
+                Math.Min(setting_.Position.Y, Screen.PrimaryScreen.Bounds.Height));
+            this.Location = pos;
 
             this.MenuToolStrip.Renderer = new CustomToolStripRenderer();
             this.MenuSplitContainer.SplitterDistance = this.MenuToolStrip.Height;
@@ -141,10 +143,6 @@ namespace Cube {
                 // Minimumは0と仮定
                 vsb.SmallChange = Math.Max(1, (vsb.Maximum - vsb.LargeChange) / 20);
                 hsb.SmallChange = Math.Max(1, (hsb.Maximum - hsb.LargeChange) / 20);
-
-                // 選択・非選択の枠線を更新するために再描画が必要となる．
-                //var thumb = Thumbnail.GetInstance(this.NavigationSplitContainer.Panel1);
-                //if (thumb != null) thumb.Invalidate();
             }
 
             if (this.MainMenuStrip != null) this.MainMenuStrip.Refresh();
