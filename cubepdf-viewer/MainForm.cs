@@ -416,11 +416,19 @@ namespace Cube {
             var thumb = Thumbnail.GetInstance(parent);
             if (thumb == null) return;
             thumb.Dispose();
-            parent.Controls.Remove(thumb);
         }
 
         /* ----------------------------------------------------------------- */
+        ///
         /// RefreshThumbnail
+        /// 
+        /// <summary>
+        /// 選択ページを表す枠線を再描画する．index0, index1 がそれぞれ
+        /// 遷移元ページ，現在の選択ページに対応するインデックスを表す．
+        /// 選択ページについては，Selected プロパティを更新する事によって
+        /// DrawItem イベントが自動的に発生する模様．
+        /// </summary>
+        /// 
         /* ----------------------------------------------------------------- */
         private void RefreshThumbnail(Control parent, int current, int previous) {
             var thumb = Thumbnail.GetInstance(parent);

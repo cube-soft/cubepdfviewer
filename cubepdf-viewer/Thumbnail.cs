@@ -523,6 +523,7 @@ namespace Cube {
                             engine_.ImageGenerated -= new ThumbEventHandler(ImageGeneratedHandler);
                             engine_.Dispose();
                             engine_ = null;
+                            this.Parent.Controls.Remove(this);
                         }
                     }
                 }
