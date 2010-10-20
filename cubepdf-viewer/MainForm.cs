@@ -250,6 +250,8 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         private void Search(TabPage tab, string text, bool next) {
             var canvas = CanvasPolicy.Get(tab);
+            if (canvas == null || text.Length <= 0) return;
+
             var message = "";
 
             try {
@@ -262,13 +264,11 @@ namespace Cube {
 
                 var result = CanvasPolicy.Search(canvas, args);
                 begin_ = !result; // 最後まで検索したら始めに戻る
+                this.Refresh(canvas, message);
             }
             catch (Exception err) {
                 Utility.ErrorLog(err);
                 message = err.Message;
-            }
-            finally {
-                this.Refresh(canvas, message);
             }
         }
 
