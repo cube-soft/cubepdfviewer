@@ -684,8 +684,7 @@ namespace Cube {
                 if (prd.ShowDialog() == DialogResult.OK) {
                     document.PrintPage += new PrintPageEventHandler(PrintDocument_PrintPage);
                     document.PrinterSettings = prd.PrinterSettings;
-
-                    core.CurrentPage = prd.PrinterSettings.FromPage;
+                    core.CurrentPage = (prd.PrinterSettings.PrintRange == PrintRange.AllPages) ? 1 : prd.PrinterSettings.FromPage;
                     document.Print();
                     core.CurrentPage = settings.page;
                     core.Zoom = settings.zoom;
