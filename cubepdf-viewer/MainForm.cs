@@ -755,7 +755,7 @@ namespace Cube {
             if (canvas == null) return;
 
             this.CreateThumbnail(canvas);
-            CanvasPolicy.Adjust(canvas);
+            this.Adjust(control.SelectedTab);
             this.Refresh(canvas);
         }
 
