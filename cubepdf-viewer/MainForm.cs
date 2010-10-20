@@ -79,8 +79,8 @@ namespace Cube {
             this.Size = (setting_.Size.Width > 0 && setting_.Size.Height > 0) ?
                 setting_.Size : new Size(System.Math.Max(x, this.MinimumSize.Width), x);
             this.StartPosition = FormStartPosition.Manual;
-            var pos = new Point(Math.Min(setting_.Position.X, Screen.PrimaryScreen.Bounds.Width),
-                Math.Min(setting_.Position.Y, Screen.PrimaryScreen.Bounds.Height));
+            var pos = new Point(Math.Max(Math.Min(setting_.Position.X, Screen.PrimaryScreen.Bounds.Width), 0),
+                Math.Max(Math.Min(setting_.Position.Y, Screen.PrimaryScreen.Bounds.Height), 0));
             this.Location = pos;
 
             this.MenuToolStrip.Renderer = new CustomToolStripRenderer();
@@ -1000,7 +1000,7 @@ namespace Cube {
         /// LogoButton_Click
         /* ----------------------------------------------------------------- */
         private void LogoButton_Click(object sender, EventArgs e) {
-            System.Diagnostics.Process.Start("http://www.cube-soft.jp/");
+            System.Diagnostics.Process.Start("http://www.cube-soft.jp/cubepdfviewer/");
         }
 
         /* ----------------------------------------------------------------- */
