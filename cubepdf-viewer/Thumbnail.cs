@@ -561,7 +561,7 @@ namespace Cube {
                         core.Pages[1].Height / (double)core.Pages[1].Width;
                     int width = parent.ClientSize.Width;
                     if (width * ratio * core.PageCount > parent.Size.Height) width -= 20;
-                    width -= 3; // NOTE: 余白を持たせる．手動で微調整したもの
+                    width -= 5; // NOTE: 余白を持たせる．手動で微調整したもの
                     int height = (int)(width * ratio);
                     engine_.ClearQueue();
                     engine_.QueueLimit = parent.Height / height * 2;

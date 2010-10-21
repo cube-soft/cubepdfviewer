@@ -255,6 +255,7 @@ namespace Cube {
             var message = "";
 
             try {
+                int prev = CanvasPolicy.CurrentPage(canvas);
                 var args = new SearchArgs(text);
                 args.FromBegin = begin_;
                 args.IgnoreCase = true;
@@ -264,6 +265,7 @@ namespace Cube {
 
                 var result = CanvasPolicy.Search(canvas, args);
                 begin_ = !result; // 最後まで検索したら始めに戻る
+                this.RefreshThumbnail(this.NavigationSplitContainer.Panel1, CanvasPolicy.CurrentPage(canvas), prev);
                 this.Refresh(canvas, message);
             }
             catch (Exception err) {
@@ -437,6 +439,7 @@ namespace Cube {
             var index1 = Math.Min(Math.Max(current - 1, 0), thumb.Items.Count);
             thumb.Invalidate(thumb.Items[index0].Bounds);
             thumb.Items[index1].Selected = true;
+            thumb.Items[index1].EnsureVisible();
         }
 
         /* ----------------------------------------------------------------- */
@@ -712,21 +715,29 @@ namespace Cube {
 
             var control = this.PageViewerTabControl;
             var canvas = CanvasPolicy.Get(this.PageViewerTabControl.SelectedTab);
+            if (canvas == null || canvas.Tag == null) return;
             var core = canvas.Tag as PDFLibNet.PDFWrapper;
 
+#if nouse
+            PDFLibNet.PDFPage page;
+            if (!core.Pages.TryGetValue(core.CurrentPage, out page)) return;
+            using (var image = page.GetBitmap(ev.PageSettings.PaperSize.Width, ev.PageSettings.PaperSize.Height)) {
+                ev.Graphics.DrawImageUnscaled(image, new Point(0, 0));
+            }
+#else
             using (var bitmap = new Bitmap(ev.PageSettings.PaperSize.Width, ev.PageSettings.PaperSize.Height)) {
                 // NOTE: ページのサイズに合わせて拡大縮小するにはどうすればよいのか？
                 var g = Graphics.FromImage(bitmap);
                 core.ClientBounds = new Rectangle(new Point(0, 0), bitmap.Size);
-                core.Zoom = 100;
+                core.Zoom = ev.PageSettings.PaperSize.Width / (double)core.Pages[1].Width * 100.0;
                 core.RenderPage(IntPtr.Zero, false, false);
                 core.DrawPageHDC(g.GetHdc());
                 g.ReleaseHdc();
                 g.Save();
 
-                ev.Graphics.DrawImage(bitmap, 0, 0);
+                ev.Graphics.DrawImageUnscaled(bitmap, new Point(0, 0));
             }
-
+#endif
 
             // If more lines exist, print another page.
             if (ev.PageSettings.PrinterSettings.PrintRange == PrintRange.AllPages) {
