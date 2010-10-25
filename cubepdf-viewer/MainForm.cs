@@ -673,47 +673,27 @@ namespace Cube {
             // Print するためには，いったん PDFWrapper の値を変える必要がある．
             var core = canvas.Tag as PDFLibNet.PDFWrapper;
             var settings = new { page = core.CurrentPage, zoom = core.Zoom };
-            
-                using (var prd = new PrintDialog())
-                using (var document = new System.Drawing.Printing.PrintDocument())
-                {
-                    prd.AllowCurrentPage = true;
-                    prd.AllowSelection = false; // ページを選択する方法を提供しないのでfalse
-                    prd.AllowSomePages = true;
-                    prd.PrinterSettings.MinimumPage = 1;
-                    prd.PrinterSettings.MaximumPage = core.PageCount;
-                    prd.PrinterSettings.FromPage = core.CurrentPage;
-                    prd.PrinterSettings.ToPage = core.PageCount;
 
-                    if (prd.ShowDialog() == DialogResult.OK)
-                    {
-                        document.PrintPage += new PrintPageEventHandler(PrintDocument_PrintPage);
-                        document.PrinterSettings = prd.PrinterSettings;
-                        core.CurrentPage = (prd.PrinterSettings.PrintRange == PrintRange.AllPages) ? 1 : prd.PrinterSettings.FromPage;
-                        document.Print();
-                        core.CurrentPage = settings.page;
-                        core.Zoom = settings.zoom;
-                        core.RenderPage(IntPtr.Zero, false, false);
-                    }
+            using (var prd = new PrintDialog())
+            using (var document = new System.Drawing.Printing.PrintDocument()) {
+                prd.AllowCurrentPage = true;
+                prd.AllowSelection = false; // ページを選択する方法を提供しないのでfalse
+                prd.AllowSomePages = true;
+                prd.PrinterSettings.MinimumPage = 1;
+                prd.PrinterSettings.MaximumPage = core.PageCount;
+                prd.PrinterSettings.FromPage = core.CurrentPage;
+                prd.PrinterSettings.ToPage = core.PageCount;
+
+                if (prd.ShowDialog() == DialogResult.OK) {
+                    document.PrintPage += new PrintPageEventHandler(PrintDocument_PrintPage);
+                    document.PrinterSettings = prd.PrinterSettings;
+                    core.CurrentPage = (prd.PrinterSettings.PrintRange == PrintRange.AllPages) ? 1 : prd.PrinterSettings.FromPage;
+                    document.Print();
+                    core.CurrentPage = settings.page;
+                    core.Zoom = settings.zoom;
+                    core.RenderPage(IntPtr.Zero, false, false);
                 }
-            
-#if false
-            else
-            {
-                // Adobeで印刷する
-                var tab = this.PageViewerTabControl.SelectedTab;
-                var path = (string)tab.Tag;
-                var process = new System.Diagnostics.Process();
-                process.StartInfo.FileName = adobe_;
-                process.StartInfo.Verb = "open";
-                process.StartInfo.Arguments = " /n /t " + path;
-                process.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
-                process.StartInfo.CreateNoWindow = true;
-                process.Start();
-                process.WaitForExit(5000);
             }
-#endif
-            
         }
 
         /* ----------------------------------------------------------------- */
@@ -735,19 +715,10 @@ namespace Cube {
             if (canvas == null || canvas.Tag == null) return;
             var core = canvas.Tag as PDFLibNet.PDFWrapper;
 
-           ev.Graphics.PageUnit = GraphicsUnit.Pixel;
-           using (var bitmap = new Bitmap(core.PageWidth, core.PageHeight)) {
-                // NOTE: ページのサイズに合わせて拡大縮小するにはどうすればよいのか？
-                var g = Graphics.FromImage(bitmap);
-                core.ClientBounds = new Rectangle(new Point(0, 0), bitmap.Size);
-                core.Zoom = ev.PageSettings.PaperSize.Width / (double)core.PageWidth * 100.0;
-                //core.Zoom = (double)(ev.MarginBounds.Size.Width) / ev.PageSettings.PaperSize.Width * 100.0;
-                core.RenderPage(IntPtr.Zero, false, false);
-                core.DrawPageHDC(g.GetHdc());
-                g.ReleaseHdc();
-                g.Save();
-                ev.Graphics.DrawImageUnscaled(bitmap, new Point(0, 0));
-                //ev.Graphics.DrawImage(bitmap, new Point(0,0));
+            PDFLibNet.PDFPage page;
+            if (!core.Pages.TryGetValue(core.CurrentPage, out page)) return;
+            using (var image = page.GetBitmap(ev.PageSettings.PaperSize.Width, ev.PageSettings.PaperSize.Height)) {
+                ev.Graphics.DrawImage(image, new Point(0, 0));
             }
 
             // If more lines exist, print another page.
@@ -1029,6 +1000,7 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         private void NavigationSplitContainer_SplitterMoved(object sender, SplitterEventArgs e) {
             this.Adjust(this.PageViewerTabControl.SelectedTab);
+            NavigationSplitContainer.Panel1.Refresh();
         }
 
         /* ----------------------------------------------------------------- */

@@ -25,6 +25,7 @@ using System.Drawing;
 using System.Diagnostics;
 using System.Windows.Forms;
 using System.ComponentModel;
+using System.Runtime.InteropServices;
 using Container = System.Collections.Generic;
 using PDF = PDFLibNet.PDFWrapper;
 
@@ -471,6 +472,10 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         protected override void WndProc(ref Message m) {
             const int WM_ERASEBKGND     = 0x0014;
+            const int WM_NCCALCSIZE     = 0x0083;
+
+            const int SB_HORZ           = 0x0000;
+            //const int SB_VERT           = 0x0001;
 
             lock (lock_) {
                 if (engine_ != null) {
@@ -478,6 +483,10 @@ namespace Cube {
                     case WM_ERASEBKGND:
                         if (erase_background_) base.WndProc(ref m);
                         return;
+                    case WM_NCCALCSIZE:
+                        // 水平スクロールバーは強制非表示
+                        ShowScrollBar(this.Handle, SB_HORZ, false);
+                        break;
                     default:
                         break;
                     }
@@ -543,8 +552,7 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         private void Reset(object sender) {
             lock (lock_) {
-                try
-                {
+                try {
                     var control = sender as Control;
                     if (control == null || engine_ == null) return;
 
@@ -561,14 +569,13 @@ namespace Cube {
                         core.Pages[1].Height / (double)core.Pages[1].Width;
                     int width = parent.ClientSize.Width;
                     if (width * ratio * core.PageCount > parent.Size.Height) width -= 20;
-                    width -= 5; // NOTE: 余白を持たせる．手動で微調整したもの
+                    width -= 3; // NOTE: 余白を持たせる．手動で微調整したもの
                     int height = (int)(width * ratio);
                     engine_.ClearQueue();
                     engine_.QueueLimit = parent.Height / height * 2;
                     engine_.CacheSize = engine_.QueueLimit;
 
-                    if (width != this.TileSize.Width)
-                    {
+                    if (width != this.TileSize.Width) {
                         this.BeginUpdate();
                         this.View = View.Tile;
                         this.TileSize = new Size(width, height);
@@ -576,10 +583,8 @@ namespace Cube {
                         for (int i = 0; i < core.PageCount; i++) this.Items.Add((i + 1).ToString());
                         this.EndUpdate();
                     }
-
                 }
-                catch (Exception err)
-                {
+                catch (Exception err) {
                     Utility.ErrorLog(err);
                 }
             }
@@ -663,6 +668,16 @@ namespace Cube {
             if (engine == null || engine.QueueCount <= 0) this.Cursor = Cursors.Default;
             else this.Cursor = Cursors.AppStarting;
         }
+
+        #endregion
+
+        /* ----------------------------------------------------------------- */
+        //  使用している Win32 API
+        /* ----------------------------------------------------------------- */
+        #region Win32 APIs
+
+        [DllImport("user32.dll")]
+        private static extern bool ShowScrollBar(IntPtr hWnd, int wBar, bool bShow);
 
         #endregion
 
