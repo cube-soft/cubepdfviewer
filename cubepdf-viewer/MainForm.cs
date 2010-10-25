@@ -676,6 +676,8 @@ namespace Cube {
 
             using (var prd = new PrintDialog())
             using (var document = new System.Drawing.Printing.PrintDocument()) {
+                var path = this.PageViewerTabControl.SelectedTab.Tag as string;
+                document.DocumentName = System.IO.Path.GetFileNameWithoutExtension(path);
                 prd.AllowCurrentPage = true;
                 prd.AllowSelection = false; // ページを選択する方法を提供しないのでfalse
                 prd.AllowSomePages = true;
