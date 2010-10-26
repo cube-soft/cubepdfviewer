@@ -410,11 +410,20 @@ namespace Cube {
         }
 
         /* ----------------------------------------------------------------- */
+        ///
         /// DestroyThumbnail
+        /// 
+        /// <summary>
+        /// MEMO: SelectedIndexChanged イベントハンドラを早い段階で除いて
+        /// おかないと，別の TabPage が SelectedIndexChanged イベントの
+        /// 影響を受けてしまう模様．
+        /// </summary>
+        /// 
         /* ----------------------------------------------------------------- */
         private void DestroyThumbnail(Control parent) {
             var thumb = Thumbnail.GetInstance(parent);
             if (thumb == null) return;
+            thumb.SelectedIndexChanged -= new EventHandler(Thumbnail_SelectedIndexChanged);
             parent.Controls.Remove(thumb);
             thumb.Dispose();
         }
@@ -754,20 +763,6 @@ namespace Cube {
         }
 
         /* ----------------------------------------------------------------- */
-        /// PageViewerTabControl_SelectedIndexChanged
-        /* ----------------------------------------------------------------- */
-        private void PageViewerTabControl_SelectedIndexChanged(object sender, EventArgs e) {
-            var control = sender as TabControl;
-            if (control == null) return;
-            var canvas = CanvasPolicy.Get(control.SelectedTab);
-            if (canvas == null) return;
-
-            this.CreateThumbnail(canvas);
-            this.Adjust(control.SelectedTab);
-            this.Refresh(canvas);
-        }
-
-        /* ----------------------------------------------------------------- */
         /// ZoomInButton_Click
         /* ----------------------------------------------------------------- */
         private void ZoomInButton_Click(object sender, EventArgs e) {
@@ -1019,6 +1014,43 @@ namespace Cube {
         }
 
         /* ----------------------------------------------------------------- */
+        /// PageViewerTabControl_SelectedIndexChanged
+        /* ----------------------------------------------------------------- */
+        private void PageViewerTabControl_SelectedIndexChanged(object sender, EventArgs e) {
+            var control = sender as TabControl;
+            if (control == null) return;
+            var canvas = CanvasPolicy.Get(control.SelectedTab);
+            if (canvas == null) return;
+
+            this.Adjust(control.SelectedTab);
+            this.Refresh(canvas);
+            this.CreateThumbnail(canvas);
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// PageViewerTabControl_TabClosing
+        /* ----------------------------------------------------------------- */
+        private void PageViewerTabControl_TabClosing(object sender, TabControlCancelEventArgs e) {
+            var control = (CustomTabControl)sender;
+            var index = control.SelectedIndex;
+            this.DestroyTab(e.TabPage);
+            if (control.TabCount <= 1) e.Cancel = true;
+            else if (e.TabPageIndex == index) control.SelectedIndex = Math.Max(index - 1, 0);
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// PageViewerTabControl_MouseDown
+        /* ----------------------------------------------------------------- */
+        private void PageViewerTabControl_MouseDown(object sender, MouseEventArgs e) {
+            if (e.Button == System.Windows.Forms.MouseButtons.Right) {
+                var control = sender as TabControl;
+                if (control == null || control.ContextMenuStrip == null) return;
+                var context = control.ContextMenuStrip;
+                context.Tag = e.Location;
+            }
+        }
+
+        /* ----------------------------------------------------------------- */
         /// TabPage_Scroll
         /* ----------------------------------------------------------------- */
         private void TabPage_Scroll(object sender, ScrollEventArgs e) {
@@ -1110,43 +1142,6 @@ namespace Cube {
         }
 
         /* ----------------------------------------------------------------- */
-        /// PageViewerTabControl_TabClosing
-        /* ----------------------------------------------------------------- */
-        private void PageViewerTabControl_TabClosing(object sender, TabControlCancelEventArgs e) {
-            var control = (CustomTabControl)sender;
-            var index = control.SelectedIndex;
-            this.DestroyTab(e.TabPage);
-            if (control.TabCount <= 1) e.Cancel = true;
-            else if (e.TabPageIndex == index) control.SelectedIndex = Math.Max(index - 1, 0);
-        }
-
-        /* ----------------------------------------------------------------- */
-        /// PageViewerTabControl_MouseDown
-        /* ----------------------------------------------------------------- */
-        private void PageViewerTabControl_MouseDown(object sender, MouseEventArgs e) {
-            if (e.Button == System.Windows.Forms.MouseButtons.Right) {
-                var control = sender as TabControl;
-                if (control == null || control.ContextMenuStrip == null) return;
-                var context = control.ContextMenuStrip;
-                context.Tag = e.Location;
-            }
-        }
-
-        /* ----------------------------------------------------------------- */
-        /// Thumbnail_SelectedIndexChanged
-        /* ----------------------------------------------------------------- */
-        private void Thumbnail_SelectedIndexChanged(object sender, EventArgs e) {
-            var thumb = sender as Thumbnail;
-            if (thumb == null || thumb.SelectedItems.Count == 0) return;
-            var page = thumb.SelectedItems[0].Index + 1;
-
-            var tab = this.PageViewerTabControl.SelectedTab;
-            var canvas = CanvasPolicy.Get(tab);
-            CanvasPolicy.MovePage(canvas, page);
-            this.Refresh(canvas);
-        }
-
-        /* ----------------------------------------------------------------- */
         ///
         /// TabCloseMenuItem_Click
         /// 
@@ -1178,6 +1173,21 @@ namespace Cube {
                 Utility.ErrorLog(err);
             }
         }
+
+        /* ----------------------------------------------------------------- */
+        /// Thumbnail_SelectedIndexChanged
+        /* ----------------------------------------------------------------- */
+        private void Thumbnail_SelectedIndexChanged(object sender, EventArgs e) {
+            var thumb = sender as Thumbnail;
+            if (thumb == null || thumb.SelectedItems.Count == 0) return;
+            var page = thumb.SelectedItems[0].Index + 1;
+
+            var tab = this.PageViewerTabControl.SelectedTab;
+            var canvas = CanvasPolicy.Get(tab);
+            CanvasPolicy.MovePage(canvas, page);
+            this.Refresh(canvas);
+        }
+
 
         #endregion
 
