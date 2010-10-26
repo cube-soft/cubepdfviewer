@@ -77,11 +77,11 @@ namespace Cube {
 
             int x = Screen.PrimaryScreen.Bounds.Height - 100;
             this.Size = (setting_.Size.Width > 0 && setting_.Size.Height > 0) ?
-                setting_.Size : new Size(System.Math.Max(x, this.MinimumSize.Width), x);
+                setting_.Size : new Size(System.Math.Max(x, 0), x);
             this.StartPosition = FormStartPosition.Manual;
-            var pos = new Point(Math.Max(Math.Min(setting_.Position.X, Screen.PrimaryScreen.Bounds.Width), 0),
-                Math.Max(Math.Min(setting_.Position.Y, Screen.PrimaryScreen.Bounds.Height), 0));
-            this.Location = pos;
+            var pos = new Point(Math.Min(Math.Max(setting_.Position.X, 0), (int)(Screen.PrimaryScreen.Bounds.Width * 0.9)),
+                Math.Min(Math.Max(setting_.Position.Y, 0), (int)(Screen.PrimaryScreen.Bounds.Height * 0.9)));
+            this.Location = setting_.Position;
 
             this.MenuToolStrip.Renderer = new CustomToolStripRenderer();
             this.MenuSplitContainer.SplitterDistance = this.MenuToolStrip.Height;
@@ -574,7 +574,6 @@ namespace Cube {
         ///  MainForm_FormClosing
         /* ----------------------------------------------------------------- */
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e) {
-            // MEMO: Resize 時に更新するのみで OK か？
             if (this.WindowState == FormWindowState.Normal) {
                 setting_.Position = this.Location;
                 setting_.Size = this.Size;
@@ -588,13 +587,7 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         private void MainForm_Resize(object sender, EventArgs e) {
             //this.NavigationSplitContainer.Panel2MinSize = this.NavigationSplitContainer.Width - 256;
-            if ((resize_ & 0x01) == 0) {
-                this.Adjust(this.PageViewerTabControl.SelectedTab);
-                if (this.WindowState == FormWindowState.Normal) {
-                    setting_.Position = this.Location;
-                    setting_.Size = this.Size;
-                }
-            }
+            if ((resize_ & 0x01) == 0) this.Adjust(this.PageViewerTabControl.SelectedTab);
             resize_ |= 0x02;
         }
 
@@ -626,7 +619,12 @@ namespace Cube {
         /// MainForm_ResizeEnd
         /* ----------------------------------------------------------------- */
         private void MainForm_ResizeEnd(object sender, EventArgs e) {
-            if ((resize_ & 0x02) != 0) this.Adjust(this.PageViewerTabControl.SelectedTab);
+            if ((resize_ & 0x02) != 0) {
+                this.Adjust(this.PageViewerTabControl.SelectedTab);
+                setting_.Position = this.Location;
+                setting_.Size = this.Size;
+            }
+
             resize_ = 0;
             var thumb = Thumbnail.GetInstance(this.NavigationSplitContainer.Panel1);
             if (thumb != null) {
