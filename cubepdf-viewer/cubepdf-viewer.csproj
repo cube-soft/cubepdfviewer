@@ -101,6 +101,7 @@
     <Compile Include="Thumbnail.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="URLParser.cs" />
     <Compile Include="UserSetting.cs" />
     <Compile Include="Utility.cs" />
     <EmbeddedResource Include="MainForm.resx">

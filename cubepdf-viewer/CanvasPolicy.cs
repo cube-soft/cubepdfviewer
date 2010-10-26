@@ -22,6 +22,7 @@
 /* ------------------------------------------------------------------------- */
 using System;
 using System.Drawing;
+using System.Diagnostics;
 using System.Windows.Forms;
 using System.ComponentModel;
 using Container = System.Collections.Generic;
@@ -34,6 +35,100 @@ namespace Cube {
     /* --------------------------------------------------------------------- */
     public enum FitCondition {
         None = 0x00, Width = 0x01, Height = 0x02
+    }
+
+    /* --------------------------------------------------------------------- */
+    ///
+    /// CanvasEngine
+    /// 
+    /// <summary>
+    /// PDF の内容を表示・操作するために必要な各種情報を保持するための
+    /// クラス．通常は，Canvas.Tag に登録しておく．
+    /// </summary>
+    /// 
+    /* --------------------------------------------------------------------- */
+    public class CanvasEngine : IDisposable {
+        /* ----------------------------------------------------------------- */
+        /// constructor
+        /* ----------------------------------------------------------------- */
+        public CanvasEngine(PDF core) {
+            core_ = core;
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// Core
+        /* ----------------------------------------------------------------- */
+        public PDF Core {
+            get { return core_; }
+            set { core_ = value; }
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// UpdateURL
+        /// 
+        /// <summary>
+        /// 現在のページに記載されている URL 情報を取得する．
+        /// </summary>
+        /// 
+        /* ----------------------------------------------------------------- */
+        public void UpdateURL() {
+            lock (lock_)
+            lock (core_) {
+                url_.Reset(core_);
+            }
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// GetURL
+        /// 
+        /// <summary>
+        /// PDF ファイルの現在のページの指定された座標に URL が存在する
+        /// 場合はその URL を取得する．存在しない場合は null.
+        /// </summary>
+        /// 
+        /* ----------------------------------------------------------------- */
+        public string GetURL(Point pos) {
+            lock (lock_) {
+                return url_.GetURL(pos);
+            }
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// Dispose
+        /* ----------------------------------------------------------------- */
+        public void Dispose() {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// Dispose
+        /* ----------------------------------------------------------------- */
+        protected virtual void Dispose(bool disposing) {
+            if (!disposed_) {
+                if (disposing) {
+                    lock (lock_) {
+                        url_.Clear();
+                        lock (core_) {
+                            core_ = null;
+                        }
+                    }
+                }
+            }
+            disposed_ = true;
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// メンバ変数の定義
+        /* ----------------------------------------------------------------- */
+        #region Variables
+        private PDF core_ = null;
+        private URLParser url_ = new URLParser();
+        private bool disposed_ = false;
+        private object lock_ = new object();
+        #endregion
     }
 
     /* --------------------------------------------------------------------- */
@@ -86,6 +181,8 @@ namespace Cube {
                 canvas.MouseUp += new MouseEventHandler(CanvasPolicy.MouseUpHandler);
                 canvas.MouseMove += new MouseEventHandler(CanvasPolicy.MouseMoveHandler);
                 canvas.MouseEnter += new EventHandler(CanvasPolicy.MouseEnterHandler);
+                canvas.MouseClick -= new MouseEventHandler(CanvasPolicy.MouseClickHandler);
+                canvas.MouseClick += new MouseEventHandler(CanvasPolicy.MouseClickHandler);
 
                 parent.Controls.Add(canvas);
             }
@@ -119,12 +216,13 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         public static void Open(Canvas canvas, string path, string password, FitCondition which = FitCondition.None) {
             if (canvas == null) return;
+            var engine = canvas.Tag as CanvasEngine;
+            if (engine != null) CanvasPolicy.Close(canvas);
 
-            var core = (PDF)canvas.Tag;
-            if (core != null) core.Dispose();
-            core = new PDF();
+            var core = new PDF();
+            engine = new CanvasEngine(core);
+            canvas.Tag = engine;
             core.UseMuPDF = true;
-            canvas.Tag = core;
             core.UserPassword = password;
             core.OwnerPassword = password;
 
@@ -172,8 +270,12 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         private static void Close(Canvas canvas) {
             if (canvas == null || canvas.Tag == null) return;
+            var engine = canvas.Tag as CanvasEngine;
+            if (engine == null) return;
+            var core = engine.Core;
+            if (core == null) return;
 
-            var core = (PDF)canvas.Tag;
+            engine.Dispose();
             core.Dispose();
             canvas.Tag = null;
 
@@ -186,9 +288,12 @@ namespace Cube {
         /// PageSize
         /* ----------------------------------------------------------------- */
         public static Size PageSize(Canvas canvas) {
-            if (canvas == null || canvas.Tag == null) return new Size(0, 0);
+            if (canvas == null) return new Size(0, 0);
+            var engine = canvas.Tag as CanvasEngine;
+            if (engine == null) return new Size(0, 0);
+            var core = engine.Core;
+            if (core == null) return new Size(0, 0);
 
-            var core = (PDF)canvas.Tag;
             return new Size(core.PageWidth, core.PageHeight);
         }
 
@@ -202,9 +307,12 @@ namespace Cube {
         /// 
         /* ----------------------------------------------------------------- */
         public static int PageCount(Canvas canvas) {
-            if (canvas == null || canvas.Tag == null) return 0;
+            if (canvas == null) return 0;
+            var engine = canvas.Tag as CanvasEngine;
+            if (engine == null) return 0;
+            var core = engine.Core;
+            if (core == null) return 0;
 
-            var core = (PDF)canvas.Tag;
             return core.PageCount;
         }
 
@@ -218,9 +326,12 @@ namespace Cube {
         ///
         /* ----------------------------------------------------------------- */
         public static int CurrentPage(Canvas canvas) {
-            if (canvas == null || canvas.Tag == null) return 0;
+            if (canvas == null) return 0;
+            var engine = canvas.Tag as CanvasEngine;
+            if (engine == null) return 0;
+            var core = engine.Core;
+            if (core == null) return 0;
 
-            var core = (PDF)canvas.Tag;
             return core.CurrentPage;
         }
 
@@ -234,9 +345,12 @@ namespace Cube {
         /// 
         /* ----------------------------------------------------------------- */
         public static int MovePage(Canvas canvas, int page) {
-            if (canvas == null || canvas.Tag == null) return 0;
-
-            var core = (PDF)canvas.Tag;
+            if (canvas == null) return 0;
+            var engine = canvas.Tag as CanvasEngine;
+            if (engine == null) return 0;
+            var core = engine.Core;
+            if (core == null) return 0;
+            
             int n = Math.Min(Math.Max(page, 1), core.PageCount);
             core.CurrentPage = n;
 #if CUBE_ASYNC
@@ -245,6 +359,7 @@ namespace Cube {
             control.AutoScrollPosition = new Point(0, 0);
 #else
             if (CanvasPolicy.Render(canvas, false)) {
+                engine.UpdateURL();
                 var control = (ScrollableControl)canvas.Parent;
                 control.AutoScrollPosition = new Point(0, 0);
             }
@@ -262,9 +377,12 @@ namespace Cube {
         /// 
         /* ----------------------------------------------------------------- */
         public static int NextPage(Canvas canvas) {
-            if (canvas == null || canvas.Tag == null) return 0;
+            if (canvas == null) return 0;
+            var engine = canvas.Tag as CanvasEngine;
+            if (engine == null) return 0;
+            var core = engine.Core;
+            if (core == null) return 0;
 
-            var core = (PDF)canvas.Tag;
             core.NextPage();
 
 #if CUBE_ASYNC
@@ -273,6 +391,7 @@ namespace Cube {
             control.AutoScrollPosition = new Point(0, 0);
 #else
             if (CanvasPolicy.Render(canvas, false)) {
+                engine.UpdateURL();
                 var control = (ScrollableControl)canvas.Parent;
                 control.AutoScrollPosition = new Point(0, 0);
             }
@@ -290,9 +409,12 @@ namespace Cube {
         /// 
         /* ----------------------------------------------------------------- */
         public static int PreviousPage(Canvas canvas) {
-            if (canvas == null || canvas.Tag == null) return 0;
+            if (canvas == null) return 0;
+            var engine = canvas.Tag as CanvasEngine;
+            if (engine == null) return 0;
+            var core = engine.Core;
+            if (core == null) return 0;
 
-            var core = (PDF)canvas.Tag;
             core.PreviousPage();
 
 #if CUBE_ASYNC
@@ -301,6 +423,7 @@ namespace Cube {
             control.AutoScrollPosition = new Point(0, 0);
 #else
             if (CanvasPolicy.Render(canvas, false)) {
+                engine.UpdateURL();
                 var control = (ScrollableControl)canvas.Parent;
                 control.AutoScrollPosition = new Point(0, 0);
             }
@@ -318,9 +441,12 @@ namespace Cube {
         /// 
         /* ----------------------------------------------------------------- */
         public static int FirstPage(Canvas canvas) {
-            if (canvas == null || canvas.Tag == null) return 0;
+            if (canvas == null) return 0;
+            var engine = canvas.Tag as CanvasEngine;
+            if (engine == null) return 0;
+            var core = engine.Core;
+            if (core == null) return 0;
 
-            var core = (PDF)canvas.Tag;
             core.CurrentPage = 1;
 #if CUBE_ASYNC
             CanvasPolicy.AsyncRender(canvas, false);
@@ -328,6 +454,7 @@ namespace Cube {
             control.AutoScrollPosition = new Point(0, 0);
 #else
             if (CanvasPolicy.Render(canvas, false)) {
+                engine.UpdateURL();
                 var control = (ScrollableControl)canvas.Parent;
                 control.AutoScrollPosition = new Point(0, 0);
             }
@@ -345,9 +472,12 @@ namespace Cube {
         /// 
         /* ----------------------------------------------------------------- */
         public static int LastPage(Canvas canvas) {
-            if (canvas == null || canvas.Tag == null) return 0;
+            if (canvas == null) return 0;
+            var engine = canvas.Tag as CanvasEngine;
+            if (engine == null) return 0;
+            var core = engine.Core;
+            if (core == null) return 0;
 
-            var core = (PDF)canvas.Tag;
             core.CurrentPage = core.PageCount;
 #if CUBE_ASYNC
             CanvasPolicy.AsyncRender(canvas, false);
@@ -355,6 +485,7 @@ namespace Cube {
             control.AutoScrollPosition = new Point(0, 0);
 #else
             if (CanvasPolicy.Render(canvas, false)) {
+                engine.UpdateURL();
                 var control = (ScrollableControl)canvas.Parent;
                 control.AutoScrollPosition = new Point(0, 0);
             }
@@ -372,9 +503,12 @@ namespace Cube {
         /// 
         /* ----------------------------------------------------------------- */
         public static double Zoom(Canvas canvas) {
-            if (canvas == null || canvas.Tag == null) return 0.0;
+            if (canvas == null) return 0.0;
+            var engine = canvas.Tag as CanvasEngine;
+            if (engine == null) return 0.0;
+            var core = engine.Core;
+            if (core == null) return 0.0;
 
-            var core = (PDF)canvas.Tag;
             return core.Zoom;
         }
 
@@ -388,9 +522,12 @@ namespace Cube {
         /// 
         /* ----------------------------------------------------------------- */
         public static double Zoom(Canvas canvas, double percent) {
-            if (canvas == null || canvas.Tag == null) return 0.0;
+            if (canvas == null) return 0.0;
+            var engine = canvas.Tag as CanvasEngine;
+            if (engine == null) return 0.0;
+            var core = engine.Core;
+            if (core == null) return 0.0;
 
-            var core = (PDF)canvas.Tag;
             var prev = canvas.Size;
             if (percent < core.Zoom || core.Zoom < 400) {
                 core.Zoom = Math.Min(percent, 400);
@@ -413,9 +550,12 @@ namespace Cube {
         /// 
         /* ----------------------------------------------------------------- */
         public static double ZoomIn(Canvas canvas) {
-            if (canvas == null || canvas.Tag == null) return 0.0;
+            if (canvas == null) return 0.0;
+            var engine = canvas.Tag as CanvasEngine;
+            if (engine == null) return 0.0;
+            var core = engine.Core;
+            if (core == null) return 0.0;
 
-            var core = (PDF)canvas.Tag;
             var prev = canvas.Size;
             if (core.Zoom < 400) {
                 core.ZoomIN();
@@ -439,9 +579,12 @@ namespace Cube {
         /// 
         /* ----------------------------------------------------------------- */
         public static double ZoomOut(Canvas canvas) {
-            if (canvas == null || canvas.Tag == null) return 0.0;
+            if (canvas == null) return 0.0;
+            var engine = canvas.Tag as CanvasEngine;
+            if (engine == null) return 0.0;
+            var core = engine.Core;
+            if (core == null) return 0.0;
 
-            var core = (PDF)canvas.Tag;
             var prev = canvas.Size;
             core.ZoomOut();
 #if CUBE_ASYNC
@@ -462,9 +605,12 @@ namespace Cube {
         /// 
         /* ----------------------------------------------------------------- */
         public static double FitToWidth(Canvas canvas) {
-            if (canvas == null || canvas.Tag == null) return 0.0;
+            if (canvas == null) return 0.0;
+            var engine = canvas.Tag as CanvasEngine;
+            if (engine == null) return 0.0;
+            var core = engine.Core;
+            if (core == null) return 0.0;
 
-            var core = (PDF)canvas.Tag;
             core.FitToWidth(canvas.Parent.Handle);
             core.Zoom = core.Zoom - 1; // 暫定
 #if CUBE_ASYNC
@@ -485,9 +631,12 @@ namespace Cube {
         /// 
         /* ----------------------------------------------------------------- */
         public static double FitToHeight(Canvas canvas) {
-            if (canvas == null || canvas.Tag == null) return 0.0;
+            if (canvas == null) return 0.0;
+            var engine = canvas.Tag as CanvasEngine;
+            if (engine == null) return 0.0;
+            var core = engine.Core;
+            if (core == null) return 0.0;
 
-            var core = (PDF)canvas.Tag;
             core.FitToHeight(canvas.Parent.Handle);
             core.Zoom = core.Zoom - 1; // 暫定
 #if CUBE_ASYNC
@@ -502,9 +651,12 @@ namespace Cube {
         /// Search
         /* ----------------------------------------------------------------- */
         public static bool Search(Canvas canvas, SearchArgs args) {
-            if (canvas == null || canvas.Tag == null) return false;
+            if (canvas == null) return false;
+            var engine = canvas.Tag as CanvasEngine;
+            if (engine == null) return false;
+            var core = engine.Core;
+            if (core == null) return false;
 
-            var core = (PDF)canvas.Tag;
             core.SearchCaseSensitive = !args.IgnoreCase;
             var order = args.WholeDocument ? PDFLibNet.PDFSearchOrder.PDFSearchFromdBegin : PDFLibNet.PDFSearchOrder.PDFSearchFromCurrent;
 
@@ -517,6 +669,7 @@ namespace Cube {
             if (result > 0) {
                 core.CurrentPage = core.SearchResults[0].Page;
                 CanvasPolicy.Render(canvas, false);
+                engine.UpdateURL();
             }
 
             return result > 0;
@@ -535,10 +688,13 @@ namespace Cube {
         ///
         /* ----------------------------------------------------------------- */
         public static void Adjust(Canvas canvas) {
-            if (canvas == null || canvas.Tag == null) return;
+            if (canvas == null) return;
+            var engine = canvas.Tag as CanvasEngine;
+            if (engine == null) return;
+            var core = engine.Core;
+            if (core == null) return;
 
             var previous = canvas.Size;
-            var core = (PDF)canvas.Tag;
             var parent = (ScrollableControl)canvas.Parent;
             canvas.Size = new Size(core.PageWidth, core.PageHeight);
             canvas.ClientSize = canvas.Size;
@@ -575,9 +731,12 @@ namespace Cube {
         /// 
         /* ----------------------------------------------------------------- */
         private static bool Render(Canvas canvas, bool adjust) {
-            if (canvas == null || canvas.Tag == null) return false;
-            var core = canvas.Tag as PDF;
-
+            if (canvas == null) return false;
+            var engine = canvas.Tag as CanvasEngine;
+            if (engine == null) return false;
+            var core = engine.Core;
+            if (core == null) return false;
+            
             lock (core) {
                 var status = core.RenderPage(IntPtr.Zero, false, false);
                 if (status && adjust) CanvasPolicy.Adjust(canvas);
@@ -616,9 +775,12 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         private static void PaintHandler(object sender, PaintEventArgs e) {
             var canvas = sender as Canvas;
-            if (canvas == null || canvas.Tag == null) return;
+            if (canvas == null) return;
+            var engine = canvas.Tag as CanvasEngine;
+            if (engine == null) return;
+            var core = engine.Core;
+            if (core == null) return;
 
-            var core = (PDF)canvas.Tag;
             core.ClientBounds = new Rectangle(new Point(0, 0), canvas.Size);
             Graphics g = e.Graphics;
             core.DrawPageHDC(g.GetHdc());
@@ -630,12 +792,14 @@ namespace Cube {
         /// MouseMoveHandler
         /// 
         /// <summary>
-        /// 手のひらツールの実装．
+        /// マウス押下中は手のひらツールとして機能する．
+        /// それ以外の場合は，URL に重なった時にツールチップを表示する．
         /// </summary>
         /// 
         /* ----------------------------------------------------------------- */
         private static void MouseMoveHandler(object sender, MouseEventArgs e) {
-            var canvas = (Canvas)sender;
+            var canvas = sender as Canvas;
+            if (canvas == null) return;
 
             if (is_mouse_down_ && e.Button == MouseButtons.Left) {
                 var control = (ScrollableControl)canvas.Parent;
@@ -644,13 +808,57 @@ namespace Cube {
                 int y = current.Y - origin_.Y;
                 control.AutoScrollPosition = new Point(-x, -y);
             }
+            else {
+                var engine = canvas.Tag as CanvasEngine;
+                if (engine == null) return;
+                var core = engine.Core;
+                if (core == null) return;
+
+                lock (core) {
+                    var pos = new Point((int)(e.Location.X * 72.0 / core.RenderDPI), (int)(e.Location.Y * 72.0 / core.RenderDPI));
+                    var result = engine.GetURL(pos);
+                    if (result != null) {
+                        if (canvas.Cursor == Cursors.Default) {
+                            canvas.Cursor = Cursors.Hand;
+                            tooltip_.Show(result, canvas, 3000);
+                        }
+                    }
+                    else {
+                        canvas.Cursor = Cursors.Default;
+                        tooltip_.Hide(canvas);
+                    }
+                }
+            }
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// MouseClickHandler
+        /* ----------------------------------------------------------------- */
+        private static void MouseClickHandler(object sender, MouseEventArgs e) {
+            var canvas = sender as Canvas;
+            if (canvas == null) return;
+
+            if (canvas.Cursor == Cursors.Hand) {
+                var engine = canvas.Tag as CanvasEngine;
+                if (engine == null) return;
+                var core = engine.Core;
+                if (core == null) return;
+
+                lock (core) {
+                    var pos = new Point((int)(e.Location.X * 72.0 / core.RenderDPI), (int)(e.Location.Y * 72.0 / core.RenderDPI));
+                    var url = engine.GetURL(pos);
+                    if (url != null) System.Diagnostics.Process.Start(url);
+                }
+                canvas.Cursor = Cursors.Default;
+            }
         }
 
         /* ----------------------------------------------------------------- */
         /// MouseDownHandler
         /* ----------------------------------------------------------------- */
         private static void MouseDownHandler(object sender, MouseEventArgs e) {
-            var canvas = (Canvas)sender;
+            var canvas = sender as Canvas;
+            if (canvas == null) return;
             origin_ = canvas.Parent.PointToScreen(e.Location);
             is_mouse_down_ = true;
         }
@@ -673,7 +881,8 @@ namespace Cube {
         /// 
         /* ----------------------------------------------------------------- */
         private static void MouseEnterHandler(object sender, EventArgs e) {
-            var control = (Control)sender;
+            var control = sender as Control;
+            if (control == null) return;
             control.Parent.Focus();
         }
 
@@ -692,11 +901,14 @@ namespace Cube {
             var worker = sender as System.ComponentModel.BackgroundWorker;
             var canvas = e.Argument as Canvas;
             if (canvas == null) return;
-            var core = canvas.Tag as PDF;
+            var engine = canvas.Tag as CanvasEngine;
+            if (engine == null) return;
+            var core = engine.Core;
             if (core == null) return;
 
             lock (core) {
                 core.RenderPage(IntPtr.Zero, false, false);
+                engine.UpdateURL();
             }
             
             e.Result = canvas;
@@ -728,6 +940,7 @@ namespace Cube {
         #region Variables
         private static bool is_mouse_down_ = false;
         private static Point origin_;
+        private static ToolTip tooltip_ = new ToolTip();
         #endregion
     }
 }

@@ -491,18 +491,24 @@ namespace Cube {
                 if (this.SearchTextBox.Focused && this.SearchTextBox.Text.Length > 0) {
                     this.SearchButton_Click(this.SearchButton, e);
                 }
+                e.SuppressKeyPress = true;
                 break;
             case Keys.Escape:
                 this.ResetSearch(this.PageViewerTabControl.SelectedTab);
+                e.SuppressKeyPress = true;
                 break;
             case Keys.Right:
+                this.NextPageButton_Click(this.NextPageButton, e);
+                break;
             case Keys.Down:
-                if (e.Control) this.ZoomInButton_Click(this.ZoomInButton, e);
+                //if (e.Control) this.ZoomInButton_Click(this.ZoomInButton, e);
                 //else this.NextPageButton_Click(this.NextPageButton, e);
                 break;
             case Keys.Left:
+                this.PreviousPageButton_Click(this.PreviousPageButton, e);
+                break;
             case Keys.Up:
-                if (e.Control) this.ZoomOutButton_Click(this.ZoomOutButton, e);
+                //if (e.Control) this.ZoomOutButton_Click(this.ZoomOutButton, e);
                 //else this.PreviousPageButton_Click(this.PreviousPageButton, e);
                 break;
             case Keys.F3: // 検索
@@ -525,6 +531,9 @@ namespace Cube {
                 break;
             case Keys.O:  // ファイルを開く
                 if (e.Control) this.OpenButton_Click(this.PageViewerTabControl.SelectedTab, e);
+                break;
+            case Keys.T: // サムネイルの表示/非表示
+                if (e.Control) this.ThumbButton_Click(this.ThumbButton, e);
                 break;
             case Keys.W:  // ファイルを閉じる
                 if (e.Control) this.CloseButton_Click(this.PageViewerTabControl.SelectedTab, e);
@@ -556,30 +565,27 @@ namespace Cube {
         ///  MainForm_FormClosing
         /* ----------------------------------------------------------------- */
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e) {
-            setting_.Position = this.Location;
-            setting_.Size = this.Size;
+            // MEMO: Resize 時に更新するのみで OK か？
+            if (this.WindowState == FormWindowState.Normal) {
+                setting_.Position = this.Location;
+                setting_.Size = this.Size;
+            }
             setting_.ThumbWidth = this.NavigationSplitContainer.SplitterDistance;
             setting_.Save();
         }
 
         /* ----------------------------------------------------------------- */
-        ///
         /// MainForm_Resize
-        /// 
-        /// <summary>
-        /// サムネイル画像の最大サイズを指定したいが，各パネルには MinSize
-        /// しか設定できないため，メイン画面側のパネルの MinSize を動的に
-        /// 変更する事で対応する．
-        /// 
-        /// MEMO: Panel2MinSize を動的に変更すると，ウィンドウを縮小した
-        /// ときにうまく位置調整されない（原因は不明）．今のところは
-        /// 無効にしておく．
-        /// </summary>
-        /// 
         /* ----------------------------------------------------------------- */
         private void MainForm_Resize(object sender, EventArgs e) {
             //this.NavigationSplitContainer.Panel2MinSize = this.NavigationSplitContainer.Width - 256;
-            if ((resize_ & 0x01) == 0) this.Adjust(this.PageViewerTabControl.SelectedTab);
+            if ((resize_ & 0x01) == 0) {
+                this.Adjust(this.PageViewerTabControl.SelectedTab);
+                if (this.WindowState == FormWindowState.Normal) {
+                    setting_.Position = this.Location;
+                    setting_.Size = this.Size;
+                }
+            }
             resize_ |= 0x02;
         }
 
@@ -668,10 +674,13 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         private void PrintButton_Click(object sender, EventArgs e) {
             var canvas = CanvasPolicy.Get(this.PageViewerTabControl.SelectedTab);
-            if (canvas == null || canvas.Tag == null) return;
+            if (canvas == null) return;
+            var engine = canvas.Tag as CanvasEngine;
+            if (engine == null) return;
+            var core = engine.Core;
+            if (core == null) return;
 
             // Print するためには，いったん PDFWrapper の値を変える必要がある．
-            var core = canvas.Tag as PDFLibNet.PDFWrapper;
             var settings = new { page = core.CurrentPage, zoom = core.Zoom };
 
             using (var prd = new PrintDialog())
@@ -714,8 +723,11 @@ namespace Cube {
         private void PrintDocument_PrintPage(object sender, PrintPageEventArgs ev) {
             var control = this.PageViewerTabControl;
             var canvas = CanvasPolicy.Get(this.PageViewerTabControl.SelectedTab);
-            if (canvas == null || canvas.Tag == null) return;
-            var core = canvas.Tag as PDFLibNet.PDFWrapper;
+            if (canvas == null) return;
+            var engine = canvas.Tag as CanvasEngine;
+            if (engine == null) return;
+            var core = engine.Core;
+            if (core == null) return;
 
             PDFLibNet.PDFPage page;
             if (!core.Pages.TryGetValue(core.CurrentPage, out page)) return;
@@ -745,7 +757,8 @@ namespace Cube {
         /// PageViewerTabControl_SelectedIndexChanged
         /* ----------------------------------------------------------------- */
         private void PageViewerTabControl_SelectedIndexChanged(object sender, EventArgs e) {
-            var control = (TabControl)sender;
+            var control = sender as TabControl;
+            if (control == null) return;
             var canvas = CanvasPolicy.Get(control.SelectedTab);
             if (canvas == null) return;
 

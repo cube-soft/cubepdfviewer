@@ -520,8 +520,9 @@ namespace Cube {
         /// Create (private)
         /* ----------------------------------------------------------------- */
         private void Create(Control parent, Control src) {
-            if (src == null || src.Tag == null) return;
-            var core = src.Tag as PDF;
+            if (src == null) return;
+            var src_engine = src.Tag as CanvasEngine;
+            if (src_engine == null) return;
 
             this.Name = "Thumbnail";
             this.BackColor = Color.DimGray;
@@ -531,7 +532,7 @@ namespace Cube {
             this.OwnerDraw = true;
 
             lock (lock_) {
-                engine_ = new ThumbEngine(core, 256);
+                engine_ = new ThumbEngine(src_engine.Core, 256);
                 engine_.ImageGenerated -= new ThumbEventHandler(ImageGeneratedHandler);
                 engine_.ImageGenerated += new ThumbEventHandler(ImageGeneratedHandler);
             }

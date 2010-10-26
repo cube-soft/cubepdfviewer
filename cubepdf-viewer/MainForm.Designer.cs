@@ -173,6 +173,7 @@
             this.PrintButton.AutoSize = false;
             this.PrintButton.BackColor = System.Drawing.Color.Transparent;
             this.PrintButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.PrintButton.Enabled = false;
             this.PrintButton.Image = global::Cube.Properties.Resources.print;
             this.PrintButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.PrintButton.ImageTransparentColor = System.Drawing.Color.Magenta;
