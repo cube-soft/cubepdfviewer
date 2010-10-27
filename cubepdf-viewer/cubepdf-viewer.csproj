@@ -95,13 +95,13 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RawPrinterHelper.cs" />
     <Compile Include="SearchArgs.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Thumbnail.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="URLParser.cs" />
     <Compile Include="UserSetting.cs" />
     <Compile Include="Utility.cs" />
     <EmbeddedResource Include="MainForm.resx">

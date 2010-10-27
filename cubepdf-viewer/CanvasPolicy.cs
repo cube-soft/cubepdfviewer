@@ -25,11 +25,78 @@ using System.Drawing;
 using System.Diagnostics;
 using System.Windows.Forms;
 using System.ComponentModel;
+using System.Text.RegularExpressions;
 using Container = System.Collections.Generic;
 using Canvas = System.Windows.Forms.PictureBox;
 using PDF = PDFLibNet.PDFWrapper;
 
 namespace Cube {
+    /* --------------------------------------------------------------------- */
+    /// URLParser
+    /* --------------------------------------------------------------------- */
+    class URLParser {
+        /* ----------------------------------------------------------------- */
+        /// constructor
+        /* ----------------------------------------------------------------- */
+        public URLParser() { }
+
+        /* ----------------------------------------------------------------- */
+        /// Reset
+        /* ----------------------------------------------------------------- */
+        public void Reset(PDF core) {
+            if (core == null) return;
+
+            string src = null;
+            core_ = core;
+            src = core_.Pages[core_.CurrentPage].Text;
+            if (src == null) return;
+
+            core.PreserveSearchResults();
+            urls_.Clear();
+            Regex exp = new Regex(@"(https?|ftp)(:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)");
+            for (var item = exp.Match(src); item.Success; item = item.NextMatch()) {
+                var order = PDFLibNet.PDFSearchOrder.PDFSearchFromCurrent;
+                if (core_.FindFirst(item.Value, order, false, false) > 0) {
+                    foreach (var result in core_.SearchResults) {
+                        if (result.Page == core_.CurrentPage) {
+                            urls_.Add(new Container.KeyValuePair<string, Rectangle>(item.Value, result.Position));
+                        }
+                    }
+                }
+            }
+            core.RecoverSearchResults();
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// Clear
+        /* ----------------------------------------------------------------- */
+        public void Clear() {
+            core_ = null;
+            urls_.Clear();
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// GetURL
+        /* ----------------------------------------------------------------- */
+        public string GetURL(Point pos) {
+            foreach (var item in urls_) {
+                if (pos.X >= item.Value.Left && pos.X <= item.Value.Right &&
+                    pos.Y >= item.Value.Top && pos.Y <= item.Value.Bottom) {
+                    return item.Key;
+                }
+            }
+            return null;
+        }
+
+        /* ----------------------------------------------------------------- */
+        //  メンバ変数の定義
+        /* ----------------------------------------------------------------- */
+        #region Variables
+        private PDF core_;
+        private Container.List<Container.KeyValuePair<string, Rectangle>> urls_ = new Container.List<Container.KeyValuePair<string, Rectangle>>();
+        #endregion
+    }
+
     /* --------------------------------------------------------------------- */
     /// FitCondition
     /* --------------------------------------------------------------------- */

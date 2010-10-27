@@ -703,13 +703,36 @@ namespace Cube {
                 prd.PrinterSettings.ToPage = core.PageCount;
 
                 if (prd.ShowDialog() == DialogResult.OK) {
-                    document.PrintPage += new PrintPageEventHandler(PrintDocument_PrintPage);
-                    document.PrinterSettings = prd.PrinterSettings;
-                    core.CurrentPage = (prd.PrinterSettings.PrintRange == PrintRange.AllPages) ? 1 : prd.PrinterSettings.FromPage;
-                    document.Print();
-                    core.CurrentPage = settings.page;
-                    core.Zoom = settings.zoom;
-                    core.RenderPage(IntPtr.Zero, false, false);
+                    try {
+                        var tmp = System.Environment.GetEnvironmentVariable("tmp");
+                        if (tmp == null) tmp = System.Environment.GetEnvironmentVariable("temp");
+                        if (tmp == null) {
+                            var exec = System.Reflection.Assembly.GetEntryAssembly();
+                            tmp = System.IO.Path.GetDirectoryName(exec.Location);
+                        }
+                        var ps = tmp + '\\' + System.IO.Path.GetRandomFileName() + ".ps";
+
+                        int first = 1;
+                        int last = core.PageCount;
+                        if (prd.PrinterSettings.PrintRange == PrintRange.SomePages) {
+                            first = prd.PrinterSettings.FromPage;
+                            last = prd.PrinterSettings.ToPage;
+                        }
+                        core.PrintToFile(ps, first, last);
+
+                        var docname = canvas.Parent.Tag as string;
+                        if (docname == null) docname = "document";
+                        RawPrinterHelper.SendFileToPrinter(prd.PrinterSettings.PrinterName, ps, System.IO.Path.GetFileNameWithoutExtension(docname));
+                    }
+                    catch (Exception /* err */) {
+                        document.PrintPage += new PrintPageEventHandler(PrintDocument_PrintPage);
+                        document.PrinterSettings = prd.PrinterSettings;
+                        core.CurrentPage = (prd.PrinterSettings.PrintRange == PrintRange.AllPages) ? 1 : prd.PrinterSettings.FromPage;
+                        document.Print();
+                        core.CurrentPage = settings.page;
+                        core.Zoom = settings.zoom;
+                        core.RenderPage(IntPtr.Zero, false, false);
+                    }
                 }
             }
         }
@@ -739,7 +762,6 @@ namespace Cube {
             PDFLibNet.PDFPage page;
             if (!core.Pages.TryGetValue(core.CurrentPage, out page)) return;
             using (var image = page.GetBitmap(ev.PageSettings.PaperSize.Width, ev.PageSettings.PaperSize.Height)) {
-                ev.Graphics.PageUnit = GraphicsUnit.Document;
                 ev.Graphics.DrawImage(image, new Point(0, 0));
             }
 
