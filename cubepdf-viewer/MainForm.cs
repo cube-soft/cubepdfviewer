@@ -739,6 +739,7 @@ namespace Cube {
             PDFLibNet.PDFPage page;
             if (!core.Pages.TryGetValue(core.CurrentPage, out page)) return;
             using (var image = page.GetBitmap(ev.PageSettings.PaperSize.Width, ev.PageSettings.PaperSize.Height)) {
+                ev.Graphics.PageUnit = GraphicsUnit.Document;
                 ev.Graphics.DrawImage(image, new Point(0, 0));
             }
 
