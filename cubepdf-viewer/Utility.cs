@@ -60,6 +60,20 @@ namespace Cube {
         }
 
         /* ----------------------------------------------------------------- */
+        /// TempPath
+        /* ----------------------------------------------------------------- */
+        public static string TempPath() {
+            var dir = System.Environment.GetEnvironmentVariable("tmp");
+            if (dir == null) dir = System.Environment.GetEnvironmentVariable("temp");
+            if (dir == null) {
+                var exec = System.Reflection.Assembly.GetEntryAssembly();
+                dir = System.IO.Path.GetDirectoryName(exec.Location);
+            }
+            var dest = dir + '\\' + System.IO.Path.GetRandomFileName();
+            return dest;
+        }
+
+        /* ----------------------------------------------------------------- */
         //  GetIcon() の為の Win32 API
         /* ----------------------------------------------------------------- */
         #region Win32 API for GetIcon().

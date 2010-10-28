@@ -32,72 +32,6 @@ using PDF = PDFLibNet.PDFWrapper;
 
 namespace Cube {
     /* --------------------------------------------------------------------- */
-    /// URLParser
-    /* --------------------------------------------------------------------- */
-    class URLParser {
-        /* ----------------------------------------------------------------- */
-        /// constructor
-        /* ----------------------------------------------------------------- */
-        public URLParser() { }
-
-        /* ----------------------------------------------------------------- */
-        /// Reset
-        /* ----------------------------------------------------------------- */
-        public void Reset(PDF core) {
-            if (core == null) return;
-
-            string src = null;
-            core_ = core;
-            src = core_.Pages[core_.CurrentPage].Text;
-            if (src == null) return;
-
-            core.PreserveSearchResults();
-            urls_.Clear();
-            Regex exp = new Regex(@"(https?|ftp)(:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)");
-            for (var item = exp.Match(src); item.Success; item = item.NextMatch()) {
-                var order = PDFLibNet.PDFSearchOrder.PDFSearchFromCurrent;
-                if (core_.FindFirst(item.Value, order, false, false) > 0) {
-                    foreach (var result in core_.SearchResults) {
-                        if (result.Page == core_.CurrentPage) {
-                            urls_.Add(new Container.KeyValuePair<string, Rectangle>(item.Value, result.Position));
-                        }
-                    }
-                }
-            }
-            core.RecoverSearchResults();
-        }
-
-        /* ----------------------------------------------------------------- */
-        /// Clear
-        /* ----------------------------------------------------------------- */
-        public void Clear() {
-            core_ = null;
-            urls_.Clear();
-        }
-
-        /* ----------------------------------------------------------------- */
-        /// GetURL
-        /* ----------------------------------------------------------------- */
-        public string GetURL(Point pos) {
-            foreach (var item in urls_) {
-                if (pos.X >= item.Value.Left && pos.X <= item.Value.Right &&
-                    pos.Y >= item.Value.Top && pos.Y <= item.Value.Bottom) {
-                    return item.Key;
-                }
-            }
-            return null;
-        }
-
-        /* ----------------------------------------------------------------- */
-        //  メンバ変数の定義
-        /* ----------------------------------------------------------------- */
-        #region Variables
-        private PDF core_;
-        private Container.List<Container.KeyValuePair<string, Rectangle>> urls_ = new Container.List<Container.KeyValuePair<string, Rectangle>>();
-        #endregion
-    }
-
-    /* --------------------------------------------------------------------- */
     /// FitCondition
     /* --------------------------------------------------------------------- */
     public enum FitCondition {
@@ -140,9 +74,44 @@ namespace Cube {
         /// 
         /* ----------------------------------------------------------------- */
         public void UpdateURL() {
-            lock (lock_)
-            lock (core_) {
-                url_.Reset(core_);
+            lock (lock_) {
+                if (core_ == null) return;
+                lock (core_) {
+                    string src = null;
+                    src = core_.Pages[core_.CurrentPage].Text;
+                    if (src == null) return;
+
+                    core_.PreserveSearchResults();
+                    urls_.Clear();
+
+                    // parse http/https/ftp addresses.
+                    Regex http = new Regex(@"(https?|ftp)(:\/\/[\-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)");
+                    for (var item = http.Match(src); item.Success; item = item.NextMatch()) {
+                        var order = PDFLibNet.PDFSearchOrder.PDFSearchFromCurrent;
+                        if (core_.FindFirst(item.Value, order, false, false) > 0) {
+                            foreach (var result in core_.SearchResults) {
+                                if (result.Page == core_.CurrentPage) {
+                                    urls_.Add(new Container.KeyValuePair<string, Rectangle>(item.Value, result.Position));
+                                }
+                            }
+                        }
+                    }
+                    
+                    // parse mail addresses.
+                    Regex mail = new Regex(@"([a-zA-Z0-9])+([a-zA-Z0-9\._\-\+])*@([a-zA-Z0-9_\-])+([a-zA-Z0-9\._\-]+)+");
+                    for (var item = mail.Match(src); item.Success; item = item.NextMatch()) {
+                        var order = PDFLibNet.PDFSearchOrder.PDFSearchFromCurrent;
+                        if (core_.FindFirst(item.Value, order, false, false) > 0) {
+                            foreach (var result in core_.SearchResults) {
+                                if (result.Page == core_.CurrentPage) {
+                                    urls_.Add(new Container.KeyValuePair<string, Rectangle>("mailto:" + item.Value, result.Position));
+                                }
+                            }
+                        }
+                    }
+
+                    core_.RecoverSearchResults();
+                }
             }
         }
 
@@ -158,8 +127,14 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         public string GetURL(Point pos) {
             lock (lock_) {
-                return url_.GetURL(pos);
+                foreach (var item in urls_) {
+                    if (pos.X >= item.Value.Left && pos.X <= item.Value.Right &&
+                        pos.Y >= item.Value.Top && pos.Y <= item.Value.Bottom) {
+                        return item.Key;
+                    }
+                }
             }
+            return null;
         }
 
         /* ----------------------------------------------------------------- */
@@ -174,17 +149,15 @@ namespace Cube {
         /// Dispose
         /* ----------------------------------------------------------------- */
         protected virtual void Dispose(bool disposing) {
-            if (!disposed_) {
-                if (disposing) {
-                    lock (lock_) {
-                        url_.Clear();
-                        lock (core_) {
-                            core_ = null;
-                        }
+            lock (lock_) {
+                if (!disposed_) {
+                    if (disposing) {
+                        urls_.Clear();
+                        if (core_ != null) core_ = null;
                     }
                 }
+                disposed_ = true;
             }
-            disposed_ = true;
         }
 
         /* ----------------------------------------------------------------- */
@@ -192,9 +165,10 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         #region Variables
         private PDF core_ = null;
-        private URLParser url_ = new URLParser();
         private bool disposed_ = false;
         private object lock_ = new object();
+        private Container.List<Container.KeyValuePair<string, Rectangle>> urls_ =
+            new Container.List<Container.KeyValuePair<string, Rectangle>>();
         #endregion
     }
 
@@ -207,6 +181,10 @@ namespace Cube {
     /// をまとめた抽象クラス．Canvas.Tag に PDFWrapper オブジェクト
     /// を設定し，このオブジェクトが保持する情報を基にして描画を行う．
     /// 現在の実装では，Canvas として PictureBox を利用している．
+    /// 
+    /// TODO: PictureBox への補助関数群として実装したが，保持しなければ
+    /// ならない状態が増えてきたので PictureBox の継承クラスとして
+    /// 書き直す．
     /// </summary>
     /// 
     /* --------------------------------------------------------------------- */
@@ -913,8 +891,8 @@ namespace Cube {
 
                 lock (core) {
                     var pos = new Point((int)(e.Location.X * 72.0 / core.RenderDPI), (int)(e.Location.Y * 72.0 / core.RenderDPI));
-                    var url = engine.GetURL(pos);
-                    if (url != null) System.Diagnostics.Process.Start(url);
+                    var addr = engine.GetURL(pos);
+                    if (addr != null) System.Diagnostics.Process.Start(addr);
                 }
                 canvas.Cursor = Cursors.Default;
             }

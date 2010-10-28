@@ -671,11 +671,11 @@ namespace Cube {
         /// PrintButton_Click
         /// 
         /// <summary> 
-        /// TODO: PaintEventHandler の解除と各種レンダリングに必要な
-        /// プロパティを保存し，印刷終了後元に戻す．
-        /// TODO: PDFLibNet.PDFWrapper を CanvasPolicy.cs の中に隠したい．
-        /// PrintDocument.PrintPage イベントハンドラに PDFLibNet.PDFWrapper
-        /// を渡す方法を検討する．
+        /// 印刷に関しては，xPDF で PostScript ファイルを生成した後，
+        /// それをプリンタに直接送信すると言う手法を取っている．
+        /// ただし，フォントが埋め込まれていないファイルの場合に文字化け
+        /// する可能性があるため，フォントが埋め込まれていない場合は
+        /// 現在表示されているビットマップデータを用いて印刷する．
         /// </summary>
         /// 
         /* ----------------------------------------------------------------- */
@@ -686,9 +686,6 @@ namespace Cube {
             if (engine == null) return;
             var core = engine.Core;
             if (core == null) return;
-
-            // Print するためには，いったん PDFWrapper の値を変える必要がある．
-            var settings = new { page = core.CurrentPage, zoom = core.Zoom };
 
             using (var prd = new PrintDialog())
             using (var document = new System.Drawing.Printing.PrintDocument()) {
@@ -703,38 +700,45 @@ namespace Cube {
                 prd.PrinterSettings.ToPage = core.PageCount;
 
                 if (prd.ShowDialog() == DialogResult.OK) {
-                    try {
-                        var tmp = System.Environment.GetEnvironmentVariable("tmp");
-                        if (tmp == null) tmp = System.Environment.GetEnvironmentVariable("temp");
-                        if (tmp == null) {
-                            var exec = System.Reflection.Assembly.GetEntryAssembly();
-                            tmp = System.IO.Path.GetDirectoryName(exec.Location);
-                        }
-                        var ps = tmp + '\\' + System.IO.Path.GetRandomFileName() + ".ps";
-
+                    document.PrinterSettings = prd.PrinterSettings;
+                    if (!core.NoEmbedFontExists()) {
+                        var ps = Utility.TempPath() + ".ps";
                         int first = 1;
                         int last = core.PageCount;
-                        if (prd.PrinterSettings.PrintRange == PrintRange.SomePages) {
-                            first = prd.PrinterSettings.FromPage;
-                            last = prd.PrinterSettings.ToPage;
+                        if (document.PrinterSettings.PrintRange == PrintRange.SomePages) {
+                            first = document.PrinterSettings.FromPage;
+                            last = document.PrinterSettings.ToPage;
                         }
-                        core.PrintToFile(ps, first, last);
 
-                        var docname = canvas.Parent.Tag as string;
-                        if (docname == null) docname = "document";
-                        RawPrinterHelper.SendFileToPrinter(prd.PrinterSettings.PrinterName, ps, System.IO.Path.GetFileNameWithoutExtension(docname));
+                        if (core.PrintToFile(ps, first, last) >= 0) {
+                            try {
+                                var docname = canvas.Parent.Tag as string;
+                                if (docname == null) docname = "document";
+                                RawPrinterHelper.SendFileToPrinter(prd.PrinterSettings.PrinterName, ps, System.IO.Path.GetFileNameWithoutExtension(docname));
+                            }
+                            catch (Exception /* err */) {
+                                this.PrintBitmap(document, core);
+                            }
+                        }
+                        else this.PrintBitmap(document, core);
                     }
-                    catch (Exception /* err */) {
-                        document.PrintPage += new PrintPageEventHandler(PrintDocument_PrintPage);
-                        document.PrinterSettings = prd.PrinterSettings;
-                        core.CurrentPage = (prd.PrinterSettings.PrintRange == PrintRange.AllPages) ? 1 : prd.PrinterSettings.FromPage;
-                        document.Print();
-                        core.CurrentPage = settings.page;
-                        core.Zoom = settings.zoom;
-                        core.RenderPage(IntPtr.Zero, false, false);
-                    }
+                    else this.PrintBitmap(document, core);
                 }
             }
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// PrintBitmap
+        /* ----------------------------------------------------------------- */
+        private void PrintBitmap(System.Drawing.Printing.PrintDocument document, PDFLibNet.PDFWrapper core) {
+            var settings = new { page = core.CurrentPage, zoom = core.Zoom };
+            document.PrintPage += new PrintPageEventHandler(PrintDocument_PrintPage);
+            core.CurrentPage = (document.PrinterSettings.PrintRange == PrintRange.AllPages) ?
+                1 : document.PrinterSettings.FromPage;
+            document.Print();
+            core.CurrentPage = settings.page;
+            core.Zoom = settings.zoom;
+            core.RenderPage(IntPtr.Zero, false, false);
         }
 
         /* ----------------------------------------------------------------- */
@@ -742,15 +746,18 @@ namespace Cube {
         /// PrintDocument_PrintPage
         ///
         /// <summary>
-        /// The PrintPage event is raised for each page to be printed.
-        /// TODO: レンダリングのDpiを変更しなければならない？
-        /// また、ページ全体の印刷やページ指定での印刷ができなければならない
-        /// NOTE: 次回600dpiで描画してみる & renderPageThread を用いて
-        /// レンダリングが終わるまで待機させたい
+        /// フォントが埋め込まれていないときに使用する印刷方法．
+        /// 
+        /// MEMO: 綺麗に印刷するためにはプリンタの解像度に合わせた画像を
+        /// 生成しなければならないが，画像サイズが大きすぎて PC がフリーズ
+        /// する恐れがある．そのため，現状は「少し大きめ」の画像を生成
+        /// し，それを拡大して印刷している．
         /// </summary>
         /// 
         /* ----------------------------------------------------------------- */
         private void PrintDocument_PrintPage(object sender, PrintPageEventArgs ev) {
+            int ratio = 3; // (int)(600 / 72.0);
+
             var control = this.PageViewerTabControl;
             var canvas = CanvasPolicy.Get(this.PageViewerTabControl.SelectedTab);
             if (canvas == null) return;
@@ -761,8 +768,13 @@ namespace Cube {
 
             PDFLibNet.PDFPage page;
             if (!core.Pages.TryGetValue(core.CurrentPage, out page)) return;
-            using (var image = page.GetBitmap(ev.PageSettings.PaperSize.Width, ev.PageSettings.PaperSize.Height)) {
-                ev.Graphics.DrawImage(image, new Point(0, 0));
+            int width = ev.PageSettings.PaperSize.Width;
+            int height = ev.PageSettings.PaperSize.Height;
+            using (var image = page.GetBitmap(width * ratio, height * ratio)) {
+                ev.Graphics.DrawImage(image,
+                    new Rectangle(new Point(0, 0), new Size(width, height)),
+                    new Rectangle(new Point(0, 0), new Size(width * ratio, height * ratio)),
+                    GraphicsUnit.Pixel);
             }
 
             // If more lines exist, print another page.
@@ -1283,11 +1295,19 @@ namespace Cube {
         }
 
         /* ----------------------------------------------------------------- */
+        ///
         /// PrintButton_MouseUp
+        /// 
+        /// <summary>
+        /// MEMO: 印刷ボタンを押して設定を行うと，遅れて MouseUp イベントが
+        /// 発生しているようでボタンがマウスオーバーされた状態のままに
+        /// なってしまうため，暫定処置．
+        /// </summary>
+        /// 
         /* ----------------------------------------------------------------- */
         private void PrintButton_MouseUp(object sender, MouseEventArgs e) {
             var control = (ToolStripButton)sender;
-            control.Image = Properties.Resources.print_over;
+            control.Image = Properties.Resources.print;
         }
 
         /* ----------------------------------------------------------------- */
