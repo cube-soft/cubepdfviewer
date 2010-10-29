@@ -702,7 +702,6 @@ namespace Cube {
                 if (prd.ShowDialog() == DialogResult.OK) {
                     document.PrinterSettings = prd.PrinterSettings;
                     if (Utility.IsPSPrinter(document.PrinterSettings.PrinterName) && !core.NoEmbedFontExists()) {
-                        MessageBox.Show("print postscript");
                         var ps = Utility.TempPath() + ".ps";
                         int first = 1;
                         int last = core.PageCount;
