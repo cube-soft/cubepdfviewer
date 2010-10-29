@@ -701,7 +701,8 @@ namespace Cube {
 
                 if (prd.ShowDialog() == DialogResult.OK) {
                     document.PrinterSettings = prd.PrinterSettings;
-                    if (!core.NoEmbedFontExists()) {
+                    if (Utility.IsPSPrinter(document.PrinterSettings.PrinterName) && !core.NoEmbedFontExists()) {
+                        MessageBox.Show("print postscript");
                         var ps = Utility.TempPath() + ".ps";
                         int first = 1;
                         int last = core.PageCount;
@@ -772,8 +773,8 @@ namespace Cube {
             int height = ev.PageSettings.PaperSize.Height;
 
             using (var image = page.GetBitmap(width * ratio, height * ratio)) {
-                ev.Graphics.DrawImage(image, ev.Graphics.VisibleClipBounds,
-                    new Rectangle(new Point(0, 0), new Size(image.Width, image.Height)), GraphicsUnit.Pixel);
+                var rect = new Rectangle(new Point(0, 0), new Size(image.Width, image.Height));
+                ev.Graphics.DrawImage(image, ev.Graphics.VisibleClipBounds, rect, GraphicsUnit.Pixel);
             }
 
             // If more lines exist, print another page.

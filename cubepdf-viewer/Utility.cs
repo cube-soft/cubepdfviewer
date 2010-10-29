@@ -74,15 +74,33 @@ namespace Cube {
         }
 
         /* ----------------------------------------------------------------- */
+        /// IsPSPrinter
+        /* ----------------------------------------------------------------- */
+        public static bool IsPSPrinter(string name) {
+            IntPtr hdc = CreateDC(IntPtr.Zero, name, IntPtr.Zero, IntPtr.Zero);
+	        uint code = POSTSCRIPT_PASSTHROUGH;
+	        if(ExtEscape(hdc, QUERYESCSUPPORT, sizeof(int), BitConverter.GetBytes(code), 0, IntPtr.Zero) > 0) return true;
+	        return false;
+        }
+
+        /* ----------------------------------------------------------------- */
         //  GetIcon() の為の Win32 API
         /* ----------------------------------------------------------------- */
         #region Win32 API for GetIcon().
         [DllImport("shell32.dll")]
         private static extern IntPtr SHGetFileInfo(string pszPath, uint dwFileAttributes, ref SHFILEINFO psfi, uint cbSizeFileInfo, uint uFlags);
 
+        [DllImport("gdi32.dll")]
+        static extern int ExtEscape(IntPtr hdc, uint nEscape, uint cbInput, byte[] lpszInData, int cbOutput, IntPtr lpszOutData);
+
+        [DllImport("gdi32.dll")]
+        static extern IntPtr CreateDC(IntPtr lpszDriver, string lpszDevice, IntPtr lpszOutput, IntPtr lpInitData);
+
         private const uint SHGFI_ICON = 0x100;      // アイコン・リソースの取得
         private const uint SHGFI_LARGEICON = 0x0;   // 大きいアイコン
         private const uint SHGFI_SMALLICON = 0x1;   // 小さいアイコン
+        private const uint POSTSCRIPT_PASSTHROUGH = 4115;
+        private const uint QUERYESCSUPPORT = 8;
 
         private struct SHFILEINFO {
             public IntPtr hIcon;
