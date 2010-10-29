@@ -716,7 +716,8 @@ namespace Cube {
                                 if (docname == null) docname = "document";
                                 RawPrinterHelper.SendFileToPrinter(prd.PrinterSettings.PrinterName, ps, System.IO.Path.GetFileNameWithoutExtension(docname));
                             }
-                            catch (Exception /* err */) {
+                            catch (Exception err) {
+                                Utility.ErrorLog(err);
                                 this.PrintBitmap(document, core);
                             }
                         }
@@ -771,27 +772,38 @@ namespace Cube {
             int width = ev.PageSettings.PaperSize.Width;
             int height = ev.PageSettings.PaperSize.Height;
 
-            using (var image = page.GetBitmap(width * ratio, height * ratio)) {
-                var rect = new Rectangle(new Point(0, 0), new Size(image.Width, image.Height));
-                ev.Graphics.DrawImage(image, ev.Graphics.VisibleClipBounds, rect, GraphicsUnit.Pixel);
-            }
+            try {
+                using (var image = page.GetBitmap(width * ratio, height * ratio)) {
+                    var rect = new Rectangle(new Point(0, 0), new Size(image.Width, image.Height));
+                    ev.Graphics.DrawImage(image, ev.Graphics.VisibleClipBounds, rect, GraphicsUnit.Pixel);
+                }
 
-            // If more lines exist, print another page.
-            if (ev.PageSettings.PrinterSettings.PrintRange == PrintRange.AllPages) {
-                if (core.CurrentPage < core.PageCount) {
-                    core.NextPage();
-                    ev.HasMorePages = true;
+                // If more lines exist, print another page.
+                if (ev.PageSettings.PrinterSettings.PrintRange == PrintRange.AllPages) {
+                    if (core.CurrentPage < core.PageCount) {
+                        core.NextPage();
+                        ev.HasMorePages = true;
+                    }
+                    else ev.HasMorePages = false;
+                }
+                else if (ev.PageSettings.PrinterSettings.PrintRange == PrintRange.SomePages) {
+                    if (core.CurrentPage < ev.PageSettings.PrinterSettings.ToPage) {
+                        core.NextPage();
+                        ev.HasMorePages = true;
+                    }
+                    else ev.HasMorePages = false;
                 }
                 else ev.HasMorePages = false;
             }
-            else if (ev.PageSettings.PrinterSettings.PrintRange == PrintRange.SomePages) {
-                if (core.CurrentPage < ev.PageSettings.PrinterSettings.ToPage) {
-                    core.NextPage();
-                    ev.HasMorePages = true;
-                }
-                else ev.HasMorePages = false;
+            catch (OutOfMemoryException err) {
+                Utility.ErrorLog(err);
+                var message = String.Format("{0}これ以降のページは無視されます。\nエラーの発生したページ番号: {1}", err.Message, core.CurrentPage);
+                MessageBox.Show(message, "印刷エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                ev.HasMorePages = false;
             }
-            else ev.HasMorePages = false;
+            catch (Exception err) {
+                Utility.ErrorLog(err);
+            }
         }
 
         /* ----------------------------------------------------------------- */
