@@ -770,11 +770,10 @@ namespace Cube {
             if (!core.Pages.TryGetValue(core.CurrentPage, out page)) return;
             int width = ev.PageSettings.PaperSize.Width;
             int height = ev.PageSettings.PaperSize.Height;
+
             using (var image = page.GetBitmap(width * ratio, height * ratio)) {
-                ev.Graphics.DrawImage(image,
-                    new Rectangle(new Point(0, 0), new Size(width, height)),
-                    new Rectangle(new Point(0, 0), new Size(width * ratio, height * ratio)),
-                    GraphicsUnit.Pixel);
+                ev.Graphics.DrawImage(image, ev.Graphics.VisibleClipBounds,
+                    new Rectangle(new Point(0, 0), new Size(image.Width, image.Height)), GraphicsUnit.Pixel);
             }
 
             // If more lines exist, print another page.
