@@ -58,6 +58,9 @@ namespace Cube {
             base.OnRenderDropDownButtonBackground(e);
         }
 
+        /* --------------------------------------------------------------------- */
+        /// OnRenderSeparator
+        /* --------------------------------------------------------------------- */
         protected override void OnRenderSeparator(ToolStripSeparatorRenderEventArgs e) {
             //base.OnRenderSeparator(e);
 
