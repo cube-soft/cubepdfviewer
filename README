@@ -2,23 +2,23 @@
 CubePDF Viewer
 Copyright (c) 2010 CubeSoft Inc. All rights reserved.
 
-ŠJ”­E”z•zFŠ”®‰ïĞƒLƒ…[ƒuEƒ\ƒtƒg
+é–‹ç™ºãƒ»é…å¸ƒï¼šæ ªå¼ä¼šç¤¾ã‚­ãƒ¥ãƒ¼ãƒ–ãƒ»ã‚½ãƒ•ãƒˆ
 Mailto: support@cube-soft.jp
 URL: http://www.cube-soft.jp/cubepdfviewer/
 
 Last-updated: Tue 26 Oct 2010 15:45:00 JST
 ------------------------------------------------------------
 
-¡What's this
-CubePDF Viewer ‚ÍA‰{——‹@”\‚É“Á‰»‚µ‚½ƒ^ƒuŒ^‚Ì PDF ƒrƒ…[ƒAi‰{——jƒ\ƒtƒg‚Å‚·B
-Ú×‚È—˜—p•û–@‚É‚Â‚¢‚Ä‚ÍA“¯«‚µ‚½ CubePDF Viewer ƒ†[ƒU[ƒYƒ}ƒjƒ…ƒAƒ‹.pdf ‚ğQÆ‚µ‚Ä‰º‚³‚¢B
+â– What's this
+CubePDF Viewer ã¯ã€é–²è¦§æ©Ÿèƒ½ã«ç‰¹åŒ–ã—ãŸã‚¿ãƒ–å‹ã® PDF ãƒ“ãƒ¥ãƒ¼ã‚¢ï¼ˆé–²è¦§ï¼‰ã‚½ãƒ•ãƒˆã§ã™ã€‚
+è©³ç´°ãªåˆ©ç”¨æ–¹æ³•ã«ã¤ã„ã¦ã¯ã€åŒæ¢±ã—ãŸ CubePDF Viewer ãƒ¦ãƒ¼ã‚¶ãƒ¼ã‚ºãƒãƒ‹ãƒ¥ã‚¢ãƒ«.pdf ã‚’å‚ç…§ã—ã¦ä¸‹ã•ã„ã€‚
 
-CubePDF Viewer ‚ğg—p‚·‚é‚½‚ß‚É‚ÍAMicrosoft .NetFramework 2.0 ‚ªƒCƒ“ƒXƒg[ƒ‹‚³‚ê‚Ä‚¢‚é•K—v‚ª‚ ‚è‚Ü‚·B
-Microsoft .NetFramework 2.0 ‚ÍAˆÈ‰º‚Ì URL ‚©‚çƒ_ƒEƒ“ƒ[ƒh‚µ‚Ä‰º‚³‚¢B
+CubePDF Viewer ã‚’ä½¿ç”¨ã™ã‚‹ãŸã‚ã«ã¯ã€Microsoft .NetFramework 2.0 ãŒã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«ã•ã‚Œã¦ã„ã‚‹å¿…è¦ãŒã‚ã‚Šã¾ã™ã€‚
+Microsoft .NetFramework 2.0 ã¯ã€ä»¥ä¸‹ã® URL ã‹ã‚‰ãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰ã—ã¦ä¸‹ã•ã„ã€‚
 http://www.microsoft.com/downloads/details.aspx?FamilyId=0856eacb-4362-4b0d-8edd-aab15c5e04f5&displaylang=ja
 
-CubePDF Viewer ‚ÍAˆÈ‰º‚Ìƒ‰ƒCƒuƒ‰ƒŠ‚ğ—˜—p‚µ‚Ä‚¢‚Ü‚·B
-‚»‚ê‚¼‚ê‚Ìƒ‰ƒCƒuƒ‰ƒŠ‚É‚Â‚¢‚Ä‚ÍA‹LÚ‚µ‚½ URL ‚©‚çæ“¾‚·‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·B
+CubePDF Viewer ã¯ã€ä»¥ä¸‹ã®ãƒ©ã‚¤ãƒ–ãƒ©ãƒªã‚’åˆ©ç”¨ã—ã¦ã„ã¾ã™ã€‚
+ãã‚Œãã‚Œã®ãƒ©ã‚¤ãƒ–ãƒ©ãƒªã«ã¤ã„ã¦ã¯ã€è¨˜è¼‰ã—ãŸ URL ã‹ã‚‰å–å¾—ã™ã‚‹ã“ã¨ãŒã§ãã¾ã™ã€‚
 - PDFLibNet
   Copyright (c) Antonio Sandoval.
   URL: http://www.codeproject.com/KB/files/xpdf_csharp.aspx
@@ -28,6 +28,6 @@ CubePDF Viewer ‚ÍAˆÈ‰º‚Ìƒ‰ƒCƒuƒ‰ƒŠ‚ğ—˜—p‚µ‚Ä‚¢‚Ü‚·B
   URL: http://www.codeproject.com/KB/tabs/NewCustomTabControl.aspx
   The Code Project Open License (CPOL) 1.02 ( http://www.codeproject.com/info/cpol10.aspx )
 
-¡ƒo[ƒWƒ‡ƒ“—š—ğ
+â– ãƒãƒ¼ã‚¸ãƒ§ãƒ³å±¥æ­´
 2010/11/01 version 0.4.0
-- Å‰‚ÌŒöŠJƒo[ƒWƒ‡ƒ“
+- æœ€åˆã®å…¬é–‹ãƒãƒ¼ã‚¸ãƒ§ãƒ³
