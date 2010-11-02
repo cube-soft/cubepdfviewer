@@ -1,0 +1,33 @@
+------------------------------------------------------------
+CubePDF Viewer
+Copyright (c) 2010 CubeSoft Inc. All rights reserved.
+
+開発・配布：株式会社キューブ・ソフト
+Mailto: support@cube-soft.jp
+URL: http://www.cube-soft.jp/cubepdfviewer/
+
+Last-updated: Tue 26 Oct 2010 15:45:00 JST
+------------------------------------------------------------
+
+■What's this
+CubePDF Viewer は、閲覧機能に特化したタブ型の PDF ビューア（閲覧）ソフトです。
+詳細な利用方法については、同梱した CubePDF Viewer ユーザーズマニュアル.pdf を参照して下さい。
+
+CubePDF Viewer を使用するためには、Microsoft .NetFramework 2.0 がインストールされている必要があります。
+Microsoft .NetFramework 2.0 は、以下の URL からダウンロードして下さい。
+http://www.microsoft.com/downloads/details.aspx?FamilyId=0856eacb-4362-4b0d-8edd-aab15c5e04f5&displaylang=ja
+
+CubePDF Viewer は、以下のライブラリを利用しています。
+それぞれのライブラリについては、記載した URL から取得することができます。
+- PDFLibNet
+  Copyright (c) Antonio Sandoval.
+  URL: http://www.codeproject.com/KB/files/xpdf_csharp.aspx
+  GNU General Public License ( http://www.gnu.org/licenses/gpl.html )
+- Painting Your Own Tabs - Second Edition
+  Copyright (c) 2010, Mark Jackson.
+  URL: http://www.codeproject.com/KB/tabs/NewCustomTabControl.aspx
+  The Code Project Open License (CPOL) 1.02 ( http://www.codeproject.com/info/cpol10.aspx )
+
+■バージョン履歴
+2010/11/01 version 0.4.0
+- 最初の公開バージョン
