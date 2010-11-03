@@ -39,22 +39,20 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         [STAThread]
         static void Main(string[] args) {
-            Process hThisProcess = Process.GetCurrentProcess();
-            var pn = hThisProcess.ProcessName;
-            var mutex = new System.Threading.Mutex(false, pn);
+            Process proc = Process.GetCurrentProcess();
 
             // 多重起動時の処理
             // NOTE: デバッガ上で起動した場合、通常起動とはプロセス名が違う。
             // そのため、デバッガ上でテストする方法が今の所不明
-            if (mutex.WaitOne(0, false) == false) {
+            if (Process.GetProcessesByName(proc.ProcessName).Length > 1) {
                 if (args.Length > 0) {
-                    var prevHwnd = FindPrevProcess();
+                    var prevHwnd = FindPrevProcess(proc);
                     var msg = args[0];
                     var cds = new COPYDATASTRUCT();
-                    cds.dwData = 0;
+                    cds.dwData = IntPtr.Zero;
                     cds.lpData = msg;
                     cds.cbData = System.Text.Encoding.Default.GetBytes(msg).Length + 1;
-                    SendMessage(prevHwnd.ToInt32(), WM_COPYDATA, 0, ref cds);
+                    SendMessage(prevHwnd, WM_COPYDATA, IntPtr.Zero, ref cds);
                 }
             }
             else {
@@ -68,12 +66,11 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         /// FindPrevProcess
         /* ----------------------------------------------------------------- */
-        private static IntPtr FindPrevProcess() {
-            Process hThisProcess = Process.GetCurrentProcess();
-            Process[] hProcesses = Process.GetProcessesByName(hThisProcess.ProcessName);
-            int iThisProcessId = hThisProcess.Id;
+        private static IntPtr FindPrevProcess(Process proc) {
+            Process[] processes = Process.GetProcessesByName(proc.ProcessName);
+            int iThisProcessId = proc.Id;
 
-            foreach (Process hProcess in hProcesses) {
+            foreach (Process hProcess in processes) {
                 if (hProcess.Id != iThisProcessId) {
                     // メインウインドウを最前面にする
                     ShowWindow(hProcess.MainWindowHandle, SW_NORMAL);
@@ -84,14 +81,14 @@ namespace Cube {
             return IntPtr.Zero;
         }
 
-        [DllImport("USER32.DLL", CharSet = CharSet.Auto)]
-        private static extern int ShowWindow(System.IntPtr hWnd, int nCmdShow);
+        [DllImport("User32.dll")]
+        private static extern int ShowWindow(IntPtr hWnd, int nCmdShow);
 
-        [DllImport("User32.dll", EntryPoint = "SendMessage")]
-        public static extern Int32 SendMessage(Int32 hWnd, Int32 Msg, Int32 wParam, ref COPYDATASTRUCT lParam);
+        [DllImport("User32.dll")]
+        public static extern Int32 SendMessage(IntPtr hWnd, uint Msg, IntPtr wParam, ref COPYDATASTRUCT lParam);
 
-        [DllImport("User32.dll", EntryPoint = "SendMessage")]
-        public static extern Int32 SendMessage(Int32 hWnd, Int32 Msg, Int32 wParam, Int32 lParam);
+        [DllImport("User32.dll")]
+        public static extern Int32 SendMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
 
         [DllImport("user32.dll")]
         private static extern bool SetForegroundWindow(IntPtr hWnd);
@@ -100,14 +97,14 @@ namespace Cube {
         [DllImport("User32.dll", EntryPoint = "FindWindow")]
         public static extern IntPtr FindWindow(String lpClassName, String lpWindowName);
 
-        public const Int32 WM_COPYDATA = 0x4A;
-        public const Int32 WM_USER = 0x400;
+        public const int WM_COPYDATA = 0x0000004A;
+        public const int WM_USER = 0x400;
 
         //COPYDATASTRUCT構造体
         public struct COPYDATASTRUCT {
-            public Int32 dwData;    // 送信する32ビット値
-            public Int32 cbData;　　// lpDataのバイト数
-            public string lpData;　 // 送信するデータへのポインタ(0も可能)
+            public IntPtr dwData;    // 送信する32ビット値
+            public int cbData;　　   // lpDataのバイト数
+            public string lpData;　  // 送信するデータへのポインタ(0も可能)
         }
 
         private const int SW_NORMAL = 1;
