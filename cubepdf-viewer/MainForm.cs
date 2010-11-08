@@ -1722,7 +1722,9 @@ namespace Cube {
             adobe_ = "";
 
             var registry = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"Software\Adobe\Acrobat Reader");
+            if (registry == null) registry = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"Software\Wow6432Node\Adobe\Acrobat Reader");
             if (registry == null) registry = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"Software\Adobe\Adobe Acrobat");
+            if (registry == null) registry = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"Software\Wow6432Node\Adobe\Adobe Acrobat");
             if (registry == null) return;
 
             string version = "";
