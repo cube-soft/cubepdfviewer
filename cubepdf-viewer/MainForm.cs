@@ -108,7 +108,7 @@ namespace Cube {
         private void UpdateFitCondition(FitCondition which) {
             setting_.Fit = which;
             this.FitToWidthButton.Checked = ((setting_.Fit & FitCondition.Width) != 0);
-            this.FitToHeightButton.Checked = ((setting_.Fit & FitCondition.Height) != 0);
+            this.FitToPageButton.Checked = ((setting_.Fit & FitCondition.Height) != 0);
         }
 
         /* ----------------------------------------------------------------- */
@@ -307,7 +307,7 @@ namespace Cube {
             
             try {
                 if (this.FitToWidthButton.Checked) CanvasPolicy.FitToWidth(canvas);
-                else if (this.FitToHeightButton.Checked) CanvasPolicy.FitToHeight(canvas);
+                else if (this.FitToPageButton.Checked) CanvasPolicy.FitToPage(canvas);
                 else CanvasPolicy.Adjust(canvas);
             }
             catch (Exception err) {
@@ -892,16 +892,16 @@ namespace Cube {
         }
 
         /* ----------------------------------------------------------------- */
-        /// FitToHeightButton_Click
+        /// FitToPageButton_Click
         /* ----------------------------------------------------------------- */
-        private void FitToHeightButton_Click(object sender, EventArgs e) {
-            this.UpdateFitCondition(this.FitToHeightButton.Checked ? FitCondition.Height : FitCondition.None);
+        private void FitToPageButton_Click(object sender, EventArgs e) {
+            this.UpdateFitCondition(this.FitToPageButton.Checked ? FitCondition.Height : FitCondition.None);
             var canvas = CanvasPolicy.Get(this.PageViewerTabControl.SelectedTab);
             if (canvas == null) return;
 
             var message = "";
             try {
-                if (this.FitToHeightButton.Checked) CanvasPolicy.FitToHeight(canvas);
+                if (this.FitToPageButton.Checked) CanvasPolicy.FitToPage(canvas);
             }
             catch (Exception err) {
                 Utility.ErrorLog(err);
@@ -1588,41 +1588,41 @@ namespace Cube {
         }
 
         /* ----------------------------------------------------------------- */
-        /// FitToHeightButton_MouseEnter
+        /// FitToPageButton_MouseEnter
         /* ----------------------------------------------------------------- */
-        private void FitToHeightButton_MouseEnter(object sender, EventArgs e) {
+        private void FitToPageButton_MouseEnter(object sender, EventArgs e) {
             var control = (ToolStripButton)sender;
             control.Image = Properties.Resources.fit2height_over;
         }
 
         /* ----------------------------------------------------------------- */
-        /// FitToHeightButton_MouseLeave
+        /// FitToPageButton_MouseLeave
         /* ----------------------------------------------------------------- */
-        private void FitToHeightButton_MouseLeave(object sender, EventArgs e) {
+        private void FitToPageButton_MouseLeave(object sender, EventArgs e) {
             var control = (ToolStripButton)sender;
             control.Image = control.Checked ? Properties.Resources.fit2height_over : Properties.Resources.fit2height;
         }
 
         /* ----------------------------------------------------------------- */
-        /// FitToHeightButton_MouseDown
+        /// FitToPageButton_MouseDown
         /* ----------------------------------------------------------------- */
-        private void FitToHeightButton_MouseDown(object sender, MouseEventArgs e) {
+        private void FitToPageButton_MouseDown(object sender, MouseEventArgs e) {
             var control = (ToolStripButton)sender;
             control.Image = Properties.Resources.fit2height_press;
         }
 
         /* ----------------------------------------------------------------- */
-        /// FitToHeightButton_MouseUp
+        /// FitToPageButton_MouseUp
         /* ----------------------------------------------------------------- */
-        private void FitToHeightButton_MouseUp(object sender, MouseEventArgs e) {
+        private void FitToPageButton_MouseUp(object sender, MouseEventArgs e) {
             var control = (ToolStripButton)sender;
             control.Image = Properties.Resources.fit2height_over;
         }
 
         /* ----------------------------------------------------------------- */
-        /// FitToHeightButton_CheckedChanged
+        /// FitToPageButton_CheckedChanged
         /* ----------------------------------------------------------------- */
-        private void FitToHeightButton_CheckedChanged(object sender, EventArgs e) {
+        private void FitToPageButton_CheckedChanged(object sender, EventArgs e) {
             var control = (ToolStripButton)sender;
             control.Image = control.Checked ? Properties.Resources.fit2height_over : Properties.Resources.fit2height;
         }

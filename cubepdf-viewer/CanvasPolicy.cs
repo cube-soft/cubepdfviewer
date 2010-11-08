@@ -668,22 +668,31 @@ namespace Cube {
 
         /* ----------------------------------------------------------------- */
         ///
-        /// FitToHeight
+        /// FitToPage
         /// 
         /// <summary>
-        /// ウィンドウ（描画領域）の高さに合わせて拡大/縮小を行う．
+        /// ウィンドウ（描画領域）に合わせて拡大/縮小を行う．
         /// </summary>
         /// 
         /* ----------------------------------------------------------------- */
-        public static double FitToHeight(Canvas canvas) {
+        public static double FitToPage(Canvas canvas) {
             if (canvas == null) return 0.0;
             var engine = canvas.Tag as CanvasEngine;
             if (engine == null) return 0.0;
             var core = engine.Core;
             if (core == null) return 0.0;
 
-            core.FitToHeight(canvas.Parent.Handle);
+            // 横長ならばFitToWidthを、縦長ならばFitToHeightを呼ぶ
+            if (checkPDFOrientation(canvas) == Orientation.portratit)
+            {
+                core.FitToHeight(canvas.Parent.Handle);
+            }
+            else
+            {
+                core.FitToWidth(canvas.Parent.Handle);
+            }
             core.Zoom = core.Zoom - 1; // 暫定
+
 #if CUBE_ASYNC
             CanvasPolicy.AsyncRender(canvas, true);
 #else
@@ -691,6 +700,30 @@ namespace Cube {
 #endif
             return core.Zoom;
         }
+        enum Orientation
+        {
+            landscape,
+            portratit,
+        };
+        private static Orientation checkPDFOrientation(Canvas canvas)
+        {
+            var core = ((CanvasEngine)canvas.Tag).Core;
+            int rotation = core.Pages[1].Rotation;
+            // 0, 90, 180, 270度以外の場合は無いであろうと仮定して、処理を省略
+            double realWidth, realHeight;
+            if ((rotation >= 45 && rotation < 135) || (rotation >= 225 && rotation < 315)) // 90 270度の場合
+            {
+                realWidth = core.Pages[1].Height;
+                realHeight = core.Pages[1].Width;
+            }
+            else // 0, 180度の場合
+            {
+                realWidth = core.Pages[1].Width;
+                realHeight = core.Pages[1].Height;
+            }
+            return (realWidth >= realHeight) ? Orientation.landscape : Orientation.portratit;
+        }
+       
 
         /* ----------------------------------------------------------------- */
         /// Search

@@ -53,7 +53,7 @@
             this.ZoomInButton = new System.Windows.Forms.ToolStripButton();
             this.ZoomOutButton = new System.Windows.Forms.ToolStripButton();
             this.FitToWidthButton = new System.Windows.Forms.ToolStripButton();
-            this.FitToHeightButton = new System.Windows.Forms.ToolStripButton();
+            this.FitToPageButton = new System.Windows.Forms.ToolStripButton();
             this.LogoButton = new System.Windows.Forms.ToolStripButton();
             this.OnlyDisplayCategoryZoomSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.AdobeButton = new System.Windows.Forms.ToolStripButton();
@@ -99,7 +99,7 @@
             this.ZoomInButton,
             this.ZoomOutButton,
             this.FitToWidthButton,
-            this.FitToHeightButton,
+            this.FitToPageButton,
             this.LogoButton,
             this.OnlyDisplayCategoryZoomSeparator,
             this.AdobeButton});
@@ -459,25 +459,25 @@
             this.FitToWidthButton.MouseLeave += new System.EventHandler(this.FitToWidthButton_MouseLeave);
             this.FitToWidthButton.MouseUp += new System.Windows.Forms.MouseEventHandler(this.FitToWidthButton_MouseUp);
             // 
-            // FitToHeightButton
+            // FitToPageButton
             // 
-            this.FitToHeightButton.AutoSize = false;
-            this.FitToHeightButton.BackColor = System.Drawing.Color.Transparent;
-            this.FitToHeightButton.CheckOnClick = true;
-            this.FitToHeightButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.FitToHeightButton.Image = global::Cube.Properties.Resources.fit2height;
-            this.FitToHeightButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.FitToHeightButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.FitToHeightButton.Margin = new System.Windows.Forms.Padding(-2, 0, 0, 0);
-            this.FitToHeightButton.Name = "FitToHeightButton";
-            this.FitToHeightButton.Size = new System.Drawing.Size(37, 40);
-            this.FitToHeightButton.Text = "ウィンドウの高さに合わせる";
-            this.FitToHeightButton.CheckedChanged += new System.EventHandler(this.FitToHeightButton_CheckedChanged);
-            this.FitToHeightButton.Click += new System.EventHandler(this.FitToHeightButton_Click);
-            this.FitToHeightButton.MouseDown += new System.Windows.Forms.MouseEventHandler(this.FitToHeightButton_MouseDown);
-            this.FitToHeightButton.MouseEnter += new System.EventHandler(this.FitToHeightButton_MouseEnter);
-            this.FitToHeightButton.MouseLeave += new System.EventHandler(this.FitToHeightButton_MouseLeave);
-            this.FitToHeightButton.MouseUp += new System.Windows.Forms.MouseEventHandler(this.FitToHeightButton_MouseUp);
+            this.FitToPageButton.AutoSize = false;
+            this.FitToPageButton.BackColor = System.Drawing.Color.Transparent;
+            this.FitToPageButton.CheckOnClick = true;
+            this.FitToPageButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.FitToPageButton.Image = global::Cube.Properties.Resources.fit2height;
+            this.FitToPageButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.FitToPageButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.FitToPageButton.Margin = new System.Windows.Forms.Padding(-2, 0, 0, 0);
+            this.FitToPageButton.Name = "FitToPageButton";
+            this.FitToPageButton.Size = new System.Drawing.Size(37, 40);
+            this.FitToPageButton.Text = "全体に表示";
+            this.FitToPageButton.CheckedChanged += new System.EventHandler(this.FitToPageButton_CheckedChanged);
+            this.FitToPageButton.Click += new System.EventHandler(this.FitToPageButton_Click);
+            this.FitToPageButton.MouseDown += new System.Windows.Forms.MouseEventHandler(this.FitToPageButton_MouseDown);
+            this.FitToPageButton.MouseEnter += new System.EventHandler(this.FitToPageButton_MouseEnter);
+            this.FitToPageButton.MouseLeave += new System.EventHandler(this.FitToPageButton_MouseLeave);
+            this.FitToPageButton.MouseUp += new System.Windows.Forms.MouseEventHandler(this.FitToPageButton_MouseUp);
             // 
             // LogoButton
             // 
@@ -659,7 +659,7 @@
         private System.Windows.Forms.ToolStripMenuItem OnlyDisplayZoom200;
         private System.Windows.Forms.ToolStripButton ZoomOutButton;
         private System.Windows.Forms.ToolStripButton FitToWidthButton;
-        private System.Windows.Forms.ToolStripButton FitToHeightButton;
+        private System.Windows.Forms.ToolStripButton FitToPageButton;
         private System.Windows.Forms.ToolStripButton PreviousPageButton;
         private System.Windows.Forms.ToolStripTextBox CurrentPageTextBox;
         private System.Windows.Forms.ToolStripLabel TotalPageLabel;
