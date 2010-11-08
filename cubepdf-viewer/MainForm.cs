@@ -1046,7 +1046,9 @@ namespace Cube {
         /// LogoButton_Click
         /* ----------------------------------------------------------------- */
         private void LogoButton_Click(object sender, EventArgs e) {
-            System.Diagnostics.Process.Start("http://www.cube-soft.jp/cubepdfviewer/");
+            // バージョン情報の表示
+            var v = new VersionInformation();
+            v.ShowDialog();
         }
 
         /* ----------------------------------------------------------------- */

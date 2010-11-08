@@ -104,6 +104,12 @@
     </Compile>
     <Compile Include="UserSetting.cs" />
     <Compile Include="Utility.cs" />
+    <Compile Include="VersionInformation.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="VersionInformation.Designer.cs">
+      <DependentUpon>VersionInformation.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -123,6 +129,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="VersionInformation.resx">
+      <DependentUpon>VersionInformation.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
