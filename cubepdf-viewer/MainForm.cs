@@ -710,6 +710,7 @@ namespace Cube {
 
                 if (prd.ShowDialog() == DialogResult.OK) {
                     document.PrinterSettings = prd.PrinterSettings;
+                    document.DefaultPageSettings = document.PrinterSettings.DefaultPageSettings; // プリンターのデフォルト設定に変更してみる
                     if (Utility.IsPSPrinter(document.PrinterSettings.PrinterName) && !core.NoEmbedFontExists()) {
                         var ps = Utility.TempPath() + ".ps";
                         int first = 1;
