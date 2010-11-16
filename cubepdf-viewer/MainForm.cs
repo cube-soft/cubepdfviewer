@@ -279,7 +279,7 @@ namespace Cube {
             var message = "";
 
             try {
-                int prev = CanvasPolicy.CurrentPage(canvas);
+                int previousPageNumber = CanvasPolicy.CurrentPage(canvas);
                 var args = new SearchArgs(text);
                 args.FromBegin = begin_;
                 args.IgnoreCase = true;
@@ -288,12 +288,14 @@ namespace Cube {
                 args.FindNext = next;
 
                 var result = CanvasPolicy.Search(canvas, args); 
-                begin_ = !result; // 最後まで検索したら始めに戻る
+                // begin_ = !result; // 最後まで検索したら始めに戻る
                 if (!result) // 検索結果0件なので、textBoxの色を変更
                 {
                     this.SearchTextBox.BackColor = Color.Red;
                 }
-                this.RefreshThumbnail(this.NavigationSplitContainer.Panel1, CanvasPolicy.CurrentPage(canvas), prev);
+                else
+                    begin_ = false;
+                this.RefreshThumbnail(this.NavigationSplitContainer.Panel1, CanvasPolicy.CurrentPage(canvas), previousPageNumber);
                 this.Refresh(canvas, message);
             }
             catch (Exception err) {

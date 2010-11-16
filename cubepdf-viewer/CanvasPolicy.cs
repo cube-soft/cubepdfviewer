@@ -728,7 +728,9 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         /// Search
         /* ----------------------------------------------------------------- */
+        private static PDFLibNet.PDFSearchResult previousSearchResult = null;
         public static bool Search(Canvas canvas, SearchArgs args) {
+            
             if (canvas == null) return false;
             var engine = canvas.Tag as CanvasEngine;
             if (engine == null) return false;
@@ -738,19 +740,38 @@ namespace Cube {
             core.SearchCaseSensitive = !args.IgnoreCase;
             var order = args.WholeDocument ? PDFLibNet.PDFSearchOrder.PDFSearchFromdBegin : PDFLibNet.PDFSearchOrder.PDFSearchFromCurrent;
 
+            // NOTE: FindFirstで、resultに1か0しか返っていない。そのため、以前の検索結果と同じかどうかで区別する
             int result = 0;
-            if (args.FromBegin) result = core.FindFirst(args.Text, order, false, args.WholeWord);
+            if (args.FromBegin) {
+                previousSearchResult = null;
+                result = core.FindFirst(args.Text, order, false, args.WholeWord); 
+            }
             else if (args.FindNext) result = core.FindNext(args.Text);
             else result = core.FindPrevious(args.Text);
             //else result = core.FindText(args.Text, core.CurrentPage, order, !args.IgnoreCase, !args.FindNext, true, args.WholeWord);
 
+            
             if (result > 0) {
-                core.CurrentPage = core.SearchResults[0].Page;
+                if (previousSearchResult != null && equalsSearchResult(previousSearchResult, core.SearchResults[0]))
+                {
+                    // 以前の検索結果と同じであったため、見つからなかった場合と同じ処理を行う
+                    return false;
+                }
+                else
+                {
+                    core.CurrentPage = core.SearchResults[0].Page;
+                    previousSearchResult = core.SearchResults[0];
+                }
                 CanvasPolicy.Render(canvas, false);
                 engine.UpdateURL();
             }
 
             return result > 0;
+        }
+
+        private static bool equalsSearchResult(PDFLibNet.PDFSearchResult arg0, PDFLibNet.PDFSearchResult arg1)
+        {
+            return (arg0.Page == arg1.Page && arg0.Position == arg1.Position);
         }
 
         /* ----------------------------------------------------------------- */
