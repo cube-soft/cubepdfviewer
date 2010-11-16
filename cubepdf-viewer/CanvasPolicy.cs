@@ -885,6 +885,7 @@ namespace Cube {
                 int x = current.X - origin_.X;
                 int y = current.Y - origin_.Y;
                 control.AutoScrollPosition = new Point(-x, -y);
+                canvas.Cursor = MainForm.HandMoveCursor;
             }
             else {
                 var engine = canvas.Tag as CanvasEngine;
@@ -916,18 +917,25 @@ namespace Cube {
             var canvas = sender as Canvas;
             if (canvas == null) return;
 
-            if (canvas.Cursor == Cursors.Hand) {
+            if (canvas.Cursor == Cursors.Hand)
+            {
                 var engine = canvas.Tag as CanvasEngine;
                 if (engine == null) return;
                 var core = engine.Core;
                 if (core == null) return;
 
-                lock (core) {
+                lock (core)
+                {
                     var pos = new Point((int)(e.Location.X * 72.0 / core.RenderDPI), (int)(e.Location.Y * 72.0 / core.RenderDPI));
                     var addr = engine.GetURL(pos);
                     if (addr != null) System.Diagnostics.Process.Start(addr);
                 }
                 canvas.Cursor = Cursors.Default;
+            }
+            else
+            {
+                // カーソルを手のひらに変更
+                canvas.Cursor = MainForm.HandMoveCursor;
             }
         }
 

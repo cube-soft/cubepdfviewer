@@ -14,5 +14,8 @@
     <Setting Name="DEFAULT_TAB_TEXT" Type="System.String" Scope="Application">
       <Value Profile="(Default)">(無題)</Value>
     </Setting>
+    <Setting Name="HAND_CURSOR_LOCATION" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Cube.Resources.hand_move.cur</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

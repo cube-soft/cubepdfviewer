@@ -58,5 +58,14 @@ namespace Cube.Properties {
                 return ((string)(this["DEFAULT_TAB_TEXT"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Cube.Resources.hand_move.cur")]
+        public string HAND_CURSOR_LOCATION {
+            get {
+                return ((string)(this["HAND_CURSOR_LOCATION"]));
+            }
+        }
     }
 }

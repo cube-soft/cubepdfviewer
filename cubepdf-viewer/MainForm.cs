@@ -25,6 +25,7 @@ using System.Drawing;
 using System.Drawing.Printing;
 using System.Windows.Forms;
 using System.Diagnostics;
+using MySettings = Cube.Properties.Settings;
 
 namespace Cube {
     /* --------------------------------------------------------------------- */
@@ -103,6 +104,10 @@ namespace Cube {
 
             // デフォルトのタイトルを表示
             this.Text = Cube.Properties.Settings.Default.DEFAULT_WINDOW_TITLE;
+
+            // 手のひらマウスカーソルを読み込んでおく
+            System.Reflection.Assembly asm = System.Reflection.Assembly.GetExecutingAssembly();
+            HandMoveCursor = new Cursor(asm.GetManifestResourceStream(MySettings.Default.HAND_CURSOR_LOCATION));  // リソースの場所は、Web上のサンプルの方法ではうまく行かなかったため、→の方法で取得したロケーションを直接代入 string[] resources = asm.GetManifestResourceNames();
         }
 
         /* ----------------------------------------------------------------- */
@@ -1863,6 +1868,7 @@ namespace Cube {
         private int wheel_counter_ = 0;
         static int resize_ = 0;
         private string adobe_;
+        public static Cursor HandMoveCursor = null; // 手のひらマウスカーソル
         #endregion
     }
 }
