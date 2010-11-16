@@ -152,6 +152,21 @@ namespace Cube {
         }
 
         /* ----------------------------------------------------------------- */
+        ///
+        /// ChangeTitlebarText
+        /// 
+        /// <summary>
+        /// 引数無しで呼び出すとタイトルバーのテキストをデフォルトに戻す．
+        /// </summary>
+        /// <param name="filename"></param>
+        /// 
+        /* ----------------------------------------------------------------- */
+        private void ChangeTitlebarText(string filename = "") {
+            if (filename == "") this.Text = Cube.Properties.Settings.Default.DEFAULT_WINDOW_TITLE;
+            else this.Text = filename + " - " + Cube.Properties.Settings.Default.DEFAULT_WINDOW_TITLE;
+        }
+
+        /* ----------------------------------------------------------------- */
         /// Open
         /* ----------------------------------------------------------------- */
         private void Open(TabPage tab, string path, string password) {
@@ -163,8 +178,7 @@ namespace Cube {
                 if (!this.NavigationSplitContainer.Panel1Collapsed) {
                     this.CreateThumbnail(canvas);
                 }
-                // タイトルバーにファイル名を表示
-                changeTitlebarText(System.IO.Path.GetFileNameWithoutExtension(path));
+                ChangeTitlebarText(System.IO.Path.GetFileNameWithoutExtension(path));
             }
             catch (System.Security.SecurityException /* err */) {
                 PasswordDialog dialog = new PasswordDialog(path);
@@ -1011,7 +1025,6 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         private void SearchTextBox_TextChanged(object sender, EventArgs e) {
             begin_ = true;
-            // TextBoxの色をデフォルトに戻す
             this.SearchTextBox.BackColor = Color.White;
         }
 
@@ -1078,16 +1091,9 @@ namespace Cube {
             var control = sender as TabControl;
             if (control == null) return;
 
-            // タブ名をタイトルバーに表示
             var tabname = control.SelectedTab.Text;
-            if (tabname == Cube.Properties.Settings.Default.DEFAULT_TAB_TEXT)
-            {
-                changeTitlebarText();
-            }
-            else
-            {
-                changeTitlebarText(tabname);
-            }
+            if (tabname == Cube.Properties.Settings.Default.DEFAULT_TAB_TEXT) ChangeTitlebarText();
+            else ChangeTitlebarText(tabname);
 
             var canvas = CanvasPolicy.Get(control.SelectedTab);
             if (canvas == null) return;
@@ -1095,22 +1101,6 @@ namespace Cube {
             this.Adjust(control.SelectedTab);
             this.Refresh(canvas);
             this.CreateThumbnail(canvas);
-        }
-
-        /// <summary>
-        /// NOTE: 引数無しで呼び出すとタイトルバーのテキストをデフォルトに戻す
-        /// </summary>
-        /// <param name="filename"></param>
-        private void changeTitlebarText(string filename = "")
-        {
-            if (filename == "")
-            {
-                this.Text = Cube.Properties.Settings.Default.DEFAULT_WINDOW_TITLE;
-            }
-            else
-            {
-                this.Text = filename + " - " + Cube.Properties.Settings.Default.DEFAULT_WINDOW_TITLE;
-            }
         }
 
         /* ----------------------------------------------------------------- */

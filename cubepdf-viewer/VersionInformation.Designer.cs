@@ -39,7 +39,7 @@
             // 
             // OKButton
             // 
-            this.OKButton.Location = new System.Drawing.Point(265, 94);
+            this.OKButton.Location = new System.Drawing.Point(193, 88);
             this.OKButton.Name = "OKButton";
             this.OKButton.Size = new System.Drawing.Size(75, 23);
             this.OKButton.TabIndex = 4;
@@ -50,25 +50,26 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(80, 10);
+            this.label1.Font = new System.Drawing.Font("MS UI Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.label1.Location = new System.Drawing.Point(56, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(88, 12);
+            this.label1.Size = new System.Drawing.Size(115, 13);
             this.label1.TabIndex = 0;
-            this.label1.Text = "CubePDFViewer";
+            this.label1.Text = "CubePDF Viewer";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(80, 49);
+            this.label2.Location = new System.Drawing.Point(57, 41);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(260, 12);
+            this.label2.Size = new System.Drawing.Size(151, 12);
             this.label2.TabIndex = 2;
-            this.label2.Text = "Copyright(C) 2010 CubeSoft. All Rights Reserved.";
+            this.label2.Text = "Copyright(C) 2010 CubeSoft.";
             // 
             // Version
             // 
             this.Version.AutoSize = true;
-            this.Version.Location = new System.Drawing.Point(80, 37);
+            this.Version.Location = new System.Drawing.Point(57, 29);
             this.Version.Name = "Version";
             this.Version.Size = new System.Drawing.Size(44, 12);
             this.Version.TabIndex = 1;
@@ -77,7 +78,7 @@
             // cubePDFLink
             // 
             this.cubePDFLink.AutoSize = true;
-            this.cubePDFLink.Location = new System.Drawing.Point(80, 70);
+            this.cubePDFLink.Location = new System.Drawing.Point(57, 63);
             this.cubePDFLink.Name = "cubePDFLink";
             this.cubePDFLink.Size = new System.Drawing.Size(211, 12);
             this.cubePDFLink.TabIndex = 3;
@@ -87,10 +88,9 @@
             // 
             // Logo
             // 
-            this.Logo.Location = new System.Drawing.Point(10, 10);
+            this.Logo.Location = new System.Drawing.Point(12, 29);
             this.Logo.Name = "Logo";
-            this.Logo.Size = new System.Drawing.Size(64, 64);
-            this.Logo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.Logo.Size = new System.Drawing.Size(32, 32);
             this.Logo.TabIndex = 5;
             this.Logo.TabStop = false;
             // 
@@ -98,17 +98,20 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(348, 127);
+            this.ClientSize = new System.Drawing.Size(283, 123);
             this.Controls.Add(this.Logo);
             this.Controls.Add(this.cubePDFLink);
             this.Controls.Add(this.Version);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.OKButton);
             this.Controls.Add(this.label1);
+            this.DoubleBuffered = true;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "VersionInformation";
             this.ShowIcon = false;
+            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "バージョン情報";
             ((System.ComponentModel.ISupportInitialize)(this.Logo)).EndInit();
             this.ResumeLayout(false);
