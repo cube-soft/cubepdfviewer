@@ -214,6 +214,13 @@ namespace Cube.Properties {
             }
         }
         
+        internal static byte[] hand_move {
+            get {
+                object obj = ResourceManager.GetObject("hand_move", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap hidemenu {
             get {
                 object obj = ResourceManager.GetObject("hidemenu", resourceCulture);

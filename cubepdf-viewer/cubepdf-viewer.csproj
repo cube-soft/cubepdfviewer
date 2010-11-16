@@ -74,19 +74,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CanvasPolicy.cs" />
-    <Compile Include="CustomPrinterDialog.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="CustomPrinterDialog.Designer.cs">
-      <DependentUpon>CustomPrinterDialog.cs</DependentUpon>
-    </Compile>
     <Compile Include="CustomToolStripRenderer.cs" />
-    <Compile Include="Form1.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -122,12 +110,6 @@
     <Compile Include="VersionInformation.Designer.cs">
       <DependentUpon>VersionInformation.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="CustomPrinterDialog.resx">
-      <DependentUpon>CustomPrinterDialog.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -174,6 +156,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="cubepdf-viewer.ico" />
+    <None Include="Resources\hand_move.cur" />
     <None Include="Resources\cubepdf-file.ico" />
     <None Include="Resources\logo_press.png" />
     <None Include="Resources\logo_over.png" />

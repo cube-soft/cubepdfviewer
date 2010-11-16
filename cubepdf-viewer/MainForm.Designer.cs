@@ -606,9 +606,9 @@
             this.DefaultTabPage.AutoScroll = true;
             this.DefaultTabPage.BackColor = System.Drawing.Color.DimGray;
             this.DefaultTabPage.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.DefaultTabPage.Location = new System.Drawing.Point(4, 28);
+            this.DefaultTabPage.Location = new System.Drawing.Point(4, 29);
             this.DefaultTabPage.Name = "DefaultTabPage";
-            this.DefaultTabPage.Size = new System.Drawing.Size(772, 489);
+            this.DefaultTabPage.Size = new System.Drawing.Size(772, 488);
             this.DefaultTabPage.TabIndex = 0;
             this.DefaultTabPage.Text = "(無題)";
             this.DefaultTabPage.Scroll += new System.Windows.Forms.ScrollEventHandler(this.TabPage_Scroll);
