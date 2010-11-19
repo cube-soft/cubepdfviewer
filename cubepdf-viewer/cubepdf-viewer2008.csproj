@@ -1,0 +1,207 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{F78B7F11-1A7A-4181-BC47-832A03D75324}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Cube</RootNamespace>
+    <AssemblyName>cubepdf-viewer</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>cubepdf-viewer.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Jacksonsoft.CustomTabControl">
+      <HintPath>.\Jacksonsoft.CustomTabControl.dll</HintPath>
+    </Reference>
+    <Reference Include="PDFLibNet">
+      <HintPath>.\PDFLibNet.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CanvasPolicy.cs" />
+    <Compile Include="CustomToolStripRenderer.cs" />
+    <Compile Include="MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MenuDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MenuDialog.Designer.cs">
+      <DependentUpon>MenuDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PasswordDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PasswordDialog.Designer.cs">
+      <DependentUpon>PasswordDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RawPrinterHelper.cs" />
+    <Compile Include="SearchArgs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Thumbnail.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="UserSetting.cs" />
+    <Compile Include="Utility.cs" />
+    <Compile Include="VersionInformation.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="VersionInformation.Designer.cs">
+      <DependentUpon>VersionInformation.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MenuDialog.resx">
+      <DependentUpon>MenuDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PasswordDialog.resx">
+      <DependentUpon>PasswordDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <EmbeddedResource Include="VersionInformation.resx">
+      <DependentUpon>VersionInformation.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <None Include="Resources\arrow_first.png" />
+    <None Include="Resources\arrow_next.png" />
+    <None Include="Resources\arrow_prev.png" />
+    <None Include="Resources\fit2height.png" />
+    <None Include="Resources\fit2width.png" />
+    <None Include="Resources\open.png" />
+    <None Include="Resources\search.png" />
+    <None Include="Resources\zoomin.png" />
+    <None Include="Resources\zoomout.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="cubepdf-viewer.ico" />
+    <EmbeddedResource Include="Resources\hand_move.cur" />
+    <None Include="Resources\cubepdf-file.ico" />
+    <None Include="Resources\logo_press.png" />
+    <None Include="Resources\logo_over.png" />
+    <None Include="Resources\zoomout_press.png" />
+    <None Include="Resources\zoomin_press.png" />
+    <None Include="Resources\thumbnail_press.png" />
+    <None Include="Resources\search_press.png" />
+    <None Include="Resources\print_press.png" />
+    <None Include="Resources\hidemenu_press.png" />
+    <None Include="Resources\fit2width_press.png" />
+    <None Include="Resources\fit2height_press.png" />
+    <None Include="Resources\arrow_prev_press.png" />
+    <None Include="Resources\arrow_next_press.png" />
+    <None Include="Resources\arrow_last_press.png" />
+    <None Include="Resources\arrow_first_press.png" />
+    <None Include="Resources\open_press.png" />
+    <None Include="Resources\thumbnail_over.png" />
+    <None Include="Resources\zoomout_over.png" />
+    <None Include="Resources\zoomin_over.png" />
+    <None Include="Resources\search_over.png" />
+    <None Include="Resources\print_over.png" />
+    <None Include="Resources\open_over.png" />
+    <None Include="Resources\hidemenu_over.png" />
+    <None Include="Resources\fit2width_over.png" />
+    <None Include="Resources\fit2height_over.png" />
+    <None Include="Resources\arrow_prev_over.png" />
+    <None Include="Resources\arrow_next_over.png" />
+    <None Include="Resources\arrow_last_over.png" />
+    <None Include="Resources\arrow_first_over.png" />
+    <None Include="Resources\cubepdf-viewer.ico" />
+    <None Include="Resources\arrow_last.png" />
+    <None Include="Resources\background_tab.png" />
+    <None Include="Resources\logo.png" />
+    <None Include="Resources\background.png" />
+    <None Include="Resources\hidemenu.png" />
+    <None Include="Resources\thumbnail.png" />
+    <None Include="Resources\print.png" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

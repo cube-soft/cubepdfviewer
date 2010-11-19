@@ -132,7 +132,7 @@ namespace Cube {
         /// </summary>
         /// 
         /* ----------------------------------------------------------------- */
-        private void Refresh(PictureBox canvas, string message = "") {
+        private void Refresh(PictureBox canvas, string message) {
             if (canvas == null || canvas.Tag == null) {
                 this.CurrentPageTextBox.Text = "0";
                 this.TotalPageLabel.Text = "0";
@@ -157,6 +157,13 @@ namespace Cube {
         }
 
         /* ----------------------------------------------------------------- */
+        /// Refresh
+        /* ----------------------------------------------------------------- */
+        private void Refresh(PictureBox canvas) {
+            this.Refresh(canvas, "");
+        }
+
+        /* ----------------------------------------------------------------- */
         ///
         /// ChangeTitlebarText
         /// 
@@ -166,7 +173,7 @@ namespace Cube {
         /// <param name="filename"></param>
         /// 
         /* ----------------------------------------------------------------- */
-        private void ChangeTitlebarText(string filename = "") {
+        private void ChangeTitlebarText(string filename) {
             if (filename == "") this.Text = Cube.Properties.Settings.Default.DEFAULT_WINDOW_TITLE;
             else this.Text = filename + " - " + Cube.Properties.Settings.Default.DEFAULT_WINDOW_TITLE;
         }
@@ -210,7 +217,7 @@ namespace Cube {
         /// </summary>
         /// 
         /* ----------------------------------------------------------------- */
-        private void Open(TabControl control, string path, string password = "") {
+        private void Open(TabControl control, string path, string password) {
             foreach (TabPage item in control.TabPages) {
                 var s = item.Tag as string;
                 if (s != null && s == path) {
@@ -219,6 +226,13 @@ namespace Cube {
                 }
             }
             this.Open(this.CreateTab(control), path, password);
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// Open
+        /* ----------------------------------------------------------------- */
+        private void Open(TabControl control, string path) {
+            this.Open(control, path, "");
         }
 
         /* ----------------------------------------------------------------- */
@@ -1099,7 +1113,7 @@ namespace Cube {
             if (control == null) return;
 
             var tabname = control.SelectedTab.Text;
-            if (tabname == Cube.Properties.Settings.Default.DEFAULT_TAB_TEXT) ChangeTitlebarText();
+            if (tabname == Cube.Properties.Settings.Default.DEFAULT_TAB_TEXT) ChangeTitlebarText("");
             else ChangeTitlebarText(tabname);
 
             var canvas = CanvasPolicy.Get(control.SelectedTab);

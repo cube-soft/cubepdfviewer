@@ -259,7 +259,7 @@ namespace Cube {
         /// </summary>
         /// 
         /* ----------------------------------------------------------------- */
-        public static void Open(Canvas canvas, string path, string password, FitCondition which = FitCondition.None) {
+        public static void Open(Canvas canvas, string path, string password, FitCondition which) {
             if (canvas == null) return;
             var engine = canvas.Tag as CanvasEngine;
             if (engine != null) CanvasPolicy.Close(canvas);
@@ -291,8 +291,15 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         /// Open
         /* ----------------------------------------------------------------- */
-        public static void Open(Canvas canvas, string path, FitCondition which = FitCondition.None) {
+        public static void Open(Canvas canvas, string path, FitCondition which) {
             CanvasPolicy.Open(canvas, path, "", which);
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// Open
+        /* ----------------------------------------------------------------- */
+        public static void Open(Canvas canvas, string path) {
+            CanvasPolicy.Open(canvas, path, "", FitCondition.None);
         }
 
         /* ----------------------------------------------------------------- */
