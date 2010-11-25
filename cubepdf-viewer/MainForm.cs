@@ -772,6 +772,7 @@ namespace Cube {
                 prd.PrinterSettings.MaximumPage = core.PageCount;
                 prd.PrinterSettings.FromPage = core.CurrentPage;
                 prd.PrinterSettings.ToPage = core.PageCount;
+                prd.UseEXDialog = true;
 
                 if (prd.ShowDialog() == DialogResult.OK) {
                     document.PrinterSettings = prd.PrinterSettings;
