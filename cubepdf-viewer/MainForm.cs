@@ -404,8 +404,16 @@ namespace Cube {
         /// DestroyTab
         /* ----------------------------------------------------------------- */
         public void DestroyTab(TabPage tab) {
-            var parent = (TabControl)tab.Parent;
+            if (tab == null) return;
+            var parent = tab.Parent as TabControl;
+            if (parent == null) return;
+
             var canvas = CanvasPolicy.Get(tab);
+            if (canvas == null) return;
+            var engine = canvas.Tag as CanvasEngine;
+            if (engine == null) return;
+
+            //engine.Thumbnail = null;
             this.DestroyThumbnail(this.NavigationSplitContainer.Panel1);
             CanvasPolicy.Destroy(canvas);
             if (this.PageViewerTabControl.TabCount > 1) {
@@ -447,8 +455,18 @@ namespace Cube {
         /// CreateThumbnail
         /* ----------------------------------------------------------------- */
         private void CreateThumbnail(PictureBox canvas) {
-            // this.DestroyThumbnail(this.NavigationSplitContainer.Panel1);  // 破棄する代わりに保存する(tabControl_Deselected)
-            Thumbnail thumb = new Thumbnail(this.NavigationSplitContainer.Panel1, canvas);
+            Thumbnail thumb = null;
+            var control = this.NavigationSplitContainer.Panel1;
+            var engine = canvas.Tag as CanvasEngine;
+
+            // キャッシュしてあるサムネイルを復元．
+            if (engine != null && engine.Thumbnail != null) {
+                thumb = engine.Thumbnail;
+                control.Controls.Add(thumb);
+                thumb.Reset(control);
+            }
+            else thumb = new Thumbnail(control, canvas);
+
             thumb.SelectedIndexChanged -= new EventHandler(Thumbnail_SelectedIndexChanged);
             thumb.SelectedIndexChanged += new EventHandler(Thumbnail_SelectedIndexChanged);
         }
@@ -473,29 +491,8 @@ namespace Cube {
             this.NavigationSplitContainer.Panel1.Controls.Remove(thumb);
 
             // thumbnail を停止させて CanvasEngine に保存する．
-            thumb.Visible = false;
-            thumb.Enabled = false;
             thumb.Reset();
             engine.Thumbnail = thumb;
-        }
-
-        /* ----------------------------------------------------------------- */
-        ///
-        /// GetBackThumbnail
-        /// 
-        /// <summary>
-        /// CanvasEngine に保存されているサムネイルをウィンドウの
-        /// サムネイル表示欄に復帰させる．
-        /// </summary>
-        /// 
-        /* ----------------------------------------------------------------- */
-        private void GetBackThumbnail(Thumbnail thumb) {
-            thumb.Enabled = true;
-            thumb.Visible = true;
-            var control = this.NavigationSplitContainer.Panel1;
-            control.Controls.Add(thumb);
-            thumb.Reset(control);
-            thumb.SelectedIndexChanged += new EventHandler(Thumbnail_SelectedIndexChanged);
         }
 
         /* ----------------------------------------------------------------- */
@@ -1138,9 +1135,8 @@ namespace Cube {
         /// LogoButton_Click
         /* ----------------------------------------------------------------- */
         private void LogoButton_Click(object sender, EventArgs e) {
-            // バージョン情報の表示
-            var v = new VersionDialog();
-            v.ShowDialog();
+            var ver = new VersionDialog();
+            ver.ShowDialog();
         }
 
         /* ----------------------------------------------------------------- */
@@ -1165,7 +1161,13 @@ namespace Cube {
         private void PageViewerTabControl_Deselected(object sender, TabControlEventArgs e) {
             var control = sender as TabControl;
             if (control == null) return;
-            this.SaveThumbnail(CanvasPolicy.Get(control.SelectedTab));
+
+            var tab = control.SelectedTab;
+            if (tab == null) return;
+
+            var canvas = CanvasPolicy.Get(tab);
+            if (canvas == null) return;
+            this.SaveThumbnail(canvas);
         }
 
         /* ----------------------------------------------------------------- */
@@ -1184,10 +1186,7 @@ namespace Cube {
 
             this.Adjust(control.SelectedTab);
             this.Refresh(canvas);
-
-            var engine = canvas.Tag as CanvasEngine;
-            if (engine != null && engine.Thumbnail != null) this.GetBackThumbnail(engine.Thumbnail);
-            else this.CreateThumbnail(canvas);
+            this.CreateThumbnail(canvas);
         }
 
 
