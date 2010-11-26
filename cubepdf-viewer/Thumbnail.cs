@@ -361,9 +361,10 @@ namespace Cube {
                 last  = images_.Keys[images_.Count - 1];
             }
 
+            this.ArchiveImage(pagenum);
             if (count > this.CacheSize) {
                 var archive = Math.Abs(pagenum - first) > Math.Abs(pagenum - last) ? first : last;
-                this.ArchiveImage(archive);
+                this.DeleteImage(archive);
             }
         }
 
@@ -377,14 +378,23 @@ namespace Cube {
 
                 lock (lock_) {
                     image = images_[pagenum];
-                    images_.Remove(pagenum);
                 }
             }
 
             var path = this.GetArchivedPath(pagenum);
-            if (!System.IO.File.Exists(path)) {
-                lock (image) {
-                    image.Save(path);
+            if (!System.IO.File.Exists(path)) image.Save(path);
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// DeleteImage (private)
+        /* ----------------------------------------------------------------- */
+        private void DeleteImage(int pagenum) {
+            Image image = null;
+            lock (internal_lock_) {
+                if (core_ == null || !images_.ContainsKey(pagenum)) return;
+                lock (lock_) {
+                    image = images_[pagenum];
+                    images_.Remove(pagenum);
                 }
             }
             image.Dispose();

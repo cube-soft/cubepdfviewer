@@ -452,31 +452,43 @@ namespace Cube {
             thumb.SelectedIndexChanged -= new EventHandler(Thumbnail_SelectedIndexChanged);
             thumb.SelectedIndexChanged += new EventHandler(Thumbnail_SelectedIndexChanged);
         }
+
         /* ----------------------------------------------------------------- */
+        ///
         /// SaveThumbnail
+        /// 
         /// <summary>
-        ///   　既に生成されたサムネイルを保存しておく
+        /// 既に生成されたサムネイルを保存しておく
         /// </summary>
+        /// 
         /* ----------------------------------------------------------------- */
-        private void SaveThumbnail(CanvasEngine canvasEngine)
-        {
+        private void SaveThumbnail(PictureBox canvas) {
+            if (canvas == null) return;
+            var engine = canvas.Tag as CanvasEngine;
+            if (engine == null) return;
+
             var thumb = Thumbnail.GetInstance(this.NavigationSplitContainer.Panel1);
             if (thumb == null) return;
             thumb.SelectedIndexChanged -= new EventHandler(Thumbnail_SelectedIndexChanged);
             this.NavigationSplitContainer.Panel1.Controls.Remove(thumb);
-            // thumbnail を　停止させてcanvasEngineに保存
+
+            // thumbnail を停止させてcanvasEngineに保存
             thumb.Visible = false;
             thumb.Enabled = false;
-            canvasEngine.Thumbnail = thumb;
+            engine.Thumbnail = thumb;
         }
+
         /* ----------------------------------------------------------------- */
+        ///
         /// GetBackThumbnail
+        /// 
         /// <summary>
-        ///   　CanvasEngineに保存されているサムネイルを復帰させる
+        /// CanvasEngine に保存されているサムネイルをウィンドウの
+        /// サムネイル表示欄に復帰させる．
         /// </summary>
+        /// 
         /* ----------------------------------------------------------------- */
-        private void GetBackThumbnail(Thumbnail thumb)
-        {
+        private void GetBackThumbnail(Thumbnail thumb) {
             thumb.Enabled = true;
             thumb.Visible = true;
             this.NavigationSplitContainer.Panel1.Controls.Add(thumb);
@@ -1135,24 +1147,24 @@ namespace Cube {
             this.Adjust(this.PageViewerTabControl.SelectedTab);
             NavigationSplitContainer.Panel1.Refresh();
         }
+
         /* ----------------------------------------------------------------- */
+        ///
         /// PageViewerTabControl_Deselected
+        /// 
         /// <summary>
-        /// 別のタブを選択した際発生。
-        /// この段階では、SelectedIndexは選択前のタブのインデックスになっている。(0から1の遷移では0)
-        /// サムネイルの保存を行う 
+        /// 別のタブが選択されたときに発生するイベントハンドラ．
+        /// この段階では SelectedIndex は選択前のタブのインデックスに
+        /// なっている (e.g., 0 から 1 の遷移の場合，0)．
         /// </summary>
+        /// 
         /* ----------------------------------------------------------------- */
-        private void PageViewerTabControl_Deselected(object sender, TabControlEventArgs e)
-        {
+        private void PageViewerTabControl_Deselected(object sender, TabControlEventArgs e) {
             var control = sender as TabControl;
             if (control == null) return;
-            
-            var canvas = CanvasPolicy.Get(control.SelectedTab);
-            if (canvas == null) return;
-            var canvasEngine = canvas.Tag as CanvasEngine;
-            this.SaveThumbnail(canvasEngine);
+            this.SaveThumbnail(CanvasPolicy.Get(control.SelectedTab));
         }
+
         /* ----------------------------------------------------------------- */
         /// PageViewerTabControl_SelectedIndexChanged
         /* ----------------------------------------------------------------- */
@@ -1166,14 +1178,13 @@ namespace Cube {
 
             var canvas = CanvasPolicy.Get(control.SelectedTab);
             if (canvas == null) return;
-            var canvasEngine = canvas.Tag as CanvasEngine;
 
             this.Adjust(control.SelectedTab);
             this.Refresh(canvas);
-            if (canvasEngine != null && canvasEngine.Thumbnail != null)
-                this.GetBackThumbnail(canvasEngine.Thumbnail);
-            else
-                this.CreateThumbnail(canvas);
+
+            var engine = canvas.Tag as CanvasEngine;
+            if (engine != null && engine.Thumbnail != null) this.GetBackThumbnail(engine.Thumbnail);
+            else this.CreateThumbnail(canvas);
         }
 
 

@@ -471,7 +471,7 @@
             this.FitToPageButton.Margin = new System.Windows.Forms.Padding(-2, 0, 0, 0);
             this.FitToPageButton.Name = "FitToPageButton";
             this.FitToPageButton.Size = new System.Drawing.Size(37, 40);
-            this.FitToPageButton.Text = "全体に表示";
+            this.FitToPageButton.Text = "ウィンドウに合わせる";
             this.FitToPageButton.CheckedChanged += new System.EventHandler(this.FitToPageButton_CheckedChanged);
             this.FitToPageButton.Click += new System.EventHandler(this.FitToPageButton_Click);
             this.FitToPageButton.MouseDown += new System.Windows.Forms.MouseEventHandler(this.FitToPageButton_MouseDown);
