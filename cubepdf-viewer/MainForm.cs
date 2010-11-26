@@ -467,7 +467,7 @@ namespace Cube {
             // thumbnail を　停止させてcanvasEngineに保存
             thumb.Visible = false;
             thumb.Enabled = false;
-            canvasEngine.SavedThumbnail = thumb;
+            canvasEngine.Thumbnail = thumb;
         }
         /* ----------------------------------------------------------------- */
         /// GetBackThumbnail
@@ -1124,7 +1124,7 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         private void LogoButton_Click(object sender, EventArgs e) {
             // バージョン情報の表示
-            var v = new VersionInformation();
+            var v = new VersionDialog();
             v.ShowDialog();
         }
 
@@ -1170,8 +1170,8 @@ namespace Cube {
 
             this.Adjust(control.SelectedTab);
             this.Refresh(canvas);
-            if (canvasEngine != null && canvasEngine.SavedThumbnail != null)
-                this.GetBackThumbnail(canvasEngine.SavedThumbnail);
+            if (canvasEngine != null && canvasEngine.Thumbnail != null)
+                this.GetBackThumbnail(canvasEngine.Thumbnail);
             else
                 this.CreateThumbnail(canvas);
         }
