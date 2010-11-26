@@ -472,9 +472,10 @@ namespace Cube {
             thumb.SelectedIndexChanged -= new EventHandler(Thumbnail_SelectedIndexChanged);
             this.NavigationSplitContainer.Panel1.Controls.Remove(thumb);
 
-            // thumbnail を停止させてcanvasEngineに保存
+            // thumbnail を停止させて CanvasEngine に保存する．
             thumb.Visible = false;
             thumb.Enabled = false;
+            thumb.Reset();
             engine.Thumbnail = thumb;
         }
 
@@ -491,7 +492,9 @@ namespace Cube {
         private void GetBackThumbnail(Thumbnail thumb) {
             thumb.Enabled = true;
             thumb.Visible = true;
-            this.NavigationSplitContainer.Panel1.Controls.Add(thumb);
+            var control = this.NavigationSplitContainer.Panel1;
+            control.Controls.Add(thumb);
+            thumb.Reset(control);
             thumb.SelectedIndexChanged += new EventHandler(Thumbnail_SelectedIndexChanged);
         }
 

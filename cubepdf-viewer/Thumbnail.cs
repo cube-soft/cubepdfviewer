@@ -225,7 +225,6 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         public void Clear() {
             lock (lock_) {
-                // TODO: ライブラリも Image への参照を持っているため，
                 foreach (Image item in images_.Values) item.Dispose();
                 images_.Clear();
                 queue_.Clear();
@@ -382,7 +381,11 @@ namespace Cube {
             }
 
             var path = this.GetArchivedPath(pagenum);
-            if (!System.IO.File.Exists(path)) image.Save(path);
+            if (!System.IO.File.Exists(path)) {
+                lock (image) {
+                    image.Save(path);
+                }
+            }
         }
 
         /* ----------------------------------------------------------------- */
@@ -468,6 +471,23 @@ namespace Cube {
         }
 
         /* ----------------------------------------------------------------- */
+        /// Reset
+        /* ----------------------------------------------------------------- */
+        public void Reset() {
+            lock (lock_) {
+                if (this.Items.Count > 0) this.Items.Clear();
+                engine_.Clear();
+            }
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// Reset
+        /* ----------------------------------------------------------------- */
+        public void Reset(Control control) {
+            this.Restruct(control);
+        }
+
+        /* ----------------------------------------------------------------- */
         /// EraseBackground
         /* ----------------------------------------------------------------- */
         public bool EraseBackground {
@@ -546,7 +566,7 @@ namespace Cube {
             }
 
             parent.Controls.Add(this);
-            this.Reset(this);
+            this.Restruct(this);
 
             this.DrawItem -= new DrawListViewItemEventHandler(DrawItemHandler);
             this.DrawItem += new DrawListViewItemEventHandler(DrawItemHandler);
@@ -557,9 +577,9 @@ namespace Cube {
         }
 
         /* ----------------------------------------------------------------- */
-        /// Reset (private)
+        /// Restruct (private)
         /* ----------------------------------------------------------------- */
-        private void Reset(object sender) {
+        private void Restruct(object sender) {
             lock (lock_) {
                 try {
                     var control = sender as Control;
@@ -656,7 +676,7 @@ namespace Cube {
         /// ResizeHandler
         /* ----------------------------------------------------------------- */
         private void ResizeHandler(object sender, EventArgs e) {
-            this.Reset(sender);
+            this.Restruct(sender);
         }
 
         /* ----------------------------------------------------------------- */
