@@ -41,6 +41,13 @@ namespace Cube {
         }
 
         /* ----------------------------------------------------------------- */
+        /// VersionDialog_Shown
+        /* ----------------------------------------------------------------- */
+        private void VersionDialog_Shown(object sender, EventArgs e) {
+            OKButton.Focus();
+        }
+
+        /* ----------------------------------------------------------------- */
         /// CubePDFLinkLabel_LinkClicked
         /* ----------------------------------------------------------------- */
         private void CubePDFLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
