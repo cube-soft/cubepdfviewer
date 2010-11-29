@@ -33,8 +33,9 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         public VersionDialog() {
             InitializeComponent();
+            var version = "unknown";
             var registry = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(REG_ROOT, false);
-            var version = registry.GetValue(REG_VERSION, "unknown");
+            if (registry != null) version = (string)registry.GetValue(REG_VERSION, "unknown");
             this.VersionLabel.Text = "version " + version;
             LogoPictureBox.Image = Cube.Properties.Resources.cubepdf_viewer.ToBitmap();
         }

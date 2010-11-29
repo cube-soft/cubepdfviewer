@@ -696,7 +696,7 @@ namespace Cube {
             if (core == null) return 0.0;
 
             // 横長ならばFitToWidthを、縦長ならばFitToHeightを呼ぶ
-            if (checkPDFOrientation(canvas) == Orientation.portratit)
+            if (GetOrientation(canvas) == Orientation.portratit)
             {
                 core.FitToHeight(canvas.Parent.Handle);
             }
@@ -713,35 +713,18 @@ namespace Cube {
 #endif
             return core.Zoom;
         }
-        enum Orientation
-        {
-            landscape,
-            portratit,
-        };
-        private static Orientation checkPDFOrientation(Canvas canvas)
-        {
-            var core = ((CanvasEngine)canvas.Tag).Core;
-            int rotation = core.Pages[1].Rotation;
-            // 0, 90, 180, 270度以外の場合は無いであろうと仮定して、処理を省略
-            double realWidth, realHeight;
-            if ((rotation >= 45 && rotation < 135) || (rotation >= 225 && rotation < 315)) // 90 270度の場合
-            {
-                realWidth = core.Pages[1].Height;
-                realHeight = core.Pages[1].Width;
-            }
-            else // 0, 180度の場合
-            {
-                realWidth = core.Pages[1].Width;
-                realHeight = core.Pages[1].Height;
-            }
-            return (realWidth >= realHeight) ? Orientation.landscape : Orientation.portratit;
-        }
-       
 
         /* ----------------------------------------------------------------- */
+        ///
         /// Search
+        /// 
+        /// NOTE: FindFirst で，前回の同じ検索結果が返ってくる場合がある．
+        /// そのため，以前の検索結果と比較し同じ場合は検索失敗（終了）
+        /// として false を返す．
+        /// NOTE: なぜ static な変数を定義しているか？
+        /// 
         /* ----------------------------------------------------------------- */
-        private static PDFLibNet.PDFSearchResult previousSearchResult = null;
+        private static PDFLibNet.PDFSearchResult PreviousSearchResult_ = null;
         public static bool Search(Canvas canvas, SearchArgs args) {
             
             if (canvas == null) return false;
@@ -753,10 +736,9 @@ namespace Cube {
             core.SearchCaseSensitive = !args.IgnoreCase;
             var order = args.WholeDocument ? PDFLibNet.PDFSearchOrder.PDFSearchFromdBegin : PDFLibNet.PDFSearchOrder.PDFSearchFromCurrent;
 
-            // NOTE: FindFirstで、resultに1か0しか返っていない。そのため、以前の検索結果と同じかどうかで区別する
             int result = 0;
             if (args.FromBegin) {
-                previousSearchResult = null;
+                PreviousSearchResult_ = null;
                 result = core.FindFirst(args.Text, order, false, args.WholeWord); 
             }
             else if (args.FindNext) result = core.FindNext(args.Text);
@@ -764,27 +746,15 @@ namespace Cube {
             //else result = core.FindText(args.Text, core.CurrentPage, order, !args.IgnoreCase, !args.FindNext, true, args.WholeWord);
 
             
-            if (result > 0) {
-                if (previousSearchResult != null && equalsSearchResult(previousSearchResult, core.SearchResults[0]))
-                {
-                    // 以前の検索結果と同じであったため、見つからなかった場合と同じ処理を行う
-                    return false;
-                }
-                else
-                {
-                    core.CurrentPage = core.SearchResults[0].Page;
-                    previousSearchResult = core.SearchResults[0];
-                }
-                CanvasPolicy.Render(canvas, false);
-                engine.UpdateURL();
+            var prev = core.CurrentPage;
+            if (result > 0 && (PreviousSearchResult_ == null || !Equals(PreviousSearchResult_, core.SearchResults[0]))) {
+                core.CurrentPage = core.SearchResults[0].Page;
+                PreviousSearchResult_ = core.SearchResults[0];
             }
+            CanvasPolicy.Render(canvas, false);
+            if (core.CurrentPage != prev) engine.UpdateURL();
 
             return result > 0;
-        }
-
-        private static bool equalsSearchResult(PDFLibNet.PDFSearchResult arg0, PDFLibNet.PDFSearchResult arg1)
-        {
-            return (arg0.Page == arg1.Page && arg0.Position == arg1.Position);
         }
 
         /* ----------------------------------------------------------------- */
@@ -868,6 +838,41 @@ namespace Cube {
             else worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(NoAdjust_WorkCompletedHandler);
             canvas.Cursor = Cursors.WaitCursor;
             worker.RunWorkerAsync(canvas);
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// Orientation
+        /* ----------------------------------------------------------------- */
+        enum Orientation {
+            landscape,
+            portratit,
+        };
+
+        /* ----------------------------------------------------------------- */
+        /// GetOrientation (private)
+        /* ----------------------------------------------------------------- */
+        private static Orientation GetOrientation(Canvas canvas) {
+            var core = ((CanvasEngine)canvas.Tag).Core;
+            int rotation = core.Pages[1].Rotation;
+
+            double width = 0.0;
+            double height = 0.0;
+            if ((rotation >= 45 && rotation < 135) || (rotation >= 225 && rotation < 315)) {
+                width = core.Pages[1].Height;
+                height = core.Pages[1].Width;
+            }
+            else {
+                width = core.Pages[1].Width;
+                height = core.Pages[1].Height;
+            }
+            return (width >= height) ? Orientation.landscape : Orientation.portratit;
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// Equals (private)
+        /* ----------------------------------------------------------------- */
+        private static bool Equals(PDFLibNet.PDFSearchResult arg0, PDFLibNet.PDFSearchResult arg1) {
+            return (arg0.Page == arg1.Page && arg0.Position == arg1.Position);
         }
 
         #endregion

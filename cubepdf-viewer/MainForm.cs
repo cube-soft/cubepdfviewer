@@ -301,14 +301,10 @@ namespace Cube {
                 args.WholeWord = false;
                 args.FindNext = next;
 
-                var result = CanvasPolicy.Search(canvas, args); 
+                var result = CanvasPolicy.Search(canvas, args);
                 // begin_ = !result; // 最後まで検索したら始めに戻る
-                if (!result) // 検索結果0件なので、textBoxの色を変更
-                {
-                    this.SearchTextBox.BackColor = Color.Red;
-                }
-                else
-                    begin_ = false;
+                if (!result) this.SearchTextBox.BackColor = Color.FromArgb(255, 102, 102);
+                else begin_ = false;
                 this.RefreshThumbnail(this.NavigationSplitContainer.Panel1, CanvasPolicy.CurrentPage(canvas), previousPageNumber);
                 this.Refresh(canvas, message);
             }
@@ -1135,8 +1131,8 @@ namespace Cube {
         /// LogoButton_Click
         /* ----------------------------------------------------------------- */
         private void LogoButton_Click(object sender, EventArgs e) {
-            var ver = new VersionDialog();
-            ver.ShowDialog();
+            var version = new VersionDialog();
+            version.ShowDialog(this);
         }
 
         /* ----------------------------------------------------------------- */
@@ -1237,6 +1233,8 @@ namespace Cube {
         /// 
         /// <summary>
         /// マウスホイールによるスクロールの処理．
+        /// MEMO: VerticalScroll.Value の値は 2 回指定しないと反映され
+        /// ない．原因を要調査．
         /// </summary>
         /// 
         /* ----------------------------------------------------------------- */
@@ -1253,12 +1251,16 @@ namespace Cube {
                 var canvas = CanvasPolicy.Get(tab);
                 if (canvas == null) return;
 
-                var maximum = 1 + scroll.Maximum - scroll.LargeChange; // ユーザのコントロールで取れる scroll.Value の最大値
+                var maximum = 1 + scroll.Maximum - scroll.LargeChange; // ユーザの操作で取りうる最大値
                 var delta = -(e.Delta / 120) * scroll.SmallChange;
                 if (scroll.Value == scroll.Minimum && delta < 0) {
                     if (wheel_counter_ > 1) {
+                        var horizon = tab.HorizontalScroll.Value;
                         if (CanvasPolicy.CurrentPage(canvas) > 1 && this.PreviousPage(tab)) {
-                            tab.AutoScrollPosition = new Point(0, maximum);
+                            tab.HorizontalScroll.Value = horizon;
+                            tab.HorizontalScroll.Value = horizon;
+                            tab.VerticalScroll.Value = maximum;
+                            tab.VerticalScroll.Value = maximum;
                         }
                         wheel_counter_ = 0;
                     }
@@ -1266,8 +1268,12 @@ namespace Cube {
                 }
                 else if (scroll.Value == maximum && delta > 0) {
                     if (wheel_counter_ > 1) {
+                        var horizon = tab.HorizontalScroll.Value;
                         if (CanvasPolicy.CurrentPage(canvas) < CanvasPolicy.PageCount(canvas) && this.NextPage(tab)) {
-                            tab.AutoScrollPosition = new Point(0, 0);
+                            tab.HorizontalScroll.Value = horizon;
+                            tab.HorizontalScroll.Value = horizon;
+                            tab.VerticalScroll.Value = 0;
+                            tab.VerticalScroll.Value = 0;
                         }
                         wheel_counter_ = 0;
                     }
@@ -1275,7 +1281,8 @@ namespace Cube {
                 }
                 else {
                     var value = Math.Min(Math.Max(scroll.Value + delta, scroll.Minimum), maximum);
-                    tab.AutoScrollPosition = new Point(0, value);
+                    tab.VerticalScroll.Value = value;
+                    tab.VerticalScroll.Value = value;
                     wheel_counter_ = 0;
                 }
             }
