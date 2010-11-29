@@ -29,17 +29,17 @@
         private void InitializeComponent()
         {
             this.MainSplitContainer = new System.Windows.Forms.SplitContainer();
+            this.TitlePictureBox = new System.Windows.Forms.PictureBox();
             this.CubePDFLinkLabel = new System.Windows.Forms.LinkLabel();
             this.VersionLabel = new System.Windows.Forms.Label();
             this.CopyrightLabel = new System.Windows.Forms.Label();
             this.LogoPictureBox = new System.Windows.Forms.PictureBox();
             this.OKButton = new System.Windows.Forms.Button();
-            this.TitlePictureBox = new System.Windows.Forms.PictureBox();
             this.MainSplitContainer.Panel1.SuspendLayout();
             this.MainSplitContainer.Panel2.SuspendLayout();
             this.MainSplitContainer.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.LogoPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.TitlePictureBox)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.LogoPictureBox)).BeginInit();
             this.SuspendLayout();
             // 
             // MainSplitContainer
@@ -54,10 +54,10 @@
             // MainSplitContainer.Panel1
             // 
             this.MainSplitContainer.Panel1.BackColor = System.Drawing.Color.White;
+            this.MainSplitContainer.Panel1.Controls.Add(this.CopyrightLabel);
+            this.MainSplitContainer.Panel1.Controls.Add(this.VersionLabel);
             this.MainSplitContainer.Panel1.Controls.Add(this.TitlePictureBox);
             this.MainSplitContainer.Panel1.Controls.Add(this.CubePDFLinkLabel);
-            this.MainSplitContainer.Panel1.Controls.Add(this.VersionLabel);
-            this.MainSplitContainer.Panel1.Controls.Add(this.CopyrightLabel);
             this.MainSplitContainer.Panel1.Controls.Add(this.LogoPictureBox);
             // 
             // MainSplitContainer.Panel2
@@ -67,6 +67,15 @@
             this.MainSplitContainer.SplitterDistance = 120;
             this.MainSplitContainer.SplitterWidth = 2;
             this.MainSplitContainer.TabIndex = 0;
+            // 
+            // TitlePictureBox
+            // 
+            this.TitlePictureBox.Image = global::Cube.Properties.Resources.title;
+            this.TitlePictureBox.Location = new System.Drawing.Point(108, 16);
+            this.TitlePictureBox.Name = "TitlePictureBox";
+            this.TitlePictureBox.Size = new System.Drawing.Size(146, 36);
+            this.TitlePictureBox.TabIndex = 12;
+            this.TitlePictureBox.TabStop = false;
             // 
             // CubePDFLinkLabel
             // 
@@ -95,9 +104,9 @@
             this.CopyrightLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.CopyrightLabel.Location = new System.Drawing.Point(108, 64);
             this.CopyrightLabel.Name = "CopyrightLabel";
-            this.CopyrightLabel.Size = new System.Drawing.Size(151, 12);
+            this.CopyrightLabel.Size = new System.Drawing.Size(153, 12);
             this.CopyrightLabel.TabIndex = 5;
-            this.CopyrightLabel.Text = "Copyright(C) 2010 CubeSoft.";
+            this.CopyrightLabel.Text = "Copyright (c) 2010 CubeSoft.";
             // 
             // LogoPictureBox
             // 
@@ -117,15 +126,6 @@
             this.OKButton.Text = "OK";
             this.OKButton.UseVisualStyleBackColor = true;
             this.OKButton.Click += new System.EventHandler(this.OKButton_Click);
-            // 
-            // TitlePictureBox
-            // 
-            this.TitlePictureBox.Image = global::Cube.Properties.Resources.title;
-            this.TitlePictureBox.Location = new System.Drawing.Point(108, 16);
-            this.TitlePictureBox.Name = "TitlePictureBox";
-            this.TitlePictureBox.Size = new System.Drawing.Size(146, 36);
-            this.TitlePictureBox.TabIndex = 12;
-            this.TitlePictureBox.TabStop = false;
             // 
             // VersionDialog
             // 
@@ -147,8 +147,8 @@
             this.MainSplitContainer.Panel1.PerformLayout();
             this.MainSplitContainer.Panel2.ResumeLayout(false);
             this.MainSplitContainer.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.LogoPictureBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.TitlePictureBox)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.LogoPictureBox)).EndInit();
             this.ResumeLayout(false);
 
         }
