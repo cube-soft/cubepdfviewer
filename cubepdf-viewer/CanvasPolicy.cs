@@ -243,6 +243,8 @@ namespace Cube {
                 // イベントハンドラの登録
                 canvas.Paint -= new PaintEventHandler(CanvasPolicy.PaintHandler);
                 canvas.Paint += new PaintEventHandler(CanvasPolicy.PaintHandler);
+                canvas.MouseEnter -= new EventHandler(CanvasPolicy.MouseEnterHandler);
+                canvas.MouseEnter += new EventHandler(CanvasPolicy.MouseEnterHandler);
                 canvas.MouseDown -= new MouseEventHandler(CanvasPolicy.MouseDownHandler);
                 canvas.MouseDown += new MouseEventHandler(CanvasPolicy.MouseDownHandler);
                 canvas.MouseUp -= new MouseEventHandler(CanvasPolicy.MouseUpHandler);
@@ -1019,14 +1021,18 @@ namespace Cube {
         /// 
         /// <summary>
         /// MEMO: Canvas.Focus() を実行するとスクロールバーがリセット
-        /// されてしまう為，TabPage.Focus() を実行する．
+        /// されてしまう為，Canvas.Parent.Focus() を実行する．
         /// </summary>
         /// 
         /* ----------------------------------------------------------------- */
         private static void MouseEnterHandler(object sender, EventArgs e) {
-            var control = sender as Control;
-            if (control == null) return;
-            control.Focus();
+            var canvas = sender as Canvas;
+            if (canvas != null) canvas.Parent.Focus();
+            else {
+                var control = sender as Control;
+                if (control == null) return;
+                control.Focus();
+            }
         }
 
         /* ----------------------------------------------------------------- */

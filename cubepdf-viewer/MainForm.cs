@@ -368,7 +368,12 @@ namespace Cube {
             worker.DoWork += new DoWorkEventHandler(AdjustDoWorkHandler);
             worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(AdjustRunCompletedHandler);
             worker.RunWorkerAsync(tab);
-            this.Refresh(CanvasPolicy.Get(tab));
+
+            var canvas = CanvasPolicy.Get(tab);
+            if (canvas == null) return;
+            
+            canvas.Cursor = Cursors.WaitCursor;
+            this.Refresh(canvas);
         }
 
         /* ----------------------------------------------------------------- */
@@ -396,7 +401,11 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         private void AdjustRunCompletedHandler(object sender, RunWorkerCompletedEventArgs e) {
             var tab = this.PageViewerTabControl.SelectedTab;
-            this.Refresh(CanvasPolicy.Get(tab));
+            var canvas = CanvasPolicy.Get(tab);
+            if (canvas == null) return;
+
+            canvas.Cursor = Cursors.Default;
+            this.Refresh(canvas);
         }
 
         /* ----------------------------------------------------------------- */
