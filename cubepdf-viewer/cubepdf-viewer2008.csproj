@@ -158,6 +158,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="cubepdf-viewer.ico" />
+    <None Include="Resources\title.png" />
+    <None Include="Resources\icon.png" />
     <EmbeddedResource Include="Resources\hand_move.cur" />
     <None Include="Resources\cubepdf-file.ico" />
     <None Include="Resources\logo_press.png" />

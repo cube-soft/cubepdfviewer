@@ -82,6 +82,7 @@
             this.Name = "MenuDialog";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "メニューの非表示";
             ((System.ComponentModel.ISupportInitialize)(this.IconPictureBox)).EndInit();
             this.ResumeLayout(false);

@@ -108,6 +108,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "PasswordDialog";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "パスワード";
             ((System.ComponentModel.ISupportInitialize)(this.IconPictureBox)).EndInit();
             this.ResumeLayout(false);

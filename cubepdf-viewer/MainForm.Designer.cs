@@ -490,7 +490,7 @@
             this.LogoButton.Margin = new System.Windows.Forms.Padding(0);
             this.LogoButton.Name = "LogoButton";
             this.LogoButton.Size = new System.Drawing.Size(119, 40);
-            this.LogoButton.Text = "CubeSoft の Web ページへ移動する";
+            this.LogoButton.Text = "CubePDF Viewe について";
             this.LogoButton.MouseUp += new System.Windows.Forms.MouseEventHandler(this.LogoButton_MouseUp);
             this.LogoButton.MouseDown += new System.Windows.Forms.MouseEventHandler(this.LogoButton_MouseDown);
             this.LogoButton.MouseLeave += new System.EventHandler(this.LogoButton_MouseLeave);

@@ -37,7 +37,7 @@ namespace Cube {
             var registry = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(REG_ROOT, false);
             if (registry != null) version = (string)registry.GetValue(REG_VERSION, "unknown");
             this.VersionLabel.Text = "Version: " + version;
-            LogoPictureBox.Image = Cube.Properties.Resources.cubepdf_viewer.ToBitmap();
+            //LogoPictureBox.Image = Cube.Properties.Resources.cubepdf_viewer.ToBitmap();
         }
 
         /* ----------------------------------------------------------------- */
