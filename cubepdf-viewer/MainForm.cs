@@ -25,6 +25,7 @@ using System.Drawing;
 using System.Drawing.Printing;
 using System.Windows.Forms;
 using System.Diagnostics;
+using System.ComponentModel;
 using MySettings = Cube.Properties.Settings;
 
 namespace Cube {
@@ -360,6 +361,45 @@ namespace Cube {
         }
 
         /* ----------------------------------------------------------------- */
+        /// AsyncAdjust
+        /* ----------------------------------------------------------------- */
+        private void AsyncAdjust(TabPage tab) {
+            var worker = new BackgroundWorker();
+            worker.DoWork += new DoWorkEventHandler(AdjustDoWorkHandler);
+            worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(AdjustRunCompletedHandler);
+            worker.RunWorkerAsync(tab);
+            this.Refresh(CanvasPolicy.Get(tab));
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// AdjustDoWorkHandler
+        /* ----------------------------------------------------------------- */
+        private void AdjustDoWorkHandler(object sender, DoWorkEventArgs e) {
+            var tab = e.Argument as TabPage;
+            var canvas = (tab != null) ? CanvasPolicy.Get(tab) : null;
+            if (canvas == null) return;
+
+            var message = "";
+            try {
+                if (this.FitToWidthButton.Checked) CanvasPolicy.FitToWidth(canvas);
+                else if (this.FitToPageButton.Checked) CanvasPolicy.FitToPage(canvas);
+                else CanvasPolicy.Adjust(canvas);
+            }
+            catch (Exception err) {
+                Utility.ErrorLog(err);
+                message = err.Message;
+            }
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// AdjustRunCompletedHandler
+        /* ----------------------------------------------------------------- */
+        private void AdjustRunCompletedHandler(object sender, RunWorkerCompletedEventArgs e) {
+            var tab = this.PageViewerTabControl.SelectedTab;
+            this.Refresh(CanvasPolicy.Get(tab));
+        }
+
+        /* ----------------------------------------------------------------- */
         ///
         /// CreateTab
         /// 
@@ -666,12 +706,21 @@ namespace Cube {
         }
 
         /* ----------------------------------------------------------------- */
+        ///
         /// MainForm_Resize
+        ///
+        /// <summary>
+        /// NOTE: メイン画面のリサイズ処理がサムネイル画面の描画を待たせて
+        /// いるため，リサイズ処理を BackgroundWorker() で実行してみる．
+        /// しばらく様子見．
+        /// </summary>
+        ///
         /* ----------------------------------------------------------------- */
         private void MainForm_Resize(object sender, EventArgs e) {
             if (!this.Visible) return;
             
-            if ((resize_ & 0x01) == 0) this.Adjust(this.PageViewerTabControl.SelectedTab);
+            //if ((resize_ & 0x01) == 0) this.Adjust(this.PageViewerTabControl.SelectedTab);
+            if ((resize_ & 0x01) == 0) this.AsyncAdjust(this.PageViewerTabControl.SelectedTab);
             resize_ |= 0x02;
         }
 
@@ -1186,9 +1235,9 @@ namespace Cube {
             var canvas = CanvasPolicy.Get(control.SelectedTab);
             if (canvas == null) return;
             
-            control.SelectedTab.Focus();
-            this.Adjust(control.SelectedTab);
-            this.Refresh(canvas);
+            var tab = control.SelectedTab;
+            tab.Focus();
+            this.Adjust(tab);
             this.CreateThumbnail(canvas);
         }
 
