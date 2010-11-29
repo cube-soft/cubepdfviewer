@@ -202,6 +202,7 @@ namespace Cube {
                 message = err.Message;
             }
             finally {
+                canvas.Parent.Focus();
                 this.Refresh(canvas, message);
             }
         }
@@ -650,6 +651,7 @@ namespace Cube {
                 this.Open(this.PageViewerTabControl, path);
                 this.Tag = null;
             }
+            visible_ = true;
         }
 
         /* ----------------------------------------------------------------- */
@@ -668,7 +670,8 @@ namespace Cube {
         /// MainForm_Resize
         /* ----------------------------------------------------------------- */
         private void MainForm_Resize(object sender, EventArgs e) {
-            //this.NavigationSplitContainer.Panel2MinSize = this.NavigationSplitContainer.Width - 256;
+            //if (!visible_) return;
+            MessageBox.Show(String.Format("visible: {0}, enable: {1}", this.Visible, this.Enabled));
             if ((resize_ & 0x01) == 0) this.Adjust(this.PageViewerTabControl.SelectedTab);
             resize_ |= 0x02;
         }
@@ -691,6 +694,8 @@ namespace Cube {
         /// 
         /* ----------------------------------------------------------------- */
         private void MainForm_ResizeBegin(object sender, EventArgs e) {
+            if (!visible_) return;
+
             resize_ = 0;
             resize_ |= 0x01;
             var thumb = Thumbnail.GetInstance(this.NavigationSplitContainer.Panel1);
@@ -701,6 +706,8 @@ namespace Cube {
         /// MainForm_ResizeEnd
         /* ----------------------------------------------------------------- */
         private void MainForm_ResizeEnd(object sender, EventArgs e) {
+            if (!visible_) return;
+
             if ((resize_ & 0x02) != 0) {
                 this.Adjust(this.PageViewerTabControl.SelectedTab);
                 setting_.Position = this.Location;
@@ -1179,7 +1186,8 @@ namespace Cube {
 
             var canvas = CanvasPolicy.Get(control.SelectedTab);
             if (canvas == null) return;
-
+            
+            control.SelectedTab.Focus();
             this.Adjust(control.SelectedTab);
             this.Refresh(canvas);
             this.CreateThumbnail(canvas);
@@ -1955,6 +1963,7 @@ namespace Cube {
         #region Member variables
         private UserSetting setting_ = new UserSetting();
         private bool begin_ = true;
+        private bool visible_ = false;
         private int wheel_counter_ = 0;
         static int resize_ = 0;
         private string adobe_;

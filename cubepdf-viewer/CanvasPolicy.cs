@@ -227,15 +227,20 @@ namespace Cube {
                 canvas.ClientSize = canvas.Size;
 
                 // イベントハンドラの登録
+                canvas.Paint -= new PaintEventHandler(CanvasPolicy.PaintHandler);
                 canvas.Paint += new PaintEventHandler(CanvasPolicy.PaintHandler);
+                canvas.MouseDown -= new MouseEventHandler(CanvasPolicy.MouseDownHandler);
                 canvas.MouseDown += new MouseEventHandler(CanvasPolicy.MouseDownHandler);
+                canvas.MouseUp -= new MouseEventHandler(CanvasPolicy.MouseUpHandler);
                 canvas.MouseUp += new MouseEventHandler(CanvasPolicy.MouseUpHandler);
+                canvas.MouseMove -= new MouseEventHandler(CanvasPolicy.MouseMoveHandler);
                 canvas.MouseMove += new MouseEventHandler(CanvasPolicy.MouseMoveHandler);
-                canvas.MouseEnter += new EventHandler(CanvasPolicy.MouseEnterHandler);
                 canvas.MouseClick -= new MouseEventHandler(CanvasPolicy.MouseClickHandler);
                 canvas.MouseClick += new MouseEventHandler(CanvasPolicy.MouseClickHandler);
 
                 parent.Controls.Add(canvas);
+                canvas.Parent.MouseEnter -= new EventHandler(CanvasPolicy.MouseEnterHandler);
+                canvas.Parent.MouseEnter += new EventHandler(CanvasPolicy.MouseEnterHandler);
             }
             return canvas;
         }
@@ -1000,15 +1005,15 @@ namespace Cube {
         /// MouseEnterHandler
         /// 
         /// <summary>
-        /// MEMO: control.Focus() を実行するとスクロールバーがリセット
-        /// されてしまう為，control.Parent.Focus() を実行する．
+        /// MEMO: Canvas.Focus() を実行するとスクロールバーがリセット
+        /// されてしまう為，TabPage.Focus() を実行する．
         /// </summary>
         /// 
         /* ----------------------------------------------------------------- */
         private static void MouseEnterHandler(object sender, EventArgs e) {
             var control = sender as Control;
             if (control == null) return;
-            control.Parent.Focus();
+            control.Focus();
         }
 
         /* ----------------------------------------------------------------- */

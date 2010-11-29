@@ -39,10 +39,10 @@
             // 
             // OKButton
             // 
-            this.OKButton.Location = new System.Drawing.Point(193, 88);
+            this.OKButton.Location = new System.Drawing.Point(83, 120);
             this.OKButton.Name = "OKButton";
             this.OKButton.Size = new System.Drawing.Size(75, 23);
-            this.OKButton.TabIndex = 4;
+            this.OKButton.TabIndex = 0;
             this.OKButton.Text = "OK";
             this.OKButton.UseVisualStyleBackColor = true;
             this.OKButton.Click += new System.EventHandler(this.OKButton_Click);
@@ -51,44 +51,44 @@
             // 
             this.TitleLabel.AutoSize = true;
             this.TitleLabel.Font = new System.Drawing.Font("MS UI Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.TitleLabel.Location = new System.Drawing.Point(56, 9);
+            this.TitleLabel.Location = new System.Drawing.Point(80, 16);
             this.TitleLabel.Name = "TitleLabel";
             this.TitleLabel.Size = new System.Drawing.Size(115, 13);
-            this.TitleLabel.TabIndex = 0;
+            this.TitleLabel.TabIndex = 2;
             this.TitleLabel.Text = "CubePDF Viewer";
             // 
             // CopyrightLabel
             // 
             this.CopyrightLabel.AutoSize = true;
-            this.CopyrightLabel.Location = new System.Drawing.Point(57, 41);
+            this.CopyrightLabel.Location = new System.Drawing.Point(80, 54);
             this.CopyrightLabel.Name = "CopyrightLabel";
             this.CopyrightLabel.Size = new System.Drawing.Size(151, 12);
-            this.CopyrightLabel.TabIndex = 2;
+            this.CopyrightLabel.TabIndex = 4;
             this.CopyrightLabel.Text = "Copyright(C) 2010 CubeSoft.";
             // 
             // VersionLabel
             // 
             this.VersionLabel.AutoSize = true;
-            this.VersionLabel.Location = new System.Drawing.Point(57, 29);
+            this.VersionLabel.Location = new System.Drawing.Point(80, 42);
             this.VersionLabel.Name = "VersionLabel";
             this.VersionLabel.Size = new System.Drawing.Size(44, 12);
-            this.VersionLabel.TabIndex = 1;
+            this.VersionLabel.TabIndex = 3;
             this.VersionLabel.Text = "Version";
             // 
             // CubePDFLinkLabel
             // 
             this.CubePDFLinkLabel.AutoSize = true;
-            this.CubePDFLinkLabel.Location = new System.Drawing.Point(57, 63);
+            this.CubePDFLinkLabel.Location = new System.Drawing.Point(31, 79);
             this.CubePDFLinkLabel.Name = "CubePDFLinkLabel";
             this.CubePDFLinkLabel.Size = new System.Drawing.Size(211, 12);
-            this.CubePDFLinkLabel.TabIndex = 3;
+            this.CubePDFLinkLabel.TabIndex = 1;
             this.CubePDFLinkLabel.TabStop = true;
             this.CubePDFLinkLabel.Text = "http://www.cube-soft.jp/cubepdfviewer/";
             this.CubePDFLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.CubePDFLinkLabel_LinkClicked);
             // 
             // LogoPictureBox
             // 
-            this.LogoPictureBox.Location = new System.Drawing.Point(12, 29);
+            this.LogoPictureBox.Location = new System.Drawing.Point(33, 25);
             this.LogoPictureBox.Name = "LogoPictureBox";
             this.LogoPictureBox.Size = new System.Drawing.Size(32, 32);
             this.LogoPictureBox.TabIndex = 5;
@@ -98,7 +98,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(283, 123);
+            this.ClientSize = new System.Drawing.Size(269, 155);
             this.Controls.Add(this.LogoPictureBox);
             this.Controls.Add(this.CubePDFLinkLabel);
             this.Controls.Add(this.VersionLabel);
