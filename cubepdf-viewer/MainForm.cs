@@ -107,7 +107,7 @@ namespace Cube {
 
             // 手のひらマウスカーソルを読み込んでおく
             System.Reflection.Assembly asm = System.Reflection.Assembly.GetExecutingAssembly();
-            HandMoveCursor = new Cursor(asm.GetManifestResourceStream(MySettings.Default.HAND_CURSOR_LOCATION));  // リソースの場所は、Web上のサンプルの方法ではうまく行かなかったため、→の方法で取得したロケーションを直接代入 string[] resources = asm.GetManifestResourceNames();
+            CanvasPolicy.SetHandCursor(new Cursor(asm.GetManifestResourceStream(MySettings.Default.HAND_CURSOR_LOCATION)));
         }
 
         /* ----------------------------------------------------------------- */
@@ -143,17 +143,16 @@ namespace Cube {
                 this.TotalPageLabel.Text = CanvasPolicy.PageCount(canvas).ToString();
                 this.ZoomDropDownButton.Text = ((int)CanvasPolicy.Zoom(canvas)).ToString() + "%";
 
-                // scrollbarのsmallchangeの更新
+                // scrollbar の smallchangeの更新
                 var control = (ScrollableControl)canvas.Parent;
                 var vsb = control.VerticalScroll;
                 var hsb = control.HorizontalScroll;
-
-                // Minimumは0と仮定
-                vsb.SmallChange = Math.Max(1, (vsb.Maximum - vsb.LargeChange) / 20);
-                hsb.SmallChange = Math.Max(1, (hsb.Maximum - hsb.LargeChange) / 20);
+                vsb.SmallChange = Math.Max(1, (vsb.Maximum - vsb.Minimum - vsb.LargeChange) / 20);
+                hsb.SmallChange = Math.Max(1, (hsb.Maximum - hsb.Minimum - hsb.LargeChange) / 20);
             }
 
             if (this.MainMenuStrip != null) this.MainMenuStrip.Refresh();
+            if (this.PageViewerTabControl != null) this.PageViewerTabControl.Refresh();
         }
 
         /* ----------------------------------------------------------------- */
@@ -646,12 +645,12 @@ namespace Cube {
         /// MainForm_Shown
         /* ----------------------------------------------------------------- */
         private void MainForm_Shown(object sender, EventArgs e) {
+            this.Refresh();
             if (this.Tag != null) {
                 var path = (string)this.Tag;
                 this.Open(this.PageViewerTabControl, path);
                 this.Tag = null;
             }
-            visible_ = true;
         }
 
         /* ----------------------------------------------------------------- */
@@ -670,8 +669,8 @@ namespace Cube {
         /// MainForm_Resize
         /* ----------------------------------------------------------------- */
         private void MainForm_Resize(object sender, EventArgs e) {
-            //if (!visible_) return;
-            MessageBox.Show(String.Format("visible: {0}, enable: {1}", this.Visible, this.Enabled));
+            if (!this.Visible) return;
+            
             if ((resize_ & 0x01) == 0) this.Adjust(this.PageViewerTabControl.SelectedTab);
             resize_ |= 0x02;
         }
@@ -694,7 +693,7 @@ namespace Cube {
         /// 
         /* ----------------------------------------------------------------- */
         private void MainForm_ResizeBegin(object sender, EventArgs e) {
-            if (!visible_) return;
+            if (!this.Visible) return;
 
             resize_ = 0;
             resize_ |= 0x01;
@@ -706,7 +705,7 @@ namespace Cube {
         /// MainForm_ResizeEnd
         /* ----------------------------------------------------------------- */
         private void MainForm_ResizeEnd(object sender, EventArgs e) {
-            if (!visible_) return;
+            if (!this.Visible) return;
 
             if ((resize_ & 0x02) != 0) {
                 this.Adjust(this.PageViewerTabControl.SelectedTab);
@@ -1963,15 +1962,9 @@ namespace Cube {
         #region Member variables
         private UserSetting setting_ = new UserSetting();
         private bool begin_ = true;
-        private bool visible_ = false;
         private int wheel_counter_ = 0;
-        static int resize_ = 0;
+        private int resize_ = 0;
         private string adobe_;
-        public static Cursor HandMoveCursor = null;
-
-       
-
-        // 手のひらマウスカーソル
         #endregion
     }
 }

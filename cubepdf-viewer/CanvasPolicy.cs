@@ -203,6 +203,20 @@ namespace Cube {
         }
 
         /* ----------------------------------------------------------------- */
+        /// GetHandCursor
+        /* ----------------------------------------------------------------- */
+        public static Cursor GetHandCursor() {
+            return hand_;
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// SetHandCursor
+        /* ----------------------------------------------------------------- */
+        public static void SetHandCursor(Cursor cursor) {
+            hand_ = cursor;
+        }
+
+        /* ----------------------------------------------------------------- */
         ///
         /// Create
         /// 
@@ -929,7 +943,8 @@ namespace Cube {
                 int x = current.X - origin_.X;
                 int y = current.Y - origin_.Y;
                 control.AutoScrollPosition = new Point(-x, -y);
-                canvas.Cursor = MainForm.HandMoveCursor;
+                var cursor = CanvasPolicy.GetHandCursor();
+                if (cursor != null) canvas.Cursor = cursor;
             }
             else {
                 var engine = canvas.Tag as CanvasEngine;
@@ -961,8 +976,7 @@ namespace Cube {
             var canvas = sender as Canvas;
             if (canvas == null) return;
 
-            if (canvas.Cursor == Cursors.Hand)
-            {
+            if (canvas.Cursor == Cursors.Hand) {
                 var engine = canvas.Tag as CanvasEngine;
                 if (engine == null) return;
                 var core = engine.Core;
@@ -976,10 +990,9 @@ namespace Cube {
                 }
                 canvas.Cursor = Cursors.Default;
             }
-            else
-            {
-                // カーソルを手のひらに変更
-                canvas.Cursor = MainForm.HandMoveCursor;
+            else {
+                var cursor = CanvasPolicy.GetHandCursor();
+                if (cursor != null) canvas.Cursor = cursor;
             }
         }
 
@@ -1071,6 +1084,7 @@ namespace Cube {
         private static bool is_mouse_down_ = false;
         private static Point origin_;
         private static ToolTip tooltip_ = new ToolTip();
+        private static Cursor hand_ = null;
         #endregion
     }
 }
