@@ -70,12 +70,11 @@ namespace Cube {
             Process[] processes = Process.GetProcessesByName(proc.ProcessName);
             int iThisProcessId = proc.Id;
 
-            foreach (Process hProcess in processes) {
-                if (hProcess.Id != iThisProcessId) {
-                    // メインウインドウを最前面にする
-                    ShowWindow(hProcess.MainWindowHandle, SW_NORMAL);
-                    SetForegroundWindow(hProcess.MainWindowHandle);
-                    return hProcess.MainWindowHandle;
+            foreach (Process item in processes) {
+                if (item.Id != iThisProcessId) {
+                    if (IsIconic(item.MainWindowHandle)) ShowWindow(item.MainWindowHandle, SW_RESTORE);
+                    SetForegroundWindow(item.MainWindowHandle);
+                    return item.MainWindowHandle;
                 }
             }
             return IntPtr.Zero;
@@ -93,6 +92,8 @@ namespace Cube {
         [DllImport("user32.dll")]
         private static extern bool SetForegroundWindow(IntPtr hWnd);
 
+        [DllImport("user32.dll")]
+        private static extern bool IsIconic(IntPtr hWnd);
 
         [DllImport("User32.dll", EntryPoint = "FindWindow")]
         public static extern IntPtr FindWindow(String lpClassName, String lpWindowName);
@@ -106,7 +107,7 @@ namespace Cube {
             public int cbData;　　   // lpDataのバイト数
             public string lpData;　  // 送信するデータへのポインタ(0も可能)
         }
-
-        private const int SW_NORMAL = 1;
+        
+        private const int SW_RESTORE = 9;
     }
 }
