@@ -1922,8 +1922,14 @@ namespace Cube {
             string version = "";
             foreach (var elem in registry.GetSubKeyNames()) {
                 try {
+                    if (elem.Equals("DC"))
+                    {
+                        version = elem;
+                        break;
+                    }
                     var x = double.Parse(elem);
                     if (version.Length == 0 || x > double.Parse(version)) version = elem;
+                    
                 }
                 catch (Exception err) {
                     Utility.ErrorLog(err);
